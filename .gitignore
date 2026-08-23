@@ -1,0 +1,27 @@
+.DS_Store
+.env
+.venv/
+.vercel/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.playwright-cli/
+dist/
+build/
+*.egg-info/
+
+# Research data can be licensed, private, or too large for Git.
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# A public deployment snapshot requires explicit review and force-add.
+deploy/research_snapshot/*
+!deploy/research_snapshot/.gitkeep
+
+# Generated capability output.
+docs/DATA_FEASIBILITY_REPORT.local.md

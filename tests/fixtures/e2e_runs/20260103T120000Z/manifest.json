@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "run_id": "20260103T120000Z",
+  "created_at": "2026-01-03T12:00:00Z",
+  "updated_at": "2026-01-03T12:00:00Z",
+  "target_events": 40,
+  "disclosure_start_date": "2025-10-01",
+  "disclosure_end_date": "2026-01-02",
+  "stages": {
+    "opendart_sample": "complete",
+    "naver_attention": "complete",
+    "fsc_stock_prices": "blocked",
+    "fsc_market_indices": "blocked",
+    "outcomes": "incomplete"
+  },
+  "counts": {
+    "audited_disclosures": 1,
+    "selected_events": 1,
+    "attention_rows": 1,
+    "attention_observed": 1,
+    "stock_price_rows": 0,
+    "market_index_rows": 0,
+    "outcome_rows": 1,
+    "decision_prices_observed": 0,
+    "abnormal_h1_observed": 0
+  },
+  "artifacts": {
+    "selected_events": "selected_events.csv",
+    "attention": "attention.csv",
+    "outcomes": "outcomes.csv"
+  },
+  "snapshots": [
+    {
+      "source": "synthetic_e2e_snapshot",
+      "relative_path": "opendart/synthetic_document.txt",
+      "sha256": "f308fd580825d80650778e06124f7e73f1b7077b8fbd162fb5e2017dde011a05",
+      "byte_count": 23,
+      "collected_at": "2026-01-03T12:00:00Z"
+    }
+  ],
+  "errors": [
+    "SYNTHETIC TEST FIXTURE: price data is intentionally absent."
+  ],
+  "interpretation": "SYNTHETIC TEST FIXTURE ONLY. Not research evidence or a tradable result."
+}

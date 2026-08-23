@@ -1,0 +1,49 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "crowd-excess-lab"
+version = "0.1.0"
+description = "A research toolkit for testing community reaction excess in Korean equities"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi>=0.116,<1",
+  "httpx>=0.28,<1",
+  "numpy>=2.0,<3",
+  "pandas>=2.2,<3",
+  "pydantic>=2.10,<3",
+  "pydantic-settings>=2.6,<3",
+  "uvicorn[standard]>=0.35,<1",
+]
+
+[dependency-groups]
+dev = [
+  "pytest>=8.3,<9",
+  "pytest-cov>=6,<7",
+  "ruff>=0.12,<1",
+]
+
+[project.scripts]
+crowd-excess-check = "crowd_excess_lab.cli:main"
+crowd-excess-study = "crowd_excess_lab.study_cli:main"
+crowd-excess-api = "crowd_excess_lab.api_cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/crowd_excess_lab"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.ruff.format]
+quote-style = "double"

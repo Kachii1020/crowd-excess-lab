@@ -1,0 +1,2 @@
+receipt_number,ticker,window_start,window_end,baseline_start,baseline_end,event_start,event_end,baseline_observed_days,event_observed_days,baseline_median_ratio,event_mean_ratio,attention_excess,missing_reason,source_snapshot_sha256,collected_at
+20260102000001,123456,2025-12-19,2026-01-04,2025-12-19,2025-12-30,2026-01-02,2026-01-04,12,3,20.0,50.0,0.8873031950009027,,bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,2026-01-03T12:00:00Z

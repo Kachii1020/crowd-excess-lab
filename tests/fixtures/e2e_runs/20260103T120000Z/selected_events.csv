@@ -1,0 +1,2 @@
+receipt_number,received_date,ticker,corporation_name,report_name,market_class,contract_amount_krw,recent_revenue_krw,reported_revenue_ratio_percent,computed_revenue_ratio_percent,ratio_difference_percentage_points,source_document_sha256,collected_at
+20260102000001,2026-01-02,123456,SYNTHETIC RESEARCH CO,Synthetic supply contract notice,Y,90071992547409930,180143985094819860,50.00,50.000000000000000000,0.000000000000000000,f308fd580825d80650778e06124f7e73f1b7077b8fbd162fb5e2017dde011a05,2026-01-03T12:00:00Z

@@ -1,0 +1,2 @@
+receipt_number,ticker,corporation_name,market_class,received_date,decision_date,contract_revenue_ratio,attention_excess,attention_group,raw_return_h0,raw_return_h1,raw_return_h3,raw_return_h5,market_return_h0,market_return_h1,market_return_h3,market_return_h5,abnormal_return_h0,abnormal_return_h1,abnormal_return_h3,abnormal_return_h5,price_missing_reason,index_missing_reason
+20260102000001,123456,SYNTHETIC RESEARCH CO,Y,2026-01-02,,0.5,0.8873031950009027,higher_attention,,,,,,,,,,,,,no_post_receipt_price,

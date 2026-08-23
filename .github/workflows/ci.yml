@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: "0.12.5"
+          enable-cache: true
+
+      - name: Install Python dependencies
+        run: uv sync --locked --dev
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: "11.19.0"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          cache: pnpm
+          cache-dependency-path: web/pnpm-lock.yaml
+
+      - name: Install frontend dependencies
+        run: pnpm --dir web install --frozen-lockfile
+
+      - name: Install Playwright browser
+        run: pnpm --dir web exec playwright install --with-deps chromium
+
+      - name: Verify backend
+        run: |
+          uv run ruff check .
+          uv run pytest -q
+
+      - name: Verify frontend
+        run: |
+          pnpm --dir web test:run
+          pnpm --dir web typecheck
+          pnpm --dir web lint
+          pnpm --dir web build
+          pnpm --dir web e2e
+
+      - name: Verify deployment configuration
+        run: uv run python scripts/deploy_preflight.py --mode configuration

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "vite",
+  "installCommand": "pnpm --dir web install --frozen-lockfile",
+  "buildCommand": "pnpm --dir web build",
+  "outputDirectory": "web/dist",
+  "functions": {
+    "api/index.py": {
+      "includeFiles": "{src/crowd_excess_lab/**,deploy/research_snapshot/**}",
+      "excludeFiles": "{data/**,docs/**,specs/**,tests/**,web/**}"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
