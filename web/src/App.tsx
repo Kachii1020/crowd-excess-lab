@@ -11,6 +11,10 @@ const EventEvidencePage = lazy(() => import('./pages/EventEvidencePage.tsx').the
 const ResearchPage = lazy(() => import('./pages/ResearchPage.tsx').then((module) => ({ default: module.ResearchPage })))
 const LineagePage = lazy(() => import('./pages/LineagePage.tsx').then((module) => ({ default: module.LineagePage })))
 const SettingsPage = lazy(() => import('./pages/SettingsPage.tsx').then((module) => ({ default: module.SettingsPage })))
+const AgentConsolePage = lazy(() => import('./pages/AgentConsolePage.tsx').then((module) => ({ default: module.AgentConsolePage })))
+const AgentRunPage = lazy(() => import('./pages/AgentRunPage.tsx').then((module) => ({ default: module.AgentRunPage })))
+const PortfolioPage = lazy(() => import('./pages/PortfolioPage.tsx').then((module) => ({ default: module.PortfolioPage })))
+const StrategyPage = lazy(() => import('./pages/StrategyPage.tsx').then((module) => ({ default: module.StrategyPage })))
 
 function App() {
   return (
@@ -18,14 +22,18 @@ function App() {
       <Suspense fallback={<LoadingState label="Preparing the workbench" />}>
         <Routes>
           <Route element={<AppShell />}>
-            <Route index element={<Navigate replace to="/events" />} />
+            <Route index element={<Navigate replace to="/agent" />} />
+            <Route path="agent" element={<AgentConsolePage />} />
+            <Route path="agent/runs/:runId" element={<AgentRunPage />} />
+            <Route path="portfolio" element={<PortfolioPage />} />
+            <Route path="strategy" element={<StrategyPage />} />
             <Route path="dashboard" element={<OverviewPage />} />
             <Route path="events" element={<EventsPage />} />
             <Route path="events/:receiptNumber" element={<EventEvidencePage />} />
             <Route path="research" element={<ResearchPage />} />
             <Route path="lineage" element={<LineagePage />} />
             <Route path="settings" element={<SettingsPage />} />
-            <Route path="*" element={<Navigate replace to="/events" />} />
+            <Route path="*" element={<Navigate replace to="/agent" />} />
           </Route>
         </Routes>
       </Suspense>

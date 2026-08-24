@@ -1,12 +1,19 @@
 # Crowd Excess Lab — Permanent Rules
 
-## Research boundary
+## Product and execution boundary
 
-- This repository is an empirical research tool, not an investment adviser or an
-  order-execution system.
-- Do not add broker integration or order submission until a separately approved
-  milestone demonstrates an out-of-sample signal after costs.
-- Never describe a backtest, fixture, or in-sample result as a profitable strategy.
+- This repository is an empirical research and hackathon paper-trading tool, not an
+  investment adviser.
+- The user approved Alpaca paper-trading integration for the Crowd Excess Options
+  Agent milestone. No other broker or execution environment is in scope.
+- Live trading is structurally forbidden. Code must reject non-paper Alpaca endpoints,
+  a live-trading flag, or an account that does not match the configured competition ID.
+- Only defined-risk option debit spreads may be submitted. Naked short options, stock
+  orders, margin expansion, deposits, withdrawals, and account administration are forbidden.
+- The model may assess evidence but may not choose contracts, size positions, or bypass
+  deterministic risk gates.
+- Never describe a backtest, fixture, in-sample result, or paper result as a profitable
+  real-money strategy.
 
 ## Data integrity
 
@@ -52,3 +59,5 @@
 - A live endpoint failure is a capability result, not a reason to insert fake data.
 - Update the active spec, plan, tasks, and feasibility report when an external API or
   data assumption changes.
+- Public application routes are read-only. Scheduler and order execution remain available
+  only to a credentialed runner, never to a browser request.

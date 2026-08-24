@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "crowd-excess-lab"
 version = "0.1.0"
-description = "A research toolkit for testing community reaction excess in Korean equities"
+description = "An auditable paper-only AI agent for defined-risk US option spreads"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -29,6 +29,7 @@ dev = [
 crowd-excess-check = "crowd_excess_lab.cli:main"
 crowd-excess-study = "crowd_excess_lab.study_cli:main"
 crowd-excess-api = "crowd_excess_lab.api_cli:main"
+crowd-excess-agent = "crowd_excess_lab.agent_cli:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/crowd_excess_lab"]

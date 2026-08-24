@@ -1,0 +1,87 @@
+name: Crowd Excess Agent
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Execution mode (live trading does not exist)
+        required: true
+        default: shadow
+        type: choice
+        options:
+          - shadow
+          - paper
+  schedule:
+    # Alpaca's market clock remains the final gate. This window covers US regular
+    # hours during daylight saving time with a buffer for clock transitions.
+    - cron: "*/15 13-20 * * 1-5"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: crowd-excess-paper-agent
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    environment: alpaca-paper
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      OPENAI_MODEL: gpt-5.6-terra
+      NAVER_API_HUB_CLIENT_ID: ${{ secrets.NAVER_API_HUB_CLIENT_ID }}
+      NAVER_API_HUB_CLIENT_SECRET: ${{ secrets.NAVER_API_HUB_CLIENT_SECRET }}
+      ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+      ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+      ALPACA_COMPETITION_ACCOUNT_ID: ${{ secrets.ALPACA_COMPETITION_ACCOUNT_ID }}
+      ALPACA_PAPER_BASE_URL: https://paper-api.alpaca.markets
+      ALPACA_MARKET_DATA_URL: https://data.alpaca.markets
+      ALPACA_LIVE_TRADE: "false"
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      AGENT_MODE: ${{ github.event.inputs.mode || vars.AGENT_MODE || 'shadow' }}
+      AGENT_FREEZE_AT: "2026-09-03T20:00:00+00:00"
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: "0.12.5"
+          enable-cache: true
+
+      - name: Install locked Python dependencies
+        run: uv sync --locked --no-editable
+
+      - name: Set up Go for the Alpaca CLI
+        uses: actions/setup-go@v6
+        with:
+          go-version: "1.25.x"
+          cache: false
+
+      - name: Install pinned Alpaca CLI
+        run: go install github.com/alpacahq/cli/cmd/alpaca@v0.0.13
+
+      - name: Verify paper boundary
+        run: |
+          alpaca version
+          uv run --no-sync crowd-excess-agent status
+
+      - name: Run competition-window scan
+        shell: bash
+        run: |
+          current_date="$(date -u +%Y-%m-%d)"
+          if [[ "$current_date" < "2026-08-29" || "$current_date" > "2026-09-04" ]]; then
+            echo "Outside the declared competition window; no scan was attempted."
+            exit 0
+          fi
+          uv run --no-sync crowd-excess-agent run

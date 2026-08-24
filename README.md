@@ -1,100 +1,107 @@
-# Crowd Excess Lab
+# Crowd Excess Agent
 
-`Crowd Excess Lab` tests a specific observation about the Korean equity market:
+Crowd Excess Agent is an auditable, paper-only US options agent for the Alpaca AI Trading
+Agents Hackathon.
 
-> Does community attention or emotion that is unusually strong relative to the
-> measurable size of a corporate event predict short-lived continuation, reversal,
-> or volatility?
+> It identifies when investor attention and price movement outrun objective news evidence,
+> then expresses a controlled mean-reversion view through defined-risk Alpaca option spreads.
 
-This repository is a data-feasibility and measurement tool. It does **not** place orders,
-scrape restricted communities, or claim that a tradable edge exists.
+The product began as a Korean-equity research tool. That pre-hackathon origin remains visible
+under `/research` and `/lineage`; it is not represented as US execution data or competition-period
+work. NAVER Search Trend is labelled **cross-border search attention**, never sentiment.
 
-## Current scope
+## Safety boundary
 
-- Query official OpenDART disclosure metadata with a user-provided API key.
-- Probe the current NAVER API HUB Search Trend API as a legal attention proxy.
-- Build an audited 30–50 event sample of original single-sales/supply-contract notices.
-- Collect official-origin FSC stock and market-index prices through the Public Data Portal.
-- Compute conservative next-trading-day event returns at fixed 0, +1, +3, and +5 horizons.
-- Validate official KRX CSV exports for prices and investor flows.
-- Validate privacy-minimised community observations obtained by an allowed method.
-- Compute transparent starting measurements:
-  - supply-contract size relative to annual revenue;
-  - community activity, participation, extremity, disagreement, and duplication;
-  - residual `Crowd Excess` after fitting an explainable baseline model.
-- Provide chronological walk-forward split utilities for the next research milestone.
+- Alpaca paper trading only; the live endpoint is rejected during configuration and execution.
+- Call or put debit verticals only; naked options and public order endpoints do not exist.
+- OpenAI assesses normalized news evidence through strict structured output. It cannot select
+  contracts, size a position, bypass a gate, or submit an order.
+- The deterministic risk engine enforces the dedicated account ID, 14–30 DTE, delta shape,
+  liquidity, 1% position debit, 3% aggregate premium risk, one new trade per day, and daily loss.
+- Missing model output, market data, Greeks, option volume, storage, or account identity means
+  `ABSTAIN`.
+- Every submitted intent receives a deterministic `client_order_id` and an append-only audit trace.
 
-## Quick start
+No real-money mode or profitability claim exists.
 
-```bash
-cp .env.example .env
-uv sync --dev
-uv run pytest
-uv run ruff check .
-uv run crowd-excess-check --report docs/DATA_FEASIBILITY_REPORT.local.md
+## System
+
+```text
+NAVER complete-day attention ─┐
+Alpaca price / SPY / volume ──┼─> Crowd Excess residual ─> deterministic risk ─> Alpaca paper
+Alpaca headlines -> OpenAI ───┘             │                        │              │
+                                            └──────── Supabase append-only audit ──┘
+                                                               │
+                                           FastAPI GET-only projection -> Vercel UI
 ```
 
-Without credentials or local CSV files, the capability command still runs and reports
-which inputs are missing. Add `--live` only when you want to call configured APIs.
+Fixed universe: `AAPL`, `MSFT`, `NVDA`, `TSLA`, and `QQQ`; `SPY` is the benchmark.
 
-See [`specs/001-data-feasibility/quickstart.md`](specs/001-data-feasibility/quickstart.md)
-for the input contracts and exact live-check workflow.
+Core implementation:
 
-## Mini event study
+- `src/crowd_excess_lab/agent/`: signal, evidence, option selection, risk, audit, and runner.
+- `supabase/migrations/`: public-read/service-append audit schema with update/delete trigger.
+- `.github/workflows/agent.yml`: 15-minute competition-window scheduler with Alpaca clock gate.
+- `web/src/pages/AgentConsolePage.tsx`: judge-facing decision console.
+- `specs/005-crowd-excess-options-agent/`: scope, contracts, data model, and traceable tasks.
 
-Enable both `금융위원회_주식시세정보` and `금융위원회_지수시세정보` for the same
-Public Data Portal key, then keep the key in the ignored `.env` as
-`DATA_GO_KR_API_KEY`.
+## Local verification
 
-```bash
-uv run crowd-excess-study --target 40
-```
-
-An interrupted or credential-blocked run can be continued without repeating completed
-OpenDART and NAVER stages:
+Python 3.12, Node 24, pnpm 11.19.0, and `uv` are expected.
 
 ```bash
-uv run crowd-excess-study --resume data/processed/mini_event_study/<run-id>
+uv sync --locked --dev --no-editable
+uv run --no-sync ruff check .
+uv run --no-sync pytest -q
+pnpm --dir web install --frozen-lockfile
+pnpm --dir web test:run
+pnpm --dir web typecheck
+pnpm --dir web lint
+pnpm --dir web build
+pnpm --dir web e2e
+uv run --no-sync python scripts/security_preflight.py
+uv run --no-sync python scripts/deploy_preflight.py --mode configuration
 ```
 
-See [`specs/002-mini-event-study/quickstart.md`](specs/002-mini-event-study/quickstart.md)
-for the exact cohort, windows, outputs, and resume behavior.
-
-## Research workbench
-
-The repository now includes a read-only local API and a desktop-first research interface. It
-shows exact run coverage, filters all selected events, exposes per-event calculation evidence,
-compares preregistered horizons, and audits source lineage without exposing local credentials.
+Run the read-only application:
 
 ```bash
 # terminal 1
-uv run crowd-excess-api
+uv run --no-sync crowd-excess-api
 
 # terminal 2
-cd web
-pnpm dev
+pnpm --dir web dev
 ```
 
-See [`specs/003-research-workbench/quickstart.md`](specs/003-research-workbench/quickstart.md) and
-[`docs/WORKBENCH_HANDOFF.md`](docs/WORKBENCH_HANDOFF.md) before extending the UI or data layer.
+The default `/agent` route renders an honest setup state without credentials or fabricated
+orders. The Korean research fixture remains available at `/events` for local development.
 
-## Git and preview deployment
+## Credentialed operation
 
-The repository is prepared for credential-free GitHub Actions verification and a single Vercel
-preview containing the Vite workbench plus the read-only FastAPI application. Local research data
-and raw provider responses remain excluded. A public preview requires an explicitly reviewed export
-of normalized artifacts; configuration CI never publishes test fixtures or local runs.
+Copy `.env.example` to ignored `.env`, then configure NAVER API HUB, OpenAI, a dedicated Alpaca
+paper account, and Supabase. Do not place a service-role key in Vercel or browser configuration.
 
 ```bash
-uv run python scripts/deploy_preflight.py --mode configuration
+uv run --no-sync crowd-excess-agent status
+uv run --no-sync crowd-excess-agent probe
+uv run --no-sync crowd-excess-agent strategy
+uv run --no-sync crowd-excess-agent feasibility  # 180-day chronological NAVER gate
+uv run --no-sync crowd-excess-agent run  # AGENT_MODE defaults to shadow
 ```
 
-See [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) for the publication gate, private GitHub setup,
-preview smoke tests, promotion, and rollback workflow.
+Paper promotion requires the exact operator checklist in
+[`docs/AGENT_OPERATIONS.md`](docs/AGENT_OPERATIONS.md). Account creation, secret registration,
+database migration, and a real paper order are deliberately not simulated by this repository.
 
-## Interpretation boundary
+## Documentation
 
-Search interest is an **attention proxy**, not community sentiment. A community heat
-score is a preregistered measurement recipe, not a validated trading signal. Any claim
-about return predictability must survive a chronological holdout, a fundamentals-only
-baseline, a shuffled-time placebo, and estimated trading costs.
+- [`PRE_HACKATHON_BASELINE.md`](PRE_HACKATHON_BASELINE.md): provenance boundary and baseline tag.
+- [`docs/AGENT_OPERATIONS.md`](docs/AGENT_OPERATIONS.md): account, Supabase, GitHub, runbook, recovery.
+- [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md): logged-out Vercel publication and rollback.
+- [`docs/HACKATHON_SUBMISSION.md`](docs/HACKATHON_SUBMISSION.md): submission copy and asset checklist.
+- [`docs/learning/LEDGER.md`](docs/learning/LEDGER.md): operator learning evidence.
+
+## Licence
+
+MIT. Provider data and APIs remain subject to their respective terms; raw third-party payloads and
+credentials are excluded from Git and the public deployment.

@@ -10,7 +10,7 @@ export default defineConfig({
   },
   webServer: [
     {
-      command: 'uv run --project .. crowd-excess-api --study-root ../tests/fixtures/e2e_runs',
+      command: '../.venv/bin/python -m crowd_excess_lab.api_cli --study-root ../tests/fixtures/e2e_runs',
       url: 'http://127.0.0.1:8000/api/v1/health',
       env: { PYTHONPATH: '../src' },
       reuseExistingServer: true,

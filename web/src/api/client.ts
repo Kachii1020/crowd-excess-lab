@@ -1,10 +1,16 @@
 import { z } from 'zod'
 import {
+  agentRunDetailSchema,
+  agentRunSchema,
+  agentStatusSchema,
   capabilitySchema,
   eventSchema,
   eventsResponseSchema,
   lineageSchema,
+  portfolioSchema,
   runSchema,
+  signalSnapshotSchema,
+  strategySchema,
   type EventFilters,
 } from './schemas.ts'
 
@@ -43,6 +49,12 @@ function queryString(filters: EventFilters): string {
 }
 
 export const api = {
+  agentStatus: () => fetchParsed('/api/v1/agent/status', agentStatusSchema),
+  agentRuns: () => fetchParsed('/api/v1/agent/runs', z.array(agentRunSchema)),
+  agentRun: (runId: string) => fetchParsed(`/api/v1/agent/runs/${runId}`, agentRunDetailSchema),
+  agentSignals: () => fetchParsed('/api/v1/agent/signals', z.array(signalSnapshotSchema)),
+  portfolio: () => fetchParsed('/api/v1/portfolio', portfolioSchema.nullable()),
+  strategy: () => fetchParsed('/api/v1/strategy', strategySchema),
   runs: () => fetchParsed('/api/v1/runs', z.array(runSchema)),
   run: (runId: string) => fetchParsed(`/api/v1/runs/${runId}`, runSchema),
   events: (runId: string, filters: EventFilters = {}) =>

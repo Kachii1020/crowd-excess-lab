@@ -8,6 +8,20 @@ from typing import Annotated, Literal
 from fastapi import APIRouter, FastAPI, HTTPException, Query, Request
 from fastapi import Path as ApiPath
 
+from crowd_excess_lab.agent.domain import (
+    AgentMode,
+    AgentRunDetail,
+    AgentRunRecord,
+    PortfolioSnapshot,
+    PublicAgentState,
+    SignalSnapshot,
+    StrategyConfig,
+)
+from crowd_excess_lab.agent.store import (
+    AgentAuditRepository,
+    AuditStoreUnavailable,
+    SupabaseAuditStore,
+)
 from crowd_excess_lab.api.repository import (
     ArtifactUnreadable,
     InvalidRunId,
@@ -39,6 +53,10 @@ EventSort = Literal[
 
 def _repository(request: Request) -> StudyArtifactRepository:
     return request.app.state.study_repository  # type: ignore[no-any-return]
+
+
+def _agent_repository(request: Request) -> AgentAuditRepository:
+    return request.app.state.agent_repository  # type: ignore[no-any-return]
 
 
 def _safe_http_error(exc: Exception) -> HTTPException:
@@ -75,6 +93,89 @@ def _api_router(settings: Settings) -> APIRouter:
                 checked_at=item.checked_at,
             )
             for item in offline_capabilities(settings)
+        )
+
+    @router.get("/agent/status", response_model=PublicAgentState)
+    def agent_status(request: Request) -> PublicAgentState:
+        repository = _agent_repository(request)
+        try:
+            runs = repository.list_runs()
+            sources = repository.source_readiness()
+        except AuditStoreUnavailable as exc:
+            raise HTTPException(
+                status_code=503, detail="Agent audit data is temporarily unavailable."
+            ) from exc
+        configured = repository.configured
+        return PublicAgentState(
+            configured=configured,
+            mode=AgentMode(settings.agent_mode),
+            scheduler="GitHub Actions / every 15 minutes during the US market window",
+            last_run=runs[0] if runs else None,
+            sources=sources,
+            message=(
+                "Append-only paper-agent audit is connected."
+                if configured
+                else (
+                    "Public audit storage is not configured; "
+                    "strategy documentation remains available."
+                )
+            ),
+        )
+
+    @router.get("/agent/runs", response_model=tuple[AgentRunRecord, ...])
+    def agent_runs(request: Request) -> tuple[AgentRunRecord, ...]:
+        try:
+            return _agent_repository(request).list_runs()
+        except AuditStoreUnavailable as exc:
+            raise HTTPException(
+                status_code=503, detail="Agent audit data is temporarily unavailable."
+            ) from exc
+
+    @router.get("/agent/runs/{run_id}", response_model=AgentRunDetail)
+    def agent_run(
+        request: Request,
+        run_id: Annotated[
+            str, ApiPath(pattern=r"^[0-9]{8}T[0-9]{6}Z-[0-9a-f]{8}$")
+        ],
+    ) -> AgentRunDetail:
+        try:
+            detail = _agent_repository(request).get_run(run_id)
+        except AuditStoreUnavailable as exc:
+            raise HTTPException(
+                status_code=503, detail="Agent audit data is temporarily unavailable."
+            ) from exc
+        if detail is None:
+            raise HTTPException(status_code=404, detail="Agent run was not found.")
+        return detail
+
+    @router.get("/agent/signals", response_model=tuple[SignalSnapshot, ...])
+    def agent_signals(request: Request) -> tuple[SignalSnapshot, ...]:
+        try:
+            return _agent_repository(request).latest_signals()
+        except AuditStoreUnavailable as exc:
+            raise HTTPException(
+                status_code=503, detail="Agent audit data is temporarily unavailable."
+            ) from exc
+
+    @router.get("/portfolio", response_model=PortfolioSnapshot | None)
+    def portfolio(request: Request) -> PortfolioSnapshot | None:
+        try:
+            return _agent_repository(request).latest_portfolio()
+        except AuditStoreUnavailable as exc:
+            raise HTTPException(
+                status_code=503, detail="Agent audit data is temporarily unavailable."
+            ) from exc
+
+    @router.get("/strategy", response_model=StrategyConfig)
+    def strategy() -> StrategyConfig:
+        return StrategyConfig(
+            competition_account_id=settings.alpaca_competition_account_id or "unconfigured",
+            paper_base_url=settings.alpaca_paper_base_url,
+            attention_weight=settings.agent_attention_weight,
+            max_position_risk_pct=settings.agent_max_position_risk_pct,
+            max_total_risk_pct=settings.agent_max_total_risk_pct,
+            daily_loss_limit_pct=settings.agent_daily_loss_limit_pct,
+            freeze_at=settings.agent_freeze_at,
         )
 
     @router.get("/runs", response_model=tuple[ResearchRunSummary, ...])
@@ -163,14 +264,33 @@ def _api_router(settings: Settings) -> APIRouter:
     return router
 
 
-def create_app(*, study_root: Path | None = None, settings: Settings | None = None) -> FastAPI:
+def create_app(
+    *,
+    study_root: Path | None = None,
+    settings: Settings | None = None,
+    agent_repository: AgentAuditRepository | None = None,
+) -> FastAPI:
     resolved_settings = settings or Settings()
     resolved_root = study_root or resolved_settings.study_output_root
     app = FastAPI(
-        title="Crowd Excess Research API",
-        version="1.0.0",
-        description="Read-only projection of local, descriptive research artifacts.",
+        title="Crowd Excess Agent API",
+        version="2.0.0",
+        description="Read-only projection of paper-agent decisions and research provenance.",
     )
     app.state.study_repository = StudyArtifactRepository(resolved_root)
+    if agent_repository is not None:
+        app.state.agent_repository = agent_repository
+    elif resolved_settings.has_supabase_public_reader:
+        assert resolved_settings.supabase_url is not None
+        assert resolved_settings.supabase_anon_key is not None
+        public_store = SupabaseAuditStore(
+            resolved_settings.supabase_url,
+            resolved_settings.supabase_anon_key,
+            writable=False,
+        )
+        app.state.agent_audit_store = public_store
+        app.state.agent_repository = AgentAuditRepository(public_store)
+    else:
+        app.state.agent_repository = AgentAuditRepository(None)
     app.include_router(_api_router(resolved_settings))
     return app
