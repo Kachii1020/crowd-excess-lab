@@ -17,6 +17,7 @@ def configuration_errors(project_root: Path) -> list[str]:
         "vercel.json",
         ".vercelignore",
         ".gitignore",
+        "package.json",
         "web/package.json",
         "web/pnpm-lock.yaml",
         "pyproject.toml",
@@ -38,8 +39,22 @@ def configuration_errors(project_root: Path) -> list[str]:
         errors.append("vercel.json must publish web/dist")
     if config.get("buildCommand") != "pnpm --dir web build":
         errors.append("vercel.json must use the locked frontend build command")
-    if config.get("installCommand") != "pnpm --dir web install --frozen-lockfile":
-        errors.append("vercel.json must use a frozen pnpm install")
+    if (
+        config.get("installCommand")
+        != "npx --yes pnpm@11.19.0 --dir web install --frozen-lockfile"
+    ):
+        errors.append("vercel.json must use pinned pnpm 11.19.0 and a frozen install")
+
+    package_path = root / "package.json"
+    try:
+        package = json.loads(package_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        errors.append("root package.json is not valid JSON")
+        package = {}
+    if package.get("packageManager") != "pnpm@11.19.0":
+        errors.append("root package.json must pin pnpm 11.19.0 for Vercel")
+    if package.get("engines", {}).get("node") != "24.x":
+        errors.append("root package.json must pin Node.js 24.x for Vercel")
 
     rewrites = config.get("rewrites")
     if not isinstance(rewrites, list) or not rewrites:

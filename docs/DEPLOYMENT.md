@@ -84,8 +84,10 @@ requests.
 
 ## 4. Create a Vercel preview
 
-The root project builds the Vite client from `web/` and routes same-origin `/api/*` requests to the
-FastAPI function in `api/index.py`. Python 3.12 and Node.js 24 are pinned by the repository.
+The root project pins pnpm 11.19.0, builds the Vite client from `web/`, and routes same-origin
+`/api/*` requests to the FastAPI function in `api/index.py`. Python 3.12 and Node.js 24 are pinned
+by the repository. The Vercel install command invokes pnpm 11.19.0 explicitly so the nested lockfile
+is read by the same package-manager version used in local development and CI.
 
 ```bash
 uv run python scripts/deploy_preflight.py --mode release

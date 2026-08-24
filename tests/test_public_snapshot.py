@@ -122,6 +122,7 @@ def _copy_deploy_configuration(destination: Path) -> None:
         "vercel.json",
         ".vercelignore",
         ".gitignore",
+        "package.json",
         "web/package.json",
         "web/pnpm-lock.yaml",
         "pyproject.toml",
