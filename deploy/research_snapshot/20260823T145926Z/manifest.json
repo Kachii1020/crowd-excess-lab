@@ -1,0 +1,2766 @@
+{
+  "schema_version": 1,
+  "run_id": "20260823T145926Z",
+  "created_at": "2026-08-23T15:03:45.868967Z",
+  "updated_at": "2026-08-23T15:08:34.959360Z",
+  "target_events": 40,
+  "disclosure_start_date": "2026-05-13",
+  "disclosure_end_date": "2026-08-10",
+  "stages": {
+    "opendart_sample": "complete",
+    "naver_attention": "complete",
+    "fsc_stock_prices": "blocked",
+    "fsc_market_indices": "blocked",
+    "outcomes": "incomplete"
+  },
+  "counts": {
+    "audited_disclosures": 889,
+    "selected_events": 40,
+    "attention_rows": 40,
+    "attention_observed": 40,
+    "stock_price_rows": 0,
+    "market_index_rows": 0,
+    "outcome_rows": 40,
+    "decision_prices_observed": 0,
+    "abnormal_h1_observed": 0
+  },
+  "artifacts": {
+    "selected_events": "selected_events.csv",
+    "attention": "attention.csv",
+    "outcomes": "outcomes.csv"
+  },
+  "snapshots": [
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260716_20260801_bcee556d9c29.json",
+      "sha256": "ca6539f288bd79c4efacc10db9030c624d0913336e35418fed418e4fefd4d878",
+      "byte_count": 829,
+      "collected_at": "2026-08-23T15:03:56.194449Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260717_20260802_6a5599755f61.json",
+      "sha256": "fc058fb203d8ad6812376745d4005870a242888b610f20f2af2caf1bbabac35c",
+      "byte_count": 833,
+      "collected_at": "2026-08-23T15:03:55.125970Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260717_20260802_8502753a1cf0.json",
+      "sha256": "f576e8635ca7c35c37b492d7fbb484583cfde0b673c965b1198b8c60aa3d752c",
+      "byte_count": 832,
+      "collected_at": "2026-08-23T15:03:54.919655Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260717_20260802_b1d25d6773d6.json",
+      "sha256": "7a952cfbf0ad1c587eadd27f870102a3d51f6781e9ad40b883d70e06a67ccdf2",
+      "byte_count": 828,
+      "collected_at": "2026-08-23T15:03:55.935011Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260717_20260802_f603fcf56163.json",
+      "sha256": "1315ddcb4d21a0f5e6ed97252a72d18350531fd623797c5b0455aeefe6a255ea",
+      "byte_count": 844,
+      "collected_at": "2026-08-23T15:03:55.672662Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260720_20260805_036ae849f665.json",
+      "sha256": "def38d29b1566f86fe0f213413479502091ce06a765f54d5449b73a22dfd191b",
+      "byte_count": 807,
+      "collected_at": "2026-08-23T15:03:52.685251Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260720_20260805_352afad517aa.json",
+      "sha256": "8733eea065ba1b03ba0205a8440c4ec05528edd14b7dd13dd86c676eb1275f6b",
+      "byte_count": 837,
+      "collected_at": "2026-08-23T15:03:53.725438Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260720_20260805_6b127a6839cf.json",
+      "sha256": "e9caedc8c328c78f227c3809ddcf6cd0fe506496af2dbd8b12e846bcf647fa51",
+      "byte_count": 843,
+      "collected_at": "2026-08-23T15:03:53.200256Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260720_20260805_764db634c73e.json",
+      "sha256": "39b1e3ab05fd6973020daa203d21a1f9a8b50a03581759c1c901848dece71047",
+      "byte_count": 832,
+      "collected_at": "2026-08-23T15:03:52.954587Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260720_20260805_7a1909917554.json",
+      "sha256": "5b057de18ea39a77d87b22a9350a71e1dd43f32603f34c2beb9ebc7ae0c8f6be",
+      "byte_count": 826,
+      "collected_at": "2026-08-23T15:03:54.686394Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260720_20260805_a3a666b1d198.json",
+      "sha256": "3f0f6b6495b832d2a3e03189d88110de35a6c1a06f64700ae58b0f2bfa9514a8",
+      "byte_count": 843,
+      "collected_at": "2026-08-23T15:03:54.180152Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260720_20260805_af3aac8e59a6.json",
+      "sha256": "7429dcfcf1fd010377162e10dd1cab12e1200b33a89d4505f2d76efc02cf8eb4",
+      "byte_count": 855,
+      "collected_at": "2026-08-23T15:03:53.954132Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260720_20260805_ef810716d529.json",
+      "sha256": "d6a177381e849f4d4147f1c899779112ec0e6f3d2e689078ce9912709a616709",
+      "byte_count": 828,
+      "collected_at": "2026-08-23T15:03:53.465819Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260720_20260805_ff3118428112.json",
+      "sha256": "985633dc276629ae3fcc25c4f4a2364afa611818331d29c353664a61a13a7f0d",
+      "byte_count": 841,
+      "collected_at": "2026-08-23T15:03:54.417901Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260721_20260806_12ce294a4828.json",
+      "sha256": "07a040b42b1e8d7b5cdbd672664a987188a2066ad4fe6df4510ea0246876699d",
+      "byte_count": 820,
+      "collected_at": "2026-08-23T15:03:51.739400Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260721_20260806_329b85a482e2.json",
+      "sha256": "863b100341bdfc12466cc975f30dbb3c1f237b89d5443e1a600777d42ac87dab",
+      "byte_count": 826,
+      "collected_at": "2026-08-23T15:03:50.697304Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260721_20260806_378e340b446a.json",
+      "sha256": "7ddb97f838c8976b5405909b1772d6303f4fc857405301b7669f2f23dda073c1",
+      "byte_count": 823,
+      "collected_at": "2026-08-23T15:03:52.141842Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260721_20260806_7496253c6872.json",
+      "sha256": "ef4d1548896ec42d1942776fe9ad17ab1c2c9e891c05343db9be7050efe84e8e",
+      "byte_count": 824,
+      "collected_at": "2026-08-23T15:03:51.227470Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260721_20260806_85dd8b304a1b.json",
+      "sha256": "32944a0977e6ea8c98ee4beab6fc1eb53be3f2bf132604a8662176e5773e16f2",
+      "byte_count": 842,
+      "collected_at": "2026-08-23T15:03:51.451728Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260721_20260806_b24d208dfbd4.json",
+      "sha256": "70a3ee155db3c21014e210b3a0ea0a4f113df55f6ba920364f52d5bccf8db172",
+      "byte_count": 834,
+      "collected_at": "2026-08-23T15:03:51.925503Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260721_20260806_b8368efe8875.json",
+      "sha256": "80c9cb66ee761ed6e96ad3d71ca5b9456645e63525d34f30455ca762a7fc7228",
+      "byte_count": 843,
+      "collected_at": "2026-08-23T15:03:52.416886Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260722_20260807_5d184c7e45e8.json",
+      "sha256": "6c86c7ad535d9a9d17518971bafb2a34dafc15870efc20edbed12bdf9d193ca8",
+      "byte_count": 834,
+      "collected_at": "2026-08-23T15:03:50.426353Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260723_20260808_1a663af72e37.json",
+      "sha256": "c786915749a6e64d901fe7ba634418aeb20dc0b3de3f9ef48652d29068ecc47e",
+      "byte_count": 837,
+      "collected_at": "2026-08-23T15:03:48.985807Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260723_20260808_335e5507a242.json",
+      "sha256": "3aabf0ddb40c85ae75c947008a0ce60d731df0ba84015505b439c0a3203938c2",
+      "byte_count": 829,
+      "collected_at": "2026-08-23T15:03:50.227151Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260723_20260808_7db989ae480a.json",
+      "sha256": "8008174e57ec1401c631d3cca9d80fdc022f74515436d41d4669c4ffafbe485f",
+      "byte_count": 829,
+      "collected_at": "2026-08-23T15:03:49.249306Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260723_20260808_8c9afdba5b7f.json",
+      "sha256": "fa1ef506fe5729bfe8a2dd78c0fe0453ad53fd84516ebd8ad5869d068510b68f",
+      "byte_count": 830,
+      "collected_at": "2026-08-23T15:03:49.752863Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260723_20260808_c4fa30f36671.json",
+      "sha256": "2cabd8f06e43bffffd5dc2ea55d001d310759c83622881ca14d9aa645c405f59",
+      "byte_count": 820,
+      "collected_at": "2026-08-23T15:03:49.500147Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260724_20260809_04fbfb6e95b5.json",
+      "sha256": "de75170ced44e41a6216a0c71add98f0474ba50dab47a5cc51944b48e1140fc1",
+      "byte_count": 825,
+      "collected_at": "2026-08-23T15:03:48.703743Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260724_20260809_56f94b4dd3e2.json",
+      "sha256": "88c52401913899a30a541734c8203db47cd9d01786c50f6ce25edc972f7a78f8",
+      "byte_count": 822,
+      "collected_at": "2026-08-23T15:03:48.461147Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260724_20260809_d5eaa388ec1d.json",
+      "sha256": "de357a9b46f5778a78ab19daa21fcfb530c3a08aabfa2364bba284458d93b7ab",
+      "byte_count": 851,
+      "collected_at": "2026-08-23T15:03:48.262835Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260727_20260812_36e57d317f3b.json",
+      "sha256": "ebcdb50b9f613727955d807596a409f952cac887e5efd1aef9bb26f6e98f4e27",
+      "byte_count": 842,
+      "collected_at": "2026-08-23T15:03:47.564817Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260727_20260812_6e5ae499144b.json",
+      "sha256": "a1829455233a98a2127c5c89c737212decb9953840b8c7fdfe1bc2a11b26f790",
+      "byte_count": 835,
+      "collected_at": "2026-08-23T15:03:46.579178Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260727_20260812_79291174dc9e.json",
+      "sha256": "2c438ea4a7945da5ee6472e37db44b219434ced501d3c5daf93ae96ed5d335f8",
+      "byte_count": 844,
+      "collected_at": "2026-08-23T15:03:48.069868Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260727_20260812_a1b100c40774.json",
+      "sha256": "a3675d0c38e62aee4c7d94655db823bf1fc19f217a5912b996ce398c06c1e0c9",
+      "byte_count": 853,
+      "collected_at": "2026-08-23T15:03:46.346323Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260727_20260812_f484d2723b47.json",
+      "sha256": "5c6c37e5bdeef7ccf4bdc426b2f7cdd57a09d4c1e12799aea16e35dd00427b53",
+      "byte_count": 824,
+      "collected_at": "2026-08-23T15:03:47.805165Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260727_20260812_f4b904e8f85c.json",
+      "sha256": "550562540bc6efad276789919d09ac7d5bcafa4825c5877d33a012e54e0e3e72",
+      "byte_count": 832,
+      "collected_at": "2026-08-23T15:03:47.071478Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260727_20260812_fdc459ebc526.json",
+      "sha256": "52d3f1b5b603cc6867be81aa2d87e64be8c1bbe726c5303858d72f40338d6eec",
+      "byte_count": 834,
+      "collected_at": "2026-08-23T15:03:47.328249Z"
+    },
+    {
+      "source": "naver_search_trend",
+      "relative_path": "naver/trend_20260727_20260812_ff4a2ee34784.json",
+      "sha256": "752fdb928d1a49f53bf18d576060f6eea8ad3fba4fe24bdf640d3d8433b23846",
+      "byte_count": 828,
+      "collected_at": "2026-08-23T15:03:46.805963Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260512_20260809_I001_p1.json",
+      "sha256": "3975a3481a7ca6f916b3af73b4d1a4c2b688e694cfa49547f286935d6eeb3374",
+      "byte_count": 25996,
+      "collected_at": "2026-08-23T14:59:27.568137Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260512_20260809_I001_p2.json",
+      "sha256": "da76d97531d7693069c54ddeee6deedacf463faf7c185b3e56be371ede29d35f",
+      "byte_count": 25122,
+      "collected_at": "2026-08-23T14:59:28.416944Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260512_20260809_I001_p3.json",
+      "sha256": "bcf7762a5a965f55f8ff6bc60a036ef3b58ce9fa69f6a82fac9d8f2b7b6a8e74",
+      "byte_count": 24745,
+      "collected_at": "2026-08-23T14:59:29.743337Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p1.json",
+      "sha256": "eac2d553ec643e63e8ce2c4b8941ab46aecca1b27995006fcb7f39f7ef0ae370",
+      "byte_count": 25348,
+      "collected_at": "2026-08-23T15:00:04.520773Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p10.json",
+      "sha256": "fd979cda916f24e133023bf4d9b873d8cbb6e9d02f41324ef2c0e3d3cdacebff",
+      "byte_count": 25211,
+      "collected_at": "2026-08-23T15:00:21.870818Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p11.json",
+      "sha256": "196456c3be92cf75297e3732507d1881dd6652c84d3e0e1645f476b3c248bcbf",
+      "byte_count": 25263,
+      "collected_at": "2026-08-23T15:00:23.353824Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p12.json",
+      "sha256": "a5a0ed3b79cf5870c500c8f088e97f6680244285cbd8bd229c878f3b42e434c2",
+      "byte_count": 25879,
+      "collected_at": "2026-08-23T15:00:25.484329Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p13.json",
+      "sha256": "3af844ac463054ecb14313935e72e9b0662adcb4f8e7e162807642851767667d",
+      "byte_count": 25450,
+      "collected_at": "2026-08-23T15:00:26.970893Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p14.json",
+      "sha256": "4cadfc6b7cc94d9acfd3147448526805d648e37e5faf9f5940189cbfc2466cef",
+      "byte_count": 25551,
+      "collected_at": "2026-08-23T15:00:28.960744Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p15.json",
+      "sha256": "777f04fe21442aaba95c144ef38446314ee38c722c1d56792bf08889af962471",
+      "byte_count": 25090,
+      "collected_at": "2026-08-23T15:00:30.496235Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p16.json",
+      "sha256": "1e382e5d39d95f3f4c66f0748d87b594ef963b355ea0c8db60feb4d6cc48ac38",
+      "byte_count": 25616,
+      "collected_at": "2026-08-23T15:00:32.830177Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p17.json",
+      "sha256": "8d4c88c3dbeab5070d44a2c7f416157825187f668c932a98a15afbd7c507375d",
+      "byte_count": 25922,
+      "collected_at": "2026-08-23T15:00:34.773696Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p18.json",
+      "sha256": "24399113b157c79bbda3b1a5621c82d03a4397eb8519eb2c544c7fbdfe8e7d93",
+      "byte_count": 25203,
+      "collected_at": "2026-08-23T15:00:36.326560Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p19.json",
+      "sha256": "c082605fab4bd36d4e710dd71edc04c7fc0a8cd38921cf82ace44ead159a9045",
+      "byte_count": 25054,
+      "collected_at": "2026-08-23T15:00:38.014214Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p2.json",
+      "sha256": "551a89bcc94a7fb0f4cb718c1f4f8a6e04025168fdd8ec9c4319fa6c0f381ea2",
+      "byte_count": 26027,
+      "collected_at": "2026-08-23T15:00:06.517552Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p20.json",
+      "sha256": "ed39d3fe188201011fe116da46f328efe9f03ff942f284e7a4e0bbb8df3fedbb",
+      "byte_count": 25101,
+      "collected_at": "2026-08-23T15:00:39.613272Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p21.json",
+      "sha256": "c3e0b3f2925018e30c8713c69577ef398683de0246556425fa2ab445bcf47231",
+      "byte_count": 25281,
+      "collected_at": "2026-08-23T15:00:41.582026Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p22.json",
+      "sha256": "c655494f26c6782a3a3fcabb7cfc49cde0cde2e0648e58c6775d4b0be12b2ca8",
+      "byte_count": 25413,
+      "collected_at": "2026-08-23T15:00:42.905519Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p23.json",
+      "sha256": "24f705493945ce34d49a75278309d8647a758fdf5f57d284b71ea5b9f3992709",
+      "byte_count": 24853,
+      "collected_at": "2026-08-23T15:00:44.778338Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p24.json",
+      "sha256": "49866c1f4813a98ddc77f7a28f8191839744408a09eb36f67ad1526c2cb28339",
+      "byte_count": 25491,
+      "collected_at": "2026-08-23T15:00:46.826554Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p25.json",
+      "sha256": "ffe0a14a39fc1fc0456e3e2734f85be8123d4a63ae3085fc4badb88d17a35575",
+      "byte_count": 25180,
+      "collected_at": "2026-08-23T15:00:48.542792Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p26.json",
+      "sha256": "2e61faf17cd405be5e1b9dc1d362652261ca33a2df853aca50add63aeee687cb",
+      "byte_count": 25749,
+      "collected_at": "2026-08-23T15:00:50.086948Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p27.json",
+      "sha256": "609cfa6022e684b64d51b4c4dda8768bdda484e2aa891a06965276fbbf6565eb",
+      "byte_count": 25270,
+      "collected_at": "2026-08-23T15:00:51.751693Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p28.json",
+      "sha256": "4c490470afc93330f549bf2b05f0645124ae1fb9b0c3f493e0d8b151d5c23664",
+      "byte_count": 25709,
+      "collected_at": "2026-08-23T15:00:53.242747Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p29.json",
+      "sha256": "57b87225ae3884195f7b6a6c3f61b4e9d9970a8023800828fc9130dcccd747d2",
+      "byte_count": 26055,
+      "collected_at": "2026-08-23T15:00:55.096883Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p3.json",
+      "sha256": "33a6948bfb0750daad234135ef47cf9a754c9e5ad255e32798b65ef0780af76c",
+      "byte_count": 25159,
+      "collected_at": "2026-08-23T15:00:08.561051Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p30.json",
+      "sha256": "41d6c06b7bba407c6c79c771fcae7ce31cfc376ce476488156b8bda22b446a50",
+      "byte_count": 25865,
+      "collected_at": "2026-08-23T15:00:57.154350Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p31.json",
+      "sha256": "07c26ec706b1b0325a61f6eb82f83a35f6540bd9b3fd31b7287dc8e8c5b978b6",
+      "byte_count": 24819,
+      "collected_at": "2026-08-23T15:00:59.126591Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p32.json",
+      "sha256": "f0217313f81b78c09319e0ff4a7a4d72faf2299f943ece118937913471491c46",
+      "byte_count": 24929,
+      "collected_at": "2026-08-23T15:01:01.388594Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p33.json",
+      "sha256": "15cbb7a09f1748084a680319b10c2c3ef091e1dff21b062138e5d9aa9961b210",
+      "byte_count": 25479,
+      "collected_at": "2026-08-23T15:01:03.530825Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p34.json",
+      "sha256": "e8b49acffeea0eae7680f2927df96fbfa6cdd0776b9e11acba31f8ee55beb767",
+      "byte_count": 25100,
+      "collected_at": "2026-08-23T15:01:05.747225Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p35.json",
+      "sha256": "242a784374c0e41066e8aed03c1fe8e163fa49331dcab011cf99f2e9d73c3b2f",
+      "byte_count": 25228,
+      "collected_at": "2026-08-23T15:01:07.723027Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p36.json",
+      "sha256": "d746f97d942305b26c05466f5338e08ed77647507c58a1eab3bb685d364b2c19",
+      "byte_count": 25337,
+      "collected_at": "2026-08-23T15:01:09.775671Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p37.json",
+      "sha256": "4b7dc7160c665e95faa83a64c0dca8a6454879c17d65dea72803317d8fd2612b",
+      "byte_count": 25257,
+      "collected_at": "2026-08-23T15:01:11.650161Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p38.json",
+      "sha256": "ab31013baa0a41f632226b0d3670e7055ca70e4d6dab188d82ec3786d8b7b8f7",
+      "byte_count": 25460,
+      "collected_at": "2026-08-23T15:01:14.018424Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p39.json",
+      "sha256": "5b47ab4f4314a0a8b036b176f1f42adc3af026380aac2abde99f6ca213e71e53",
+      "byte_count": 25649,
+      "collected_at": "2026-08-23T15:01:15.853521Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p4.json",
+      "sha256": "483189bdc450327cc1c9b49136885681028d70218fc1fa0a4b26cf2fed5119ed",
+      "byte_count": 24736,
+      "collected_at": "2026-08-23T15:00:10.765202Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p40.json",
+      "sha256": "549c48d05021b638df7918dd45dae4ba07057c3f44756532e5754b637eb1bbb0",
+      "byte_count": 25313,
+      "collected_at": "2026-08-23T15:01:17.874921Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p41.json",
+      "sha256": "47844ccf2391c4cc2267355dc76abd7790c0addd3d1db4df0c85cc465362f6da",
+      "byte_count": 25996,
+      "collected_at": "2026-08-23T15:01:19.170845Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p42.json",
+      "sha256": "a5d321a926524537e948235ba4ffcb1a0b42c1ff3fcc51539a4c5ca7c7aa7978",
+      "byte_count": 25569,
+      "collected_at": "2026-08-23T15:01:20.910824Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p43.json",
+      "sha256": "7b76a6fd9c16eead078c2ca5edfcc0704112118e06bd94161c308340c35f63f8",
+      "byte_count": 25374,
+      "collected_at": "2026-08-23T15:01:22.562505Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p44.json",
+      "sha256": "b4d164aa61d9f9443f504f34851261b20bd7837b13945f3e5d3d81ec8747e562",
+      "byte_count": 25722,
+      "collected_at": "2026-08-23T15:01:24.019861Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p45.json",
+      "sha256": "dd6f1b30de3fd2b013b627511e5b7d026e493d590b6290aa96d411ba0d7bf7f1",
+      "byte_count": 25563,
+      "collected_at": "2026-08-23T15:01:25.464236Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p46.json",
+      "sha256": "87a8d07f151261d6ab229fcfa9d1faebe642d9e7f3126b14b471a695494d47f2",
+      "byte_count": 25399,
+      "collected_at": "2026-08-23T15:01:26.722149Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p47.json",
+      "sha256": "c7a8125c4c5159ebf946588a8259874f57997c6bbb6f6eb06b4d0b8df6ab0f10",
+      "byte_count": 25480,
+      "collected_at": "2026-08-23T15:01:28.303674Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p48.json",
+      "sha256": "ab01e838206000ea241c4ba76c3f74bfb9bc3ebfd84b031bcbaa7eeed398b413",
+      "byte_count": 25704,
+      "collected_at": "2026-08-23T15:01:29.742151Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p49.json",
+      "sha256": "eb01e9da7c35ee4fef351543634a637a94328ce8704cefcda8ead897578bfeea",
+      "byte_count": 25362,
+      "collected_at": "2026-08-23T15:01:31.882225Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p5.json",
+      "sha256": "fd5fdd773bd351db665ec368af1bea0d10e6a11fbf01ded60f9063d2ec4b1610",
+      "byte_count": 26217,
+      "collected_at": "2026-08-23T15:00:12.710851Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p50.json",
+      "sha256": "eeaa246bfa4f7b1d55fa5da352f6331701bd0ae890bd609b1a46a3a90d219944",
+      "byte_count": 25512,
+      "collected_at": "2026-08-23T15:01:33.503427Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p51.json",
+      "sha256": "56d70f45e068af54de1e3c207e4edbe9012ca765b12b5b161bb7ed388ba36a13",
+      "byte_count": 25665,
+      "collected_at": "2026-08-23T15:01:34.987143Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p52.json",
+      "sha256": "86202c04802d8b9f571081372e1733bd666e5733787e44204bde8b74d65bcd4c",
+      "byte_count": 25197,
+      "collected_at": "2026-08-23T15:01:36.234878Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p53.json",
+      "sha256": "d7277f3ed2781181a8238986bb497bedc163a72c60522408ba3df16fa3456a59",
+      "byte_count": 25327,
+      "collected_at": "2026-08-23T15:01:37.675580Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p54.json",
+      "sha256": "9d9f2d77685a42f552724a0bd092e7154fa42e07a1e4c900fd62cb03a50041e5",
+      "byte_count": 25307,
+      "collected_at": "2026-08-23T15:01:39.182851Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p55.json",
+      "sha256": "f1e2c0585d85c43224ca9b29c40d131b515d7605af51a725de07a525d211c853",
+      "byte_count": 25290,
+      "collected_at": "2026-08-23T15:01:40.326383Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p56.json",
+      "sha256": "71dfc240098253afca7425197dcf601bbc2056e512d301743be79bd96803cce4",
+      "byte_count": 25806,
+      "collected_at": "2026-08-23T15:01:41.970344Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p57.json",
+      "sha256": "31c4c806a9d388730231e1c7e67da63f31007469343dd82ac4b2650eee7f733c",
+      "byte_count": 25405,
+      "collected_at": "2026-08-23T15:01:43.545935Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p58.json",
+      "sha256": "e7badea3331bab44fcf92a0f9c70960a1297e896b718bb278e5338a370956243",
+      "byte_count": 25324,
+      "collected_at": "2026-08-23T15:01:45.386690Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p59.json",
+      "sha256": "4fb450d2d56eab10c5e957dcb53a750e41fa2cf2069b1bad0b486c5a9231f369",
+      "byte_count": 25284,
+      "collected_at": "2026-08-23T15:01:47.769596Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p6.json",
+      "sha256": "6904190414b8fa2d0213f406be62fdd0df759780b8dd251062a2969130b30b43",
+      "byte_count": 25402,
+      "collected_at": "2026-08-23T15:00:14.161112Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p60.json",
+      "sha256": "047abbb835ef24b85d9639ff726aa231bd506028cd8b73c3b9c58e5bcb2724b4",
+      "byte_count": 25439,
+      "collected_at": "2026-08-23T15:01:49.313381Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p7.json",
+      "sha256": "9f90cda198b62582ef74a34c6531ebdfa5b453f72bd2fb800559d8cf28cdf295",
+      "byte_count": 25865,
+      "collected_at": "2026-08-23T15:00:16.127439Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p8.json",
+      "sha256": "d89147c422a2800ca2bbf9bd9518f4ae0a84a65832c6ccc6ceac76c5f9d44eb7",
+      "byte_count": 25601,
+      "collected_at": "2026-08-23T15:00:18.260970Z"
+    },
+    {
+      "source": "opendart_disclosure_list",
+      "relative_path": "opendart/list_20260513_20260810_I001_p9.json",
+      "sha256": "859ea467357b331de7e6e297183f3e08bc024e9032bd7ebbf3071cb54759012f",
+      "byte_count": 25451,
+      "collected_at": "2026-08-23T15:00:19.677804Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260611800236.zip",
+      "sha256": "a66ad40a17ba57233297120ded41f860c890b1d11f5366b964bb1168349da428",
+      "byte_count": 1900,
+      "collected_at": "2026-08-23T15:01:49.742562Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260611800255.zip",
+      "sha256": "f35ad4304ca4d91596bc58d2ed2a6b4d6b65a2a2ad0aa20253b9201683058362",
+      "byte_count": 2186,
+      "collected_at": "2026-08-23T15:01:49.657333Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260611800770.zip",
+      "sha256": "428294461fa6d58f4551cb8d2356c7e0022de7ae8172af0d71c988e8a9dad021",
+      "byte_count": 1954,
+      "collected_at": "2026-08-23T15:01:49.487628Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260612800170.zip",
+      "sha256": "b88ed48a1f6bc187f6e3d124df4cc2117e41c567f49f008e0cce3df4937e7c0f",
+      "byte_count": 1840,
+      "collected_at": "2026-08-23T15:01:49.395497Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260612801030.zip",
+      "sha256": "f39a24f1ce71a2abde5554ca2dba854dbd027360677a10f86e4ad23655e3105d",
+      "byte_count": 1996,
+      "collected_at": "2026-08-23T15:01:46.856042Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260612900492.zip",
+      "sha256": "88cda7b821ebfa5583b266a5723faff4911f83e61e8032226aa9cbcb069f6a7f",
+      "byte_count": 2091,
+      "collected_at": "2026-08-23T15:01:48.093124Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260612900559.zip",
+      "sha256": "3691685630f7f8323862c75715b39704ba97f7f5abbb5239d8e58536d0a0243f",
+      "byte_count": 2132,
+      "collected_at": "2026-08-23T15:01:48.007957Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260612900603.zip",
+      "sha256": "ad55cb142bb09ecf1914534d7432d6d0b9451d4d63f4e31ce6b2b63c0307b8a2",
+      "byte_count": 2101,
+      "collected_at": "2026-08-23T15:01:47.851580Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260612901084.zip",
+      "sha256": "8ad3de4f4f7349fe38ef4b234f01219f6dafd5a46b5d5f6e92c9ccac01019009",
+      "byte_count": 2231,
+      "collected_at": "2026-08-23T15:01:46.770259Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260615800297.zip",
+      "sha256": "e8341f49d321fed33b43afd4d4dc5a98dba81f47a06db7df682eb7693ad800ee",
+      "byte_count": 1949,
+      "collected_at": "2026-08-23T15:01:46.511290Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260615800352.zip",
+      "sha256": "a2d9cfa952d8a5a591fe33d38240dc72bc59ca9ccf6cabf3cf3675432b66faf6",
+      "byte_count": 1950,
+      "collected_at": "2026-08-23T15:01:46.008651Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260615800420.zip",
+      "sha256": "df9689f99638366c5b2695001c9bd44e7fa38e081d7e423f223f02fa910c2aa2",
+      "byte_count": 2289,
+      "collected_at": "2026-08-23T15:01:45.789049Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260615800697.zip",
+      "sha256": "0b68cd87f218fac2ac6e222f0cdeb19887d67fcd99481605e0d4f97691d7bb65",
+      "byte_count": 2090,
+      "collected_at": "2026-08-23T15:01:43.910579Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260615900184.zip",
+      "sha256": "45b4cb9e3ae0f91dbb5d53ecd04798aecc2a133b6f042056bb33b9e7a3f7f610",
+      "byte_count": 2215,
+      "collected_at": "2026-08-23T15:01:46.687660Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260615900219.zip",
+      "sha256": "3fa3e0011a1efcf4485f32517ef2b6afb127aba7080e205966c0de1b472ee6a2",
+      "byte_count": 2472,
+      "collected_at": "2026-08-23T15:01:46.597830Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260615900301.zip",
+      "sha256": "2583bf09d56fde085443576804285a32178977c815fafb458d7cfbc61bf156a1",
+      "byte_count": 1948,
+      "collected_at": "2026-08-23T15:01:46.099584Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260615900381.zip",
+      "sha256": "5aae061975a7b599c578d2ac6ff903a2d40424e36f0ad4a1ffb93e2f9b2db5b8",
+      "byte_count": 2061,
+      "collected_at": "2026-08-23T15:01:45.911010Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260615900440.zip",
+      "sha256": "512c3b0d8e276ea51b4b5d99e3f9c33796edf593284d48b3af86b5a825e8c0fb",
+      "byte_count": 2396,
+      "collected_at": "2026-08-23T15:01:45.675880Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260615900536.zip",
+      "sha256": "8357cb83d60b0b4feeedc59a9fcc47ff281fd9435ad46dc53ceb4011f413918b",
+      "byte_count": 2144,
+      "collected_at": "2026-08-23T15:01:44.337312Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260615900675.zip",
+      "sha256": "0df97487ba091e3b406a9e8918197bd03e312995bc7b9166bf34c63b590e07b2",
+      "byte_count": 2154,
+      "collected_at": "2026-08-23T15:01:43.816190Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260615900756.zip",
+      "sha256": "9a8c115f1cc94ff81f28298aeead25c554a97a62d53b09e270e9ed7d2b4918c2",
+      "byte_count": 1981,
+      "collected_at": "2026-08-23T15:01:43.642650Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260616800284.zip",
+      "sha256": "cb78452ce5699e972b46f48978c16dd432d4f11fb75db219cf4cb97ab27293aa",
+      "byte_count": 2373,
+      "collected_at": "2026-08-23T15:01:42.399566Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260616900207.zip",
+      "sha256": "1cb5b30b29f6ad15c2404e13fde94ac55b5bfe26480f8eae969db611f2395d58",
+      "byte_count": 2022,
+      "collected_at": "2026-08-23T15:01:42.490262Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260616900384.zip",
+      "sha256": "317e5c0d262cdad51614089042ba7de2efb38e87cf0db5109f2d9549a5f6c800",
+      "byte_count": 2137,
+      "collected_at": "2026-08-23T15:01:42.314285Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260616900395.zip",
+      "sha256": "99f897997c22a67f81b8d91a41cbdb2a7602c145ffeb339bd3698f515dc2acfe",
+      "byte_count": 2189,
+      "collected_at": "2026-08-23T15:01:42.150522Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260616900494.zip",
+      "sha256": "39d78f138b323a576e4431c58faef3a63cfbc855b851263ee8b253fd4f611dea",
+      "byte_count": 2042,
+      "collected_at": "2026-08-23T15:01:42.062468Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260617800062.zip",
+      "sha256": "b8ceccc00ef0e012c41d3529ca5f87895e33b25d00a159a7179b7782121e21b6",
+      "byte_count": 2031,
+      "collected_at": "2026-08-23T15:01:40.955504Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260617800094.zip",
+      "sha256": "ddbc3b380596e62d8f263afba33ac4524e38e0443f546913207ca49151219111",
+      "byte_count": 1898,
+      "collected_at": "2026-08-23T15:01:40.853973Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260617800109.zip",
+      "sha256": "4cdf368732fa0c119c876293ab54a6f4b21e0ac05287bde56217f79932ac6982",
+      "byte_count": 1921,
+      "collected_at": "2026-08-23T15:01:40.667799Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260617800388.zip",
+      "sha256": "531d419a48502a2a6285b6126b9bcf5daf99f3d0575e09d94aef326d834dd6d2",
+      "byte_count": 1969,
+      "collected_at": "2026-08-23T15:01:40.513759Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260617900088.zip",
+      "sha256": "bf82fdbceacf0b7f6a236ec6015572a119f89919b44c68e0244f7a95d41b227a",
+      "byte_count": 2118,
+      "collected_at": "2026-08-23T15:01:40.764198Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260617900488.zip",
+      "sha256": "68da7a9dca3b4e439dbaf9157214c73b2a61db60f549da37a461f08041b1443f",
+      "byte_count": 2010,
+      "collected_at": "2026-08-23T15:01:40.422608Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260618800546.zip",
+      "sha256": "2dcaba982ba25e7d7201f6d5c36f76febc9d4de96d0a41d86c9fcca21cb43150",
+      "byte_count": 1965,
+      "collected_at": "2026-08-23T15:01:39.272293Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260618900461.zip",
+      "sha256": "01e41aa0093a647abc9959e6165049c654aa6507a022abdb4ee47d7f6aabeb60",
+      "byte_count": 1961,
+      "collected_at": "2026-08-23T15:01:39.367350Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260619800001.zip",
+      "sha256": "b4d6ac67802f9c01c484a3092d6f71f053449d748d06879b8a624aae53b0fd0b",
+      "byte_count": 2056,
+      "collected_at": "2026-08-23T15:01:38.144697Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260619800474.zip",
+      "sha256": "3aa50156427cb30b782950814d7ae140d313be129eacabc6b6ee515b9055acea",
+      "byte_count": 2412,
+      "collected_at": "2026-08-23T15:01:37.935776Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260619800907.zip",
+      "sha256": "706f5ccc946436ebd5069928bf54d6d2067545dabceef10159545a48bbb08d8a",
+      "byte_count": 2321,
+      "collected_at": "2026-08-23T15:01:36.652555Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260619900494.zip",
+      "sha256": "f50647ff3dd7a04aa8e29d73a6177ae5ad5d64d3e8ba85e5bf00e11cd17d0d19",
+      "byte_count": 2070,
+      "collected_at": "2026-08-23T15:01:38.045773Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260619900525.zip",
+      "sha256": "a0457505e24fe9a5116e12a7a053eb0d41ad9bbd00dbac2d2bc73ccb45ff8c36",
+      "byte_count": 2280,
+      "collected_at": "2026-08-23T15:01:37.855166Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260619900580.zip",
+      "sha256": "86bff6c4d2bb79daebe6055144e769a913267890f0d34f1ab92d1d8daef7b30e",
+      "byte_count": 2232,
+      "collected_at": "2026-08-23T15:01:37.756512Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260622800225.zip",
+      "sha256": "78c8f58e34c760f3794e38d319d14d399ca9ab056ef2cc8f2aea6505622f952a",
+      "byte_count": 1825,
+      "collected_at": "2026-08-23T15:01:36.567429Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260622800670.zip",
+      "sha256": "6df65d870aea433642931b032481960c4aab1f76ead892a632ce17a57c9ac009",
+      "byte_count": 2078,
+      "collected_at": "2026-08-23T15:01:35.083035Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260622800884.zip",
+      "sha256": "6bfa88d181d170f02c87cf82e0c7cfe70308caf9aec2691413499bd28568d543",
+      "byte_count": 2339,
+      "collected_at": "2026-08-23T15:01:33.927362Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260622900231.zip",
+      "sha256": "745b8da2b5f2e40f9f2db0ff3900c23cbf476e6f3c6169e8f543db5926366d7b",
+      "byte_count": 2433,
+      "collected_at": "2026-08-23T15:01:36.471937Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260622900239.zip",
+      "sha256": "fedef2046e1401f0972698494f3bc7ed0d42b853d0eb75082c08de4fba1cb762",
+      "byte_count": 1962,
+      "collected_at": "2026-08-23T15:01:36.332177Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260622900311.zip",
+      "sha256": "3b7f4991eef932db3b90b4422a8d30dca1e091dae60070eed8e0d6b3ed0d953c",
+      "byte_count": 2207,
+      "collected_at": "2026-08-23T15:01:35.178332Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260623800109.zip",
+      "sha256": "00f8a88e23d7591ed971b4b957b23be6a53776d322e86354e3a8f55a2e7fd0fb",
+      "byte_count": 1912,
+      "collected_at": "2026-08-23T15:01:33.850255Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260623800231.zip",
+      "sha256": "f25a1906bb8f6513c1625669185f76ebbb1351d4a1a0bd9b13bdc8b959bfe978",
+      "byte_count": 1984,
+      "collected_at": "2026-08-23T15:01:33.665967Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260623800501.zip",
+      "sha256": "acb1a356859acbc8ea95a4c9eeab16c02b5d93d0b093f7d87959213bd517efa4",
+      "byte_count": 1912,
+      "collected_at": "2026-08-23T15:01:32.463172Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260623800537.zip",
+      "sha256": "4e2348749b07953f6cfa5b72c9d622b984ab33a6770a2934916c2e12f6bda8a5",
+      "byte_count": 1708,
+      "collected_at": "2026-08-23T15:01:32.281765Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260623800546.zip",
+      "sha256": "cb4719e59216dc5cbb1b4728a847cefc65c2d054df8fed59aea3ce6b961a71eb",
+      "byte_count": 2187,
+      "collected_at": "2026-08-23T15:01:32.145548Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260623800549.zip",
+      "sha256": "843bb7847b34a555aefc8e876d43083d54f2f42b645abcfd92680fb6ba004544",
+      "byte_count": 2176,
+      "collected_at": "2026-08-23T15:01:32.373865Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260623800574.zip",
+      "sha256": "d6ec4d924aa613124a16b261455bf7b42f0e9c5aa2032e217a2b9482aaeeaf8a",
+      "byte_count": 1709,
+      "collected_at": "2026-08-23T15:01:32.063857Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260623900188.zip",
+      "sha256": "6afe774fe74d7546f779f15c3b676658ac92aa1fb7c5b339cea08f07de100c24",
+      "byte_count": 2066,
+      "collected_at": "2026-08-23T15:01:33.751697Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260623900281.zip",
+      "sha256": "5562bad958a1084817a3bb6fd37669e943c4b21df96ad3a344ef53d447d4ef31",
+      "byte_count": 2216,
+      "collected_at": "2026-08-23T15:01:33.584385Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260624900397.zip",
+      "sha256": "a6b752ecea08c9b7741e98d5484c1ca7da39422c767c7281a408ea237e373e20",
+      "byte_count": 2199,
+      "collected_at": "2026-08-23T15:01:31.976526Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260624900759.zip",
+      "sha256": "3def113b78bac989f15a815c489ed96775099f1f745b588ebb56486fa37675c2",
+      "byte_count": 2123,
+      "collected_at": "2026-08-23T15:01:30.707045Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260624900828.zip",
+      "sha256": "8c1df9a19b29c572760f6d517e8f31d87e72230a3c3a6a6711dba3b2f56707f7",
+      "byte_count": 2130,
+      "collected_at": "2026-08-23T15:01:30.578945Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260625800190.zip",
+      "sha256": "30d79b0c425f6c49582e422bc05647db60a5f168eac726de4419e84e9052e14a",
+      "byte_count": 1792,
+      "collected_at": "2026-08-23T15:01:30.401075Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260625800507.zip",
+      "sha256": "7f0a6b4f184bb66f5a1fc2e8fa46164a7dce789470c447ce179203e8a1c23370",
+      "byte_count": 1927,
+      "collected_at": "2026-08-23T15:01:28.704436Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260625800570.zip",
+      "sha256": "10e02d467f9f408fd23b04219a2102cb72e73bb6ff2aa7cf8ef88dfb2004d21b",
+      "byte_count": 1809,
+      "collected_at": "2026-08-23T15:01:28.608564Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260625800691.zip",
+      "sha256": "8fa2cd5f54ff39382432dc4e7f0d5ab189bd19d0b4ea316cc20b5a30027bce2b",
+      "byte_count": 1976,
+      "collected_at": "2026-08-23T15:01:28.494819Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260625800731.zip",
+      "sha256": "285a8f6f68fb8f8f7481f61a3cd68682d0c8fe2899a8c5d4da606d58dc7c1655",
+      "byte_count": 2117,
+      "collected_at": "2026-08-23T15:01:28.395254Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260625900143.zip",
+      "sha256": "4a0075243feace06831af090442a8323333413af9b928c3e7ab3a59f759cdd60",
+      "byte_count": 2103,
+      "collected_at": "2026-08-23T15:01:30.489344Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260625900181.zip",
+      "sha256": "103ea3a988a517992a2a9e9087aaacf4d401f2bcb2f06075af59876ef0d52022",
+      "byte_count": 2029,
+      "collected_at": "2026-08-23T15:01:30.223213Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260625900237.zip",
+      "sha256": "a8ae7ac6dbfd8dd1a6536164c30d66b44510c4920d9131659823ef8b8d9e6409",
+      "byte_count": 1899,
+      "collected_at": "2026-08-23T15:01:30.317157Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260625900304.zip",
+      "sha256": "c51fe059616bb2a9db7cd4f0f607acf83cecf48c85cc94453cb43092c5332d9b",
+      "byte_count": 2244,
+      "collected_at": "2026-08-23T15:01:29.833222Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260626800130.zip",
+      "sha256": "a9980df288a99746702ed51e71112596537416abed396eefc784ddc8f20705ac",
+      "byte_count": 2176,
+      "collected_at": "2026-08-23T15:01:27.325629Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260626800586.zip",
+      "sha256": "6346703c74f37a37b3fe1aa3456291eb1cc7ffa2fadc8fa675c0dc4ee7c10017",
+      "byte_count": 2184,
+      "collected_at": "2026-08-23T15:01:26.891388Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260626800701.zip",
+      "sha256": "d226771ba0a26dd262d0bf8b64d64030ff680e904b45e6ad0e56ee72f9f994d1",
+      "byte_count": 2217,
+      "collected_at": "2026-08-23T15:01:25.726568Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260626800816.zip",
+      "sha256": "28de87113142d9ce6377bff0592a478644c27270eff92179aec2c399dee75f25",
+      "byte_count": 1851,
+      "collected_at": "2026-08-23T15:01:25.645555Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260626801050.zip",
+      "sha256": "7780b9410a9c589a0b55bfcb21cff037d971e9bf719436ec6123aceeafa54d0c",
+      "byte_count": 1931,
+      "collected_at": "2026-08-23T15:01:25.552262Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260626900449.zip",
+      "sha256": "a80b412081701bd5ba8eecabe1ee84ae372b484a62df993bfc1241fd9fc3447b",
+      "byte_count": 2373,
+      "collected_at": "2026-08-23T15:01:27.231025Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260626900451.zip",
+      "sha256": "00d589aa7fd695db6b3c6509fc51e2462e6cb227094d45481decbccf31c74d64",
+      "byte_count": 2082,
+      "collected_at": "2026-08-23T15:01:27.132901Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260626900581.zip",
+      "sha256": "e93389188a67c59ee548b5d5182fc5094b210d31a6a9be2dd8841ca52f2159f3",
+      "byte_count": 2047,
+      "collected_at": "2026-08-23T15:01:27.036697Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260626900604.zip",
+      "sha256": "0385a6f147c8a87e80788d32b4a0b9519b84f4520bf8e64541c89978bc56e11a",
+      "byte_count": 2098,
+      "collected_at": "2026-08-23T15:01:26.802949Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260629800518.zip",
+      "sha256": "d288e16e0fcd434012d72902471f749f4337e5c5bd6a35ee9b593d9c9ea7c67d",
+      "byte_count": 2145,
+      "collected_at": "2026-08-23T15:01:24.123927Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260629800788.zip",
+      "sha256": "57a579c7d04c075c5b56be0923b20869e0cf5256a7b6dda7862146f27e5898e8",
+      "byte_count": 2017,
+      "collected_at": "2026-08-23T15:01:22.651134Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260629900182.zip",
+      "sha256": "e6814e1e68198d44afebd6c3ee92ce6781b857fbe5273ea12f24b1503112d2ca",
+      "byte_count": 2163,
+      "collected_at": "2026-08-23T15:01:24.413971Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260629900280.zip",
+      "sha256": "5e55217c48f0f3303ec39955486d3a1304b142b4a03683ba05944d320b721593",
+      "byte_count": 2031,
+      "collected_at": "2026-08-23T15:01:24.307873Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260629900404.zip",
+      "sha256": "d6d9c61e795e51de9b996f6396dbf5a7dc9c9388d8757213c66a7b505bd883f2",
+      "byte_count": 2400,
+      "collected_at": "2026-08-23T15:01:24.214112Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260629900545.zip",
+      "sha256": "ff3a03531cb29196637a41f0e8fb94b0d22cb870a1ce16f06c1e5ec7ba2923fa",
+      "byte_count": 1967,
+      "collected_at": "2026-08-23T15:01:22.841705Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260629900799.zip",
+      "sha256": "763be0161d9838e6bd479b2d9166ad5e6e1b1b6ccf4e539b68c72200b181488e",
+      "byte_count": 1958,
+      "collected_at": "2026-08-23T15:01:22.730892Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260629901198.zip",
+      "sha256": "dfe484fd88b1e9986faed761a8826128560f10b78b1f41a89a497fecdb02627e",
+      "byte_count": 2115,
+      "collected_at": "2026-08-23T15:01:21.002750Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260630800114.zip",
+      "sha256": "3370ed89544ed0861a5cc14c003ef91c57a1b6a67f2bc890647ab74a52cb6575",
+      "byte_count": 2138,
+      "collected_at": "2026-08-23T15:01:19.695864Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260630800143.zip",
+      "sha256": "bbdb713ee23b286ec171cd205613cbf91a44187a85c52edeb9f9fcdefac4dedd",
+      "byte_count": 2173,
+      "collected_at": "2026-08-23T15:01:19.579798Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260630800303.zip",
+      "sha256": "8fa2c52d44e2166621b2a4fcacb32612aa20ee1c2e374b5d01a65e22d7d11858",
+      "byte_count": 1839,
+      "collected_at": "2026-08-23T15:01:19.482463Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260630800913.zip",
+      "sha256": "f15c77dd849d526a36fe3e1d2686ed822b312ef654578ebe12dc2746bb409f0b",
+      "byte_count": 2231,
+      "collected_at": "2026-08-23T15:01:16.789609Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260630800917.zip",
+      "sha256": "77ed9d0ace75865b26d8686a312cd19d257b1e1cb9dd94f894c0fd08898fe366",
+      "byte_count": 1849,
+      "collected_at": "2026-08-23T15:01:16.653909Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260630801056.zip",
+      "sha256": "036a306dd6b09b36d65dd8d0cfe3ae50b1c27655f503ce3925f2af7e4aa29a45",
+      "byte_count": 1933,
+      "collected_at": "2026-08-23T15:01:16.025777Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260630801244.zip",
+      "sha256": "b18e91606d9a674a6c37b8b1df6058b8b0bd30e4103147536b973224383593f9",
+      "byte_count": 1891,
+      "collected_at": "2026-08-23T15:01:14.452575Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260630801343.zip",
+      "sha256": "725c8d354a7d13d85601670b5b02c12bb991c3ec56679478c86d41925ce204eb",
+      "byte_count": 2133,
+      "collected_at": "2026-08-23T15:01:14.205881Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260630801368.zip",
+      "sha256": "9fd4b4a3469df0864afdc4030b019c8874f193a53a8606c2eefad313c38e7546",
+      "byte_count": 1943,
+      "collected_at": "2026-08-23T15:01:14.296022Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260630801413.zip",
+      "sha256": "160618ccf47c79507cab854a5e335a2d75edd2573d2d1f5e76e1d754306c5d8d",
+      "byte_count": 2163,
+      "collected_at": "2026-08-23T15:01:14.120836Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260630900368.zip",
+      "sha256": "01739bcff8f289309e5518c734a0464537c734e7a4c50f8ffc654a8958c807c9",
+      "byte_count": 2309,
+      "collected_at": "2026-08-23T15:01:19.385668Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260630900452.zip",
+      "sha256": "aa07eb0ef1e493bc67373d514a5f4793794994fda530297b8b897b8b789854dc",
+      "byte_count": 1980,
+      "collected_at": "2026-08-23T15:01:19.260141Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260630900898.zip",
+      "sha256": "fbcc6caaea3316165ceb66a5fffbdf4af82bb31945c05bd16ea157cfeb66e147",
+      "byte_count": 2151,
+      "collected_at": "2026-08-23T15:01:16.551294Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260630901232.zip",
+      "sha256": "6dcaf8187a55b0441d86965935717d07109b4966c4de3820241a35ebd0c26cd4",
+      "byte_count": 2267,
+      "collected_at": "2026-08-23T15:01:14.549137Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260630901559.zip",
+      "sha256": "14c5efd5c267004628721cf58b8086c07fde8a82dad8c7744d206672392d2305",
+      "byte_count": 2279,
+      "collected_at": "2026-08-23T15:01:12.881980Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260701800112.zip",
+      "sha256": "f9eda39d96c29bcb3e486dd6392f7356038a23bc61e5ece38eecba701e98bc29",
+      "byte_count": 2023,
+      "collected_at": "2026-08-23T15:01:12.739656Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260701800135.zip",
+      "sha256": "1adef09a04ed25d669d77a134797d77c5bfbac80b51a7714269ee49024b2d431",
+      "byte_count": 2069,
+      "collected_at": "2026-08-23T15:01:12.550352Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260701800136.zip",
+      "sha256": "0ea865e6e0fc0b91258e462c4438c16b3fb68f80e1b3907b76c64aa961978eab",
+      "byte_count": 1966,
+      "collected_at": "2026-08-23T15:01:12.646673Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260701800212.zip",
+      "sha256": "d33dea892f1fe29e399252f01dc05711d36933db2a4c26884c01c99cb8c17c7f",
+      "byte_count": 1775,
+      "collected_at": "2026-08-23T15:01:12.356316Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260701800234.zip",
+      "sha256": "1246d94f4f840a00d9f1d883d1cb9e55b1346c5d940fa019ba7addd71805549e",
+      "byte_count": 1943,
+      "collected_at": "2026-08-23T15:01:12.254595Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260701900202.zip",
+      "sha256": "38dfaf3c40bee4da01e16d8eb0e320e91f1840ff1b0e5ce8b86bd411e3f17831",
+      "byte_count": 1919,
+      "collected_at": "2026-08-23T15:01:12.453630Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260701900220.zip",
+      "sha256": "33d6ec198c838d00b5a8c40232d80c540453048bf854c31dcb6a473e70afe07d",
+      "byte_count": 1830,
+      "collected_at": "2026-08-23T15:01:12.180616Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260701900241.zip",
+      "sha256": "b6872ca9ba88b069b7b99d244c48c7259751314ddd722309e1aca09ae32bf5be",
+      "byte_count": 2523,
+      "collected_at": "2026-08-23T15:01:12.092847Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260701900488.zip",
+      "sha256": "693833abc378c7803bee57f600275b66a7f4bd691afd82d52de201b09a8335a6",
+      "byte_count": 2303,
+      "collected_at": "2026-08-23T15:01:11.996763Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260701900558.zip",
+      "sha256": "684dee477bb5dbad20606390034fca354f1d21bf0e48a9992e2b62ad3a0b4bbb",
+      "byte_count": 2239,
+      "collected_at": "2026-08-23T15:01:11.907737Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260701900683.zip",
+      "sha256": "bdce28dae480b8253fca6e796a321e89d4c9a215c467e0a162227178d763cab1",
+      "byte_count": 2224,
+      "collected_at": "2026-08-23T15:01:11.741264Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260702800089.zip",
+      "sha256": "ee00575e0429022e14905b19ab039e4b0c42af8ec5c698b7477c0e4bf2dce506",
+      "byte_count": 2178,
+      "collected_at": "2026-08-23T15:01:10.540077Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260702800126.zip",
+      "sha256": "b145c8bdd0747390924e94c80883fecb608edbff7cc4d4ba3648d7910b40ff2b",
+      "byte_count": 1928,
+      "collected_at": "2026-08-23T15:01:10.259181Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260702800158.zip",
+      "sha256": "9d2bfa35ad179528c4cfc4e6831abc1ff53e5fd51c32384bdf980f3c2f961d30",
+      "byte_count": 1823,
+      "collected_at": "2026-08-23T15:01:10.040105Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260702800782.zip",
+      "sha256": "70a463d852efef1f9324a2292c48bf4a371a185a3c1ad24da847debdf1139303",
+      "byte_count": 2338,
+      "collected_at": "2026-08-23T15:01:07.977882Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260702800844.zip",
+      "sha256": "cd72d232d0d353391cd352b574f2c4c918e14501844513e2a98f1083ddf1ab24",
+      "byte_count": 2367,
+      "collected_at": "2026-08-23T15:01:07.894672Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260702800852.zip",
+      "sha256": "30ccfcd32c7aed22f8a1df6aa73daed381b8b3bd2c761d6bd7c4b0b99d026107",
+      "byte_count": 2314,
+      "collected_at": "2026-08-23T15:01:07.810395Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260702900096.zip",
+      "sha256": "5b6cd2a5dee303aa30acef5f313b08740407387eacb21b4eeb7ba0e524d6532a",
+      "byte_count": 1866,
+      "collected_at": "2026-08-23T15:01:10.455699Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260702900130.zip",
+      "sha256": "9590885377d895aced7d55c52d4d780a6dd608e1ab7484a6fed288bda7b87fb3",
+      "byte_count": 1945,
+      "collected_at": "2026-08-23T15:01:10.358778Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260702900141.zip",
+      "sha256": "b593c6d04178ecba92abe9dc9b898e3898b64e822023355e1ec5e14bc33a33e3",
+      "byte_count": 1970,
+      "collected_at": "2026-08-23T15:01:10.117383Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260702900226.zip",
+      "sha256": "39725893d627e619f0416b4a9ee7ab7abcc9dcfff352bca19128dd127a9ea836",
+      "byte_count": 1999,
+      "collected_at": "2026-08-23T15:01:09.955117Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260702900264.zip",
+      "sha256": "829b421cfcb6a34e7e74715b60667ab02a2722eba3014c19a38d08f9b0eb0ef2",
+      "byte_count": 2072,
+      "collected_at": "2026-08-23T15:01:09.864523Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260702900442.zip",
+      "sha256": "b92b0da21972fdbea636f0056f78a2ec977b4036064bfe591f014ca27d45cd5c",
+      "byte_count": 1946,
+      "collected_at": "2026-08-23T15:01:08.512200Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260702900482.zip",
+      "sha256": "abaa47cb625cf6ea1264880a0ac874bc98b476fb2ce012e513452639feb1cdb4",
+      "byte_count": 2199,
+      "collected_at": "2026-08-23T15:01:08.427406Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260702900516.zip",
+      "sha256": "b97c3a75134db8a7d2d48f609f2a3a9045aad49c7891ef4b40e27e8603276a1f",
+      "byte_count": 2376,
+      "collected_at": "2026-08-23T15:01:08.340119Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260702900555.zip",
+      "sha256": "0d7558acca80eee738c2f39fa15d63464a2d3d5b5456bf0fc845af23e3aaa332",
+      "byte_count": 2065,
+      "collected_at": "2026-08-23T15:01:08.251855Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260702900704.zip",
+      "sha256": "172ea9848e88de00e7c3c8fad7d3eea2428b7bcb1f41969dd74bf1c73953872a",
+      "byte_count": 2065,
+      "collected_at": "2026-08-23T15:01:08.162318Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260702900719.zip",
+      "sha256": "934447e01455f13ebd5c4555305e6183945786383ad4c60bb7a13438d40d8994",
+      "byte_count": 2178,
+      "collected_at": "2026-08-23T15:01:08.058877Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260703900700.zip",
+      "sha256": "5e6df3fcf1f54fb38a425148400d457fa7e64ef5e6820c510b3bfe43e28b92c2",
+      "byte_count": 2211,
+      "collected_at": "2026-08-23T15:01:06.627623Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260703900836.zip",
+      "sha256": "93b5febec8c97470e76517c8d7b883cb954aada7eda94658b79f75559dfd180c",
+      "byte_count": 2076,
+      "collected_at": "2026-08-23T15:01:06.448835Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260706800182.zip",
+      "sha256": "d5b30491b962f1bef456bbf7c94202c5b717688288b41ccbbac54d30d5a58832",
+      "byte_count": 2003,
+      "collected_at": "2026-08-23T15:01:06.355490Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260706800236.zip",
+      "sha256": "6fc7681695d34af9995a302a51a8ea034c432c95a42fe83388c0ca12f1c5815b",
+      "byte_count": 2024,
+      "collected_at": "2026-08-23T15:01:05.832516Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260706900205.zip",
+      "sha256": "cb6ee44e372bb068d97fc7969a0ed7866bfb4f18ab57a039585e3265b460e1a2",
+      "byte_count": 2172,
+      "collected_at": "2026-08-23T15:01:05.917515Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260706900374.zip",
+      "sha256": "62dff6cbee7eb79297e344b517973d70bbd84df472746086f51aa94173c12330",
+      "byte_count": 2314,
+      "collected_at": "2026-08-23T15:01:04.295262Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260706900417.zip",
+      "sha256": "10875fbf0cba775a29df55066a3afa8d71afe4183cfdaeeb94acaad67c22dbef",
+      "byte_count": 1978,
+      "collected_at": "2026-08-23T15:01:04.155957Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260706900449.zip",
+      "sha256": "477e6387e9fb044bfe9eff67bbe85b49989f0857d4f8c00dd9aa54ed712e7bd2",
+      "byte_count": 2142,
+      "collected_at": "2026-08-23T15:01:03.708443Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260706900477.zip",
+      "sha256": "105d21fe9eadc45e1c6ebd6f0177cad0b36d298705a77b11e74c81891318ddf4",
+      "byte_count": 2160,
+      "collected_at": "2026-08-23T15:01:03.612671Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260707800128.zip",
+      "sha256": "72883a3f06e60ef97eb9dc9a4fb60ccfe60d52e0f23035636b6224afc5ede319",
+      "byte_count": 1973,
+      "collected_at": "2026-08-23T15:01:02.394999Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260707800145.zip",
+      "sha256": "18921aef257dc4a86072de8f874cf8af98f89d80c915ae81878585fe1c00d3f8",
+      "byte_count": 2009,
+      "collected_at": "2026-08-23T15:01:02.242955Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260707800238.zip",
+      "sha256": "4606e30933c19395bdbb53881c413de9d5fe220bff6431def2c2dd7568386a04",
+      "byte_count": 2120,
+      "collected_at": "2026-08-23T15:01:02.058196Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260707800240.zip",
+      "sha256": "fa68f209d1b9f0a63e53ea9e18b0060410314dd240374a01f10ef16a18f0fa94",
+      "byte_count": 1806,
+      "collected_at": "2026-08-23T15:01:01.957468Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260707800689.zip",
+      "sha256": "86715fbe0645c4a06942f1f2a87334e1979852e5e66e6dda3dd69829fcd7511e",
+      "byte_count": 1822,
+      "collected_at": "2026-08-23T15:01:00.151515Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260707900182.zip",
+      "sha256": "949274e4df144c59fd90d4e84509a24b50bdff0f5fd5a46bc946989c08a315ae",
+      "byte_count": 2056,
+      "collected_at": "2026-08-23T15:01:02.154116Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260707900298.zip",
+      "sha256": "a7971b770084153af5d7e3c0fcc0b4ce715c8a0584cd3eb3fe7ecaeef960f0ec",
+      "byte_count": 2096,
+      "collected_at": "2026-08-23T15:01:01.869469Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260707900311.zip",
+      "sha256": "474aba6abbcd9bec69374ed76fc8816f46472922578f56d843b1e56fd010d689",
+      "byte_count": 2238,
+      "collected_at": "2026-08-23T15:01:01.771168Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260707900319.zip",
+      "sha256": "9bd3dc7990b0fd1b6db8ec4f4d1d06492960b36f41c9465ab4bb36b154b3bb27",
+      "byte_count": 2137,
+      "collected_at": "2026-08-23T15:01:01.674333Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260707900345.zip",
+      "sha256": "5b99533ae502b6cb98883c9627afdfc074d327cb8c66337dd62b642e196d8d9f",
+      "byte_count": 2162,
+      "collected_at": "2026-08-23T15:01:01.580737Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260707900582.zip",
+      "sha256": "d8a7f9f85472ce0cfe2bf6607ae960c6884b1c7974ed88a4c9fbf5bd078a8d09",
+      "byte_count": 2233,
+      "collected_at": "2026-08-23T15:01:01.486435Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260707900754.zip",
+      "sha256": "906e1e0a674bda5c76b8cf84877f25e9b09aa7ffa7a9b12b0f7a8bfa1c091a66",
+      "byte_count": 1979,
+      "collected_at": "2026-08-23T15:01:00.038176Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260707900767.zip",
+      "sha256": "031323175964d67da35d64fa949966506b75b896e1b925ca1eb0082e8636f6c3",
+      "byte_count": 2289,
+      "collected_at": "2026-08-23T15:00:59.946283Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260708800164.zip",
+      "sha256": "d878f2f11dc2067769a9d2d8bc004f65736e49818c0dac507982ef775a1857f6",
+      "byte_count": 1819,
+      "collected_at": "2026-08-23T15:00:59.772671Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260708800285.zip",
+      "sha256": "3bb35eba40756dee18747fbb418cf10878c3df36596d86946ca896ced2f4ba9b",
+      "byte_count": 2009,
+      "collected_at": "2026-08-23T15:00:59.621281Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260708800287.zip",
+      "sha256": "8c13e1a98c5f310133a44a808c0acdbd7668206b14024737798b534095f2cef7",
+      "byte_count": 2049,
+      "collected_at": "2026-08-23T15:00:59.524356Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260708800371.zip",
+      "sha256": "0b04f791588e05b2d4cf1e3fdf498b5cebbaf89ec7b8654e0c9a23659b2de940",
+      "byte_count": 1916,
+      "collected_at": "2026-08-23T15:00:59.434108Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260708900160.zip",
+      "sha256": "5a89b905bcc896f2ccaf9afb955ac630e99ce9322849bb59ec562a45677582c5",
+      "byte_count": 1863,
+      "collected_at": "2026-08-23T15:00:59.864395Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260708900521.zip",
+      "sha256": "5eee1626ab124f41aa0e0d96b9bc8a220cec39a24bf309f2a9d89d0bad124bfd",
+      "byte_count": 2093,
+      "collected_at": "2026-08-23T15:00:59.351894Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260708900635.zip",
+      "sha256": "098d12be673ab732aa2b96314572385426e77c7c3e56aab1919a37a0165afe71",
+      "byte_count": 2290,
+      "collected_at": "2026-08-23T15:00:59.248865Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260708900756.zip",
+      "sha256": "c09c75cd3fa58707cdc6b3a33891d5df704f20347dcfd71c7fc69194bb86730e",
+      "byte_count": 2088,
+      "collected_at": "2026-08-23T15:00:57.453521Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260709800093.zip",
+      "sha256": "5a1c57518c5d588c7ef8e78fa38ba37a501caa24c442ad5de04a4254f68bbd9f",
+      "byte_count": 1909,
+      "collected_at": "2026-08-23T15:00:57.362161Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260709800137.zip",
+      "sha256": "0e41c92c608ceed2eb7139902b129414ba7269bfef2b01ecba6ed9f56c14d1c3",
+      "byte_count": 1777,
+      "collected_at": "2026-08-23T15:00:57.263302Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260709900489.zip",
+      "sha256": "fe7b4c606b26b3b9cf4340f6ed59cbb3c94bc7824cc6f9ed9af93fef9af46881",
+      "byte_count": 1983,
+      "collected_at": "2026-08-23T15:00:55.845821Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260709900756.zip",
+      "sha256": "0aa5dbdf690033c80a1eb35275e98d205d359777962cd0d1a91a3758fd65b3f4",
+      "byte_count": 2113,
+      "collected_at": "2026-08-23T15:00:55.755601Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260710800853.zip",
+      "sha256": "ffc52a21b447b3fe61d0a9a6dacd78d69b35f89426e0e0959a1884e3f158459e",
+      "byte_count": 2034,
+      "collected_at": "2026-08-23T15:00:53.752769Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260710800910.zip",
+      "sha256": "403ec13ce8084975bd4341fd23a996a653f230309dc046129b3569da7ef2e491",
+      "byte_count": 1851,
+      "collected_at": "2026-08-23T15:00:53.663752Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260710900182.zip",
+      "sha256": "5fdf9f87ff7d9450d997dac6fcdf88f802a872ca96b4a00772649fcd78b82ff5",
+      "byte_count": 1887,
+      "collected_at": "2026-08-23T15:00:55.662016Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260710900482.zip",
+      "sha256": "991b1e7f0185d370ced5ffa20ee11481789bf13aa7dac296d5e71e0292de2a3c",
+      "byte_count": 1940,
+      "collected_at": "2026-08-23T15:00:55.278300Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260710900498.zip",
+      "sha256": "6d8f37cbdfc51adfd4c3c54fbdf7c01acbd8a4ef5a4d12d9c9821320ded13f20",
+      "byte_count": 2415,
+      "collected_at": "2026-08-23T15:00:55.185108Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260713800186.zip",
+      "sha256": "5637368dcb5def0f92b862e1d308495a0ecd7adc7ccf4df9bf82de6a13640f12",
+      "byte_count": 1996,
+      "collected_at": "2026-08-23T15:00:53.481134Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260713900131.zip",
+      "sha256": "f1521644a867a5eabb27800ee36d02cf150a76b78cfec89e45d22b3c17141c35",
+      "byte_count": 2203,
+      "collected_at": "2026-08-23T15:00:53.565087Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260713900188.zip",
+      "sha256": "c646dca767701297e156532a4174ca6fbffdfe50ee50025075c11047404bb4fb",
+      "byte_count": 2509,
+      "collected_at": "2026-08-23T15:00:53.324532Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260713900228.zip",
+      "sha256": "d2bc992c2bca4d332d847c82c624996d5258ca292242783d6d71579eda96dabb",
+      "byte_count": 2120,
+      "collected_at": "2026-08-23T15:00:52.083081Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260713900280.zip",
+      "sha256": "c6693490137de792461dafe9bcb52a68090273ebf794fdd3dd93d5107ccd0339",
+      "byte_count": 2056,
+      "collected_at": "2026-08-23T15:00:51.998087Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260713900355.zip",
+      "sha256": "d52b3db1659e940c25b931304c5836bcf31b98864d8a815d9b11b0dd45142cde",
+      "byte_count": 1790,
+      "collected_at": "2026-08-23T15:00:51.908591Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260714800329.zip",
+      "sha256": "e40fc014666a514734d666c9df0826d419009f6a00c2edd5251f514db174ef43",
+      "byte_count": 1984,
+      "collected_at": "2026-08-23T15:00:50.418195Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260714900199.zip",
+      "sha256": "56a343affca593ad56675476eeafd5eed34090ca7b3361be14589c12b79fce94",
+      "byte_count": 2188,
+      "collected_at": "2026-08-23T15:00:50.505665Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260714900490.zip",
+      "sha256": "24c8dd264cb16fe0cd39d633186e81fc86ce8446412886b667a0e5b545ff52b2",
+      "byte_count": 2063,
+      "collected_at": "2026-08-23T15:00:50.335474Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260714900779.zip",
+      "sha256": "c887763b2983e9ad1e60698569647f33b0aa580e02332e6e3e6b5aad44483654",
+      "byte_count": 2056,
+      "collected_at": "2026-08-23T15:00:50.176714Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260715800071.zip",
+      "sha256": "aa958a93f829047abede7d3b0b82096806dd4c5d6072193ae06512b12c3ff150",
+      "byte_count": 1837,
+      "collected_at": "2026-08-23T15:00:49.019241Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260715800157.zip",
+      "sha256": "95dda579f2fc740889200dd423dc74a83fb391567360aff1a7a25b20ab76b16b",
+      "byte_count": 1984,
+      "collected_at": "2026-08-23T15:00:48.849723Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260715800190.zip",
+      "sha256": "4114de6ec7471105412fea7db7175bdcf555f1031bebe862b24502334a5685df",
+      "byte_count": 1987,
+      "collected_at": "2026-08-23T15:00:48.762776Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260715900077.zip",
+      "sha256": "12fa1d7512f68423dd741813c4cd5a68d5fbcf8409350de074a68973a7de85cc",
+      "byte_count": 1981,
+      "collected_at": "2026-08-23T15:00:48.931418Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260715900218.zip",
+      "sha256": "159f0c6d4d414def705604856a54018bbb2609ab7651e704aacf378ea90d7575",
+      "byte_count": 2411,
+      "collected_at": "2026-08-23T15:00:48.626628Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260715900738.zip",
+      "sha256": "eff7bb907a8bd0ac6e58ddb4d7771c10ac4b41ae37e8d55bae714c1d3a02c419",
+      "byte_count": 2151,
+      "collected_at": "2026-08-23T15:00:47.423099Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260716800131.zip",
+      "sha256": "133a3921221fcd2ae00507461326d682885bd03721cfbcf9b1a03670de770709",
+      "byte_count": 2009,
+      "collected_at": "2026-08-23T15:00:47.331759Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260716800314.zip",
+      "sha256": "b021acf42b8427866445d7d68bc0c6754b58048ade24ab1214195b6ea02decb9",
+      "byte_count": 1926,
+      "collected_at": "2026-08-23T15:00:46.912034Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260716800502.zip",
+      "sha256": "c008abd03a50a97b3f3b39d974f28fff369da68982b68137210ef6abc1b73fd0",
+      "byte_count": 1921,
+      "collected_at": "2026-08-23T15:00:45.093167Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260716800784.zip",
+      "sha256": "81c11de529aa9ac87a7c887d6851113ad73658ad0bbb14279f046aff0fb9543b",
+      "byte_count": 1697,
+      "collected_at": "2026-08-23T15:00:44.961328Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260716800786.zip",
+      "sha256": "84d51c8acd659c0821a2cecbfaf67b94fa530e31725e1c8f737456007d587877",
+      "byte_count": 1699,
+      "collected_at": "2026-08-23T15:00:44.870448Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260716800816.zip",
+      "sha256": "41574e0d2348d94c5b7c3a4bac05e76cdcb8f99ab53d60cf36c702e3704865af",
+      "byte_count": 2162,
+      "collected_at": "2026-08-23T15:00:43.341608Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260720900129.zip",
+      "sha256": "0b81244d9dffcec66b0c5fcc986e5149df60a40a42bdd79333db68f8f67fa53b",
+      "byte_count": 2142,
+      "collected_at": "2026-08-23T15:00:43.257302Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260720900132.zip",
+      "sha256": "3af772e6bdde60f0a81bd21d1a72d543f26f4e15e753657c75772f75ae47326e",
+      "byte_count": 2185,
+      "collected_at": "2026-08-23T15:00:43.162100Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260720900330.zip",
+      "sha256": "b99a783ef9d1ffabe43de2f433a2fd5f93ef5151259091049fed057bfd56237a",
+      "byte_count": 1957,
+      "collected_at": "2026-08-23T15:00:43.085235Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260720900414.zip",
+      "sha256": "352429a5f03328e1b4af8da64ab12adda35af5472588ec2420ad778332baf733",
+      "byte_count": 2172,
+      "collected_at": "2026-08-23T15:00:41.776672Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260721800122.zip",
+      "sha256": "dee56cfb2aef28dd67812d6b83be69508f771a73c4b17866a3c8f3ee6f3cdae2",
+      "byte_count": 1914,
+      "collected_at": "2026-08-23T15:00:41.675441Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260721800758.zip",
+      "sha256": "2970b942dc06f0d7f86651594d565c8f06ad6da5cfa8357d6a8c962740f18e2e",
+      "byte_count": 1944,
+      "collected_at": "2026-08-23T15:00:39.946469Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260721900281.zip",
+      "sha256": "4be4bfba3f50eaf086882330ee22a2c2e3c9065e4d123c7e559d88707484dbfd",
+      "byte_count": 2113,
+      "collected_at": "2026-08-23T15:00:40.126062Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260721900480.zip",
+      "sha256": "339ada2571e5ae41a95eaf0f08cf8477f8220f53998794e2df8a2f37616a1bfe",
+      "byte_count": 1948,
+      "collected_at": "2026-08-23T15:00:40.033314Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260721901451.zip",
+      "sha256": "7aba7891850a726f67a973ba58db6fdecfef0e3e63be5f78ef20463bdb319eb9",
+      "byte_count": 1983,
+      "collected_at": "2026-08-23T15:00:39.850788Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260722800610.zip",
+      "sha256": "b9a3fe141db11f20ee63bd2dfa00e8a8ba3a4e13527456c9666dfca522f30bdd",
+      "byte_count": 1952,
+      "collected_at": "2026-08-23T15:00:38.140604Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260722900107.zip",
+      "sha256": "d772dc6fab5782303e82dd2aab8d55f222747823c28edb42deebdf9f77c0265f",
+      "byte_count": 1995,
+      "collected_at": "2026-08-23T15:00:39.704744Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260722900356.zip",
+      "sha256": "057dab73d40b1d5522ae638095dbc31442496f0e47d204fdd5dd9ee8320a6384",
+      "byte_count": 2165,
+      "collected_at": "2026-08-23T15:00:38.458525Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260722900385.zip",
+      "sha256": "aec02d69b4fc4ebc08409bf1534d62a3312d5348609990c1674894c4b3f9fd72",
+      "byte_count": 2098,
+      "collected_at": "2026-08-23T15:00:38.277045Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260722900387.zip",
+      "sha256": "519c1fcde55397257455027d5a8790c14fe8faae877d491df8d8f200a8686388",
+      "byte_count": 1980,
+      "collected_at": "2026-08-23T15:00:38.369115Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260722900812.zip",
+      "sha256": "aba7ce5cb55666b652a0270810327d5aa26f86a788891cce126ffd09754d71fd",
+      "byte_count": 2290,
+      "collected_at": "2026-08-23T15:00:36.971397Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260722900866.zip",
+      "sha256": "0cd40e2fa0453d2453ac4ae7fd36545d6475831ea7299f67034a7c8ced965b2b",
+      "byte_count": 2468,
+      "collected_at": "2026-08-23T15:00:36.882499Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260723800073.zip",
+      "sha256": "ba093c0accec6dd09111af83e56bc796e2236103ce44b5290e7347bda01eeec7",
+      "byte_count": 2137,
+      "collected_at": "2026-08-23T15:00:36.793941Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260723800695.zip",
+      "sha256": "b2a9c1da77c00cbf1b3f8dedb08a30c739f71ee351cb01b1997563d0f6a4b42c",
+      "byte_count": 1805,
+      "collected_at": "2026-08-23T15:00:35.132053Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260723900280.zip",
+      "sha256": "f462a8e79addc7ff2976cb7844a3d8f3126e18f6c3d7ebae9032c0d15562a6cd",
+      "byte_count": 2066,
+      "collected_at": "2026-08-23T15:00:36.705652Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260723900301.zip",
+      "sha256": "a02d1ee023cc459b5ea094974e0f3dfc63339a204c005b524c536f7f91119cfc",
+      "byte_count": 1857,
+      "collected_at": "2026-08-23T15:00:36.600735Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260723900314.zip",
+      "sha256": "b35552112aea6f5a85be39f383d7ff762e25500f7c4e09526002b42a87a9985b",
+      "byte_count": 1947,
+      "collected_at": "2026-08-23T15:00:36.509448Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260723900467.zip",
+      "sha256": "1c1a7ef5d2bcce6c2e3f0b19e89ecc7b342a8ffbadeaae41db7e1521c761eb43",
+      "byte_count": 2225,
+      "collected_at": "2026-08-23T15:00:36.422632Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260723900606.zip",
+      "sha256": "64f2b739cdef63a8caf04777141a13e25007c82ed25e0ad8fc9e1535ce365b64",
+      "byte_count": 2048,
+      "collected_at": "2026-08-23T15:00:35.231688Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260723900888.zip",
+      "sha256": "230c621d27dca9c84274f021ab1aa4d44fa616b3d9dd0f29d5d4aeca81d28613",
+      "byte_count": 2071,
+      "collected_at": "2026-08-23T15:00:34.963015Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260724800147.zip",
+      "sha256": "e89d74aae939150637099db583d418cfcd1b4f49c75f4e967799aa4f6c760c1d",
+      "byte_count": 1773,
+      "collected_at": "2026-08-23T15:00:33.658580Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260724800282.zip",
+      "sha256": "0162850d6e11c1a266805cbc0f70e4365a0a23533094cfffe194911cb6bd3448",
+      "byte_count": 1896,
+      "collected_at": "2026-08-23T15:00:33.237608Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260724800888.zip",
+      "sha256": "bc25c6f4580a646fcf2e3bcbceb41ca18b90114385da9d53a6d50787776cbb83",
+      "byte_count": 1872,
+      "collected_at": "2026-08-23T15:00:31.329123Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260724800892.zip",
+      "sha256": "db369183832c953149cd4414e34005f9225dc8d02a456a932498d2b06ec99436",
+      "byte_count": 1864,
+      "collected_at": "2026-08-23T15:00:31.236585Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260724900079.zip",
+      "sha256": "45f1af0d8ef80c2c4bef31bcfbce41dde2399b5ce6af7814b8ba89ffeac5ab4c",
+      "byte_count": 2030,
+      "collected_at": "2026-08-23T15:00:34.864572Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260724900176.zip",
+      "sha256": "e9f0166ec281554489059f343d49ad2b6bac0c65914dc8de56dd453d684b6f10",
+      "byte_count": 2001,
+      "collected_at": "2026-08-23T15:00:33.561172Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260724900184.zip",
+      "sha256": "360cbb49cd632c76f2483481e317513e066e53938fddbbed760edacbd4a091f2",
+      "byte_count": 2277,
+      "collected_at": "2026-08-23T15:00:33.433670Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260724900195.zip",
+      "sha256": "a1ac91b00fa1da0c8095cfad04f94613aea6bca3bcd159c4315a8a9ef895bfd9",
+      "byte_count": 2151,
+      "collected_at": "2026-08-23T15:00:33.337333Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260724900354.zip",
+      "sha256": "248d004e5e0c022942a5a501753ec95719b74773f509bf19ff86000a13c78a63",
+      "byte_count": 1920,
+      "collected_at": "2026-08-23T15:00:33.136586Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260724900442.zip",
+      "sha256": "61f8235a6e45aa99759110b5eb3d1265b3ac3facc4edb1d0dacf0d0e5c57ac50",
+      "byte_count": 1964,
+      "collected_at": "2026-08-23T15:00:33.034198Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260724900446.zip",
+      "sha256": "9469e7b5ab99338f47ebf0f15aa6d428b863c638f2484cc449ff7b4f07671ad3",
+      "byte_count": 2169,
+      "collected_at": "2026-08-23T15:00:32.924723Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260727800063.zip",
+      "sha256": "9c7f388a946293660bdb8609a349d8794c2f58fd4521554d161fb36a4ff884ea",
+      "byte_count": 1901,
+      "collected_at": "2026-08-23T15:00:31.149939Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260727800193.zip",
+      "sha256": "ce2036dd466be65d93de0b1baf500d1229a674b7f8b696a2dd536cd8fe9dd790",
+      "byte_count": 1909,
+      "collected_at": "2026-08-23T15:00:30.937797Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260727900160.zip",
+      "sha256": "3aef8b1b9efb4ab6795859a2e90fa70426b461fc3542b9e489f73beb9aa8464f",
+      "byte_count": 2049,
+      "collected_at": "2026-08-23T15:00:31.041760Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260727900252.zip",
+      "sha256": "a4834211c8eab1c51ccfcfd0f09b9ec58cad9b5afcd963051cf27f4d4ffb198c",
+      "byte_count": 1931,
+      "collected_at": "2026-08-23T15:00:30.763361Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260727900268.zip",
+      "sha256": "df457e05dc7fea3ddcdfe989b006d66fa32b680e7d6f70c5d9827929b636e2ea",
+      "byte_count": 2077,
+      "collected_at": "2026-08-23T15:00:30.581176Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260727900293.zip",
+      "sha256": "c53fcdef3ce10eb747a2b918a819c7c5d46d35610f41cb2c053fd69cdbe89f94",
+      "byte_count": 2061,
+      "collected_at": "2026-08-23T15:00:30.670868Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260728800274.zip",
+      "sha256": "f44f90dcaba81520ef6ceefa52cc35e6fa466a801c87d601da0d3b6bb899586f",
+      "byte_count": 1874,
+      "collected_at": "2026-08-23T15:00:29.050249Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260728800408.zip",
+      "sha256": "751809545047665760455b292b46a2c28934563e2686e6b1aa56a882ac4768d7",
+      "byte_count": 2200,
+      "collected_at": "2026-08-23T15:00:27.353008Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260728800426.zip",
+      "sha256": "164d225806b0d74f20767c803d850d3ac283483fb9a3ddaa080ebe0f86c932e2",
+      "byte_count": 2090,
+      "collected_at": "2026-08-23T15:00:27.266787Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260728800716.zip",
+      "sha256": "51674931a60b230d87f1c7e8506d8fe64e6129f6b4a5f144ac860e4e6dc3712e",
+      "byte_count": 1916,
+      "collected_at": "2026-08-23T15:00:27.063089Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260728900210.zip",
+      "sha256": "6b4552540320a3b7cb7ee8e2fa17d3b478675a53cffca3d4ba80f43a685810b6",
+      "byte_count": 2197,
+      "collected_at": "2026-08-23T15:00:29.242668Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260728900242.zip",
+      "sha256": "c8657a0aa63710dbd93513db39945bb1f3c2b032470f8e3a99e953958ae8aa20",
+      "byte_count": 2949,
+      "collected_at": "2026-08-23T15:00:29.152392Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260728900719.zip",
+      "sha256": "d4a80cd0c47d27ac5cee2e2225b3b00a5dea63f0f25ecb2ee51e183b19fbaf82",
+      "byte_count": 2077,
+      "collected_at": "2026-08-23T15:00:27.151018Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260729800496.zip",
+      "sha256": "b42dabfe0a11347623f24502aeeb2e267474c6932b50bfe2ff1672fca5b650a1",
+      "byte_count": 2160,
+      "collected_at": "2026-08-23T15:00:25.693161Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260729800998.zip",
+      "sha256": "cf7bf802f3a35bf4575521def77a569c092c24ac8110ef47a463549cff9c4460",
+      "byte_count": 1989,
+      "collected_at": "2026-08-23T15:00:24.122064Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260729900255.zip",
+      "sha256": "dae9b2c055dec29a165ae01c129a50368039f106c85b87f026b071ecbf36ce5e",
+      "byte_count": 2123,
+      "collected_at": "2026-08-23T15:00:25.790931Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260729900566.zip",
+      "sha256": "7236f843180987007fdc8541e5123dbd9d73c13a817152f2ad43d0f048d29739",
+      "byte_count": 1969,
+      "collected_at": "2026-08-23T15:00:25.582853Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260730800221.zip",
+      "sha256": "b0799017757f9458dc450e8e1bcc33e7543a50bfd85260467e188816b06abd34",
+      "byte_count": 1838,
+      "collected_at": "2026-08-23T15:00:23.691354Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260730800911.zip",
+      "sha256": "a40bbf95d412559f716e49e169cc226e68dd16d72454e3e9577641c871276580",
+      "byte_count": 1683,
+      "collected_at": "2026-08-23T15:00:20.301183Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260730900136.zip",
+      "sha256": "679d190872b91a08fa7761f863ca12ebd60f2d98f4f846833de4f3b6598287fe",
+      "byte_count": 2301,
+      "collected_at": "2026-08-23T15:00:24.013046Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260730900138.zip",
+      "sha256": "bbfe235e162ba95e44e5ca0b82fad757401744944afb43b2336b3d2619ac7f13",
+      "byte_count": 2145,
+      "collected_at": "2026-08-23T15:00:23.901330Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260730900213.zip",
+      "sha256": "3995782a40828c5ad3261ea8b2de403472d67ac1c49096bb58c397b998a84d15",
+      "byte_count": 2039,
+      "collected_at": "2026-08-23T15:00:23.790361Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260730900247.zip",
+      "sha256": "d355e24b71f0b42c865f4e5d8eab2e37b42561e506b00c264f0cde7f20bd140c",
+      "byte_count": 2168,
+      "collected_at": "2026-08-23T15:00:23.597100Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260730900277.zip",
+      "sha256": "d1b380c37b80dabf3138a36294aaf605c37ce620e272eb375902c22ad2b2b715",
+      "byte_count": 1932,
+      "collected_at": "2026-08-23T15:00:23.450825Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260730900393.zip",
+      "sha256": "61d4c88f641a73dc0533f46d2f3456f1e71dfb89ce2206fb1b1e4c925f928806",
+      "byte_count": 1908,
+      "collected_at": "2026-08-23T15:00:22.025878Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260730900394.zip",
+      "sha256": "ba521fe08fd636389e4d6b165bc5f8f126c0e35834187e0208fc442cd0a67d23",
+      "byte_count": 2007,
+      "collected_at": "2026-08-23T15:00:22.122993Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260730900881.zip",
+      "sha256": "aec9901542f91583b3da52cda2128f487a9a8eca07b8b4a35794bd88e6497a14",
+      "byte_count": 2778,
+      "collected_at": "2026-08-23T15:00:20.451658Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260731800210.zip",
+      "sha256": "dfc41b9bcdccb73678d2475e3ffd969b7a746f943c9722eabcb57ce0b9993666",
+      "byte_count": 1926,
+      "collected_at": "2026-08-23T15:00:20.110947Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260731800216.zip",
+      "sha256": "64a80b65d10fe96ae93c094ace51284be4cca4076386a46e6d03dd8be1043a73",
+      "byte_count": 2093,
+      "collected_at": "2026-08-23T15:00:20.205387Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260731800361.zip",
+      "sha256": "0915a3d7b5ac73b4fd48513c6252f08b1de2cf145f2330287ebbb4fe7f170a73",
+      "byte_count": 1919,
+      "collected_at": "2026-08-23T15:00:20.021033Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260731800502.zip",
+      "sha256": "893ee3c617f9092737aff9918b7c47867d5630f7e9f9c087c1fb400d1acfbf11",
+      "byte_count": 1923,
+      "collected_at": "2026-08-23T15:00:19.926915Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260731800547.zip",
+      "sha256": "f434064869a9cdef7682d6182c79bc2328602f101f56a3647fb0362ed4742ab5",
+      "byte_count": 1968,
+      "collected_at": "2026-08-23T15:00:19.763917Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260803800305.zip",
+      "sha256": "77bebde48f30c6dd109cccb2a1c1bfac62bc054903ec349628eb0e79ce9932c6",
+      "byte_count": 1878,
+      "collected_at": "2026-08-23T15:00:16.883842Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260803800398.zip",
+      "sha256": "f1af4cae9da85b624f8f645bcad768df9b801ec98c7f8b3773f27808a3eea854",
+      "byte_count": 1811,
+      "collected_at": "2026-08-23T15:00:16.527207Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260803800706.zip",
+      "sha256": "1cbc0bc84af7b1776e05ab40fd0c61727b76fb39b7422cd2ec3582c958a37816",
+      "byte_count": 1829,
+      "collected_at": "2026-08-23T15:00:16.437352Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260803800852.zip",
+      "sha256": "ffa73c3e2308b87c4d5b63765e9d1c0fea0d6b9cb16da0f0cba90f3fd79e9c4d",
+      "byte_count": 2075,
+      "collected_at": "2026-08-23T15:00:16.350432Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260803900002.zip",
+      "sha256": "a03eba9487bafbb0e06eb0a24258c6b01796bfb6cf6bdb410014191758d0f408",
+      "byte_count": 2901,
+      "collected_at": "2026-08-23T15:00:16.969395Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260803900306.zip",
+      "sha256": "74f70e9ba109e33d4f1edf4704f7bc5b76a0ad336d5bd2ec129b14e1eced07dd",
+      "byte_count": 1973,
+      "collected_at": "2026-08-23T15:00:16.781078Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260803900322.zip",
+      "sha256": "00af2feb12b7f215c337818a2291a31fd9a5448b54ef5c3ac74ae7a569b924f5",
+      "byte_count": 2112,
+      "collected_at": "2026-08-23T15:00:16.626359Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260803900921.zip",
+      "sha256": "d04a477ab48ff5f451461142896b583894105a5d25bf68e771404d70c57e6342",
+      "byte_count": 2169,
+      "collected_at": "2026-08-23T15:00:16.256960Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260803901043.zip",
+      "sha256": "e44333fc8be2b55e38259024e4f15ccfe34e198af1b02e9cc5dfddcec6ce08b5",
+      "byte_count": 1953,
+      "collected_at": "2026-08-23T15:00:15.041833Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260804800385.zip",
+      "sha256": "70558dd806dff7aa5db37e7b7104218fb0a16031395d42c47c4da1c30199a89a",
+      "byte_count": 2076,
+      "collected_at": "2026-08-23T15:00:14.362404Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260804800387.zip",
+      "sha256": "e37ec418915626878c61a0f3e0baf7e712ca8b14c8763da5d90cab256541bbf8",
+      "byte_count": 2078,
+      "collected_at": "2026-08-23T15:00:14.254475Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260804900092.zip",
+      "sha256": "6ef45042415839352bbf6af4ebc66a1a4467f6380ce55887c09bd3e2617017ae",
+      "byte_count": 1986,
+      "collected_at": "2026-08-23T15:00:14.950210Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260804900178.zip",
+      "sha256": "872e82f63c13d3d63ca097c31be5ea1a489abc30b7468d0882dc9c4eeab4b358",
+      "byte_count": 2014,
+      "collected_at": "2026-08-23T15:00:14.870570Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260804900187.zip",
+      "sha256": "96dbb91ee85e6f4e3c4fcca32328307dbb67782529432bfa7c77b79d00424fd3",
+      "byte_count": 2233,
+      "collected_at": "2026-08-23T15:00:14.771932Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260804900286.zip",
+      "sha256": "ffa1f3d221d1d9782e9a9bb4a574e4509ab416ff58941f47443e9f8ddd8f5cbb",
+      "byte_count": 1986,
+      "collected_at": "2026-08-23T15:00:14.685034Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260804900307.zip",
+      "sha256": "4968768e007ae40be6d18c0057e3a3e785920995e9575dc0c52ddc2a7935cb37",
+      "byte_count": 2108,
+      "collected_at": "2026-08-23T15:00:14.445597Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260804900308.zip",
+      "sha256": "7a20e8698a414430ce8594e87b76908ee50f51486f93ccdd2fc7ee9209f1bc2d",
+      "byte_count": 2196,
+      "collected_at": "2026-08-23T15:00:14.560915Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260805800294.zip",
+      "sha256": "14c47e5bbacaf89fbb716bab5f4fa839989e381c4b31438c2c3603a34297b6ad",
+      "byte_count": 1892,
+      "collected_at": "2026-08-23T15:00:12.809598Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260806800133.zip",
+      "sha256": "e4a04cbadc86e1ba6ee20535b5d21982e5de4c1557170e21879bebd1457d1b66",
+      "byte_count": 2019,
+      "collected_at": "2026-08-23T15:00:11.199895Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260806800295.zip",
+      "sha256": "b0e24599e3a24fa2278294b1af9e496e569afb137eb11fc374deb942eda8fd42",
+      "byte_count": 2059,
+      "collected_at": "2026-08-23T15:00:11.110688Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260806800457.zip",
+      "sha256": "1d813e925ca6fdc21a7dd90408f588d453891cdd232fd19de87375c4308d6685",
+      "byte_count": 1949,
+      "collected_at": "2026-08-23T15:00:11.012201Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260806900451.zip",
+      "sha256": "dae4b18f63ea7c173a53525e71bc0707c64503a4abaf440eaa7bb85c63518201",
+      "byte_count": 2077,
+      "collected_at": "2026-08-23T14:59:28.918645Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260806900659.zip",
+      "sha256": "fdf3402c14f3c6bbb216e5dd66c2b3baf5749d02bbac97e3f6b27268ae939a7e",
+      "byte_count": 2228,
+      "collected_at": "2026-08-23T14:59:28.839837Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260807800073.zip",
+      "sha256": "6b60e1369004ea63efab21c3367c8a3ecf53b29912fe141dc099addecf70c0bd",
+      "byte_count": 1799,
+      "collected_at": "2026-08-23T14:59:28.616634Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260807800114.zip",
+      "sha256": "675666ba0af43813af0ee6fe520097228c140f75977def060f29abf09d5c095c",
+      "byte_count": 1961,
+      "collected_at": "2026-08-23T14:59:28.547894Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260807800878.zip",
+      "sha256": "194c387d77b4349f3bfee6fd98f624336f09cb0edc1c36bb2ffc62a5a1327b88",
+      "byte_count": 2208,
+      "collected_at": "2026-08-23T14:59:27.655839Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260810800128.zip",
+      "sha256": "fe021215858e36aafb721ff1c75201eb7b83eed43c539aca66284dd1ec6e1b34",
+      "byte_count": 1926,
+      "collected_at": "2026-08-23T15:00:07.008820Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260810800144.zip",
+      "sha256": "d97bb3e10a5748dbac90dd60592e7fc44a5e7e154c3604d5000758d2c8b14745",
+      "byte_count": 1952,
+      "collected_at": "2026-08-23T15:00:06.820121Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260810800210.zip",
+      "sha256": "26871c83606a5ece3564913e9e2cfb46f7583a3c05d3c3981cf55a90a62b32c4",
+      "byte_count": 2001,
+      "collected_at": "2026-08-23T15:00:04.903265Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260810800759.zip",
+      "sha256": "2cc9342bc43127f1c1e4861b38a271572d34b2032ad74a7c2129d7e458d4e14d",
+      "byte_count": 2001,
+      "collected_at": "2026-08-23T15:00:04.618570Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260810900133.zip",
+      "sha256": "b88ef3f319970620734beb201b0c4796323cd0bf2d968b0b829ebf90e1e605ba",
+      "byte_count": 1964,
+      "collected_at": "2026-08-23T15:00:05.125478Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260810900134.zip",
+      "sha256": "7cd6db00b2a0324fd875b6ce0747527408872140196776078b457e238299459c",
+      "byte_count": 2042,
+      "collected_at": "2026-08-23T15:00:06.912697Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260810900159.zip",
+      "sha256": "7478d7afcb7cb36241665571ab0a20755ce5831fc3320daf0ac777f8ea711475",
+      "byte_count": 1964,
+      "collected_at": "2026-08-23T15:00:05.014041Z"
+    },
+    {
+      "source": "opendart_source_document",
+      "relative_path": "opendart/document_20260810900391.zip",
+      "sha256": "57d457971f64302aedfbc1d9e58b925c54a15723ae0eac97fd8e2b7abdcf6f08",
+      "byte_count": 2165,
+      "collected_at": "2026-08-23T15:00:04.813043Z"
+    }
+  ],
+  "errors": [],
+  "interpretation": "Descriptive in-sample pilot only; it does not establish predictive power or tradability."
+}
