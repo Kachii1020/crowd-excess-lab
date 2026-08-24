@@ -1,6 +1,7 @@
 .git/
 .github/
 .env
+.env.local
 .venv/
 .pytest_cache/
 .ruff_cache/
