@@ -44,7 +44,9 @@ class ExecutionState(StrEnum):
     ACCEPTED = "accepted"
     PARTIALLY_FILLED = "partially_filled"
     FILLED = "filled"
+    DONE_FOR_DAY = "done_for_day"
     CANCELLED = "cancelled"
+    EXPIRED = "expired"
     REJECTED = "rejected"
 
 
@@ -305,6 +307,7 @@ class ExecutionReceipt(AgentModel):
     filled_at: datetime | None = None
     limit_debit: float
     quantity: int
+    filled_quantity: int = Field(default=0, ge=0)
     legs: tuple[OptionLeg, OptionLeg]
     response_status: int | None = None
     message: str = ""
@@ -316,6 +319,27 @@ class ExecutionReceipt(AgentModel):
     limit_credit: float | None = Field(default=None, gt=0)
 
     _normalize_submitted = field_validator("submitted_at")(_aware_utc)
+
+    @model_validator(mode="before")
+    @classmethod
+    def preserve_legacy_filled_quantity(cls, value: Any) -> Any:
+        """Treat historical filled receipts as fully filled without rewriting the audit log."""
+
+        if isinstance(value, dict) and "filled_quantity" not in value:
+            normalized = dict(value)
+            normalized["filled_quantity"] = (
+                normalized.get("quantity", 0)
+                if normalized.get("state") == ExecutionState.FILLED
+                else 0
+            )
+            return normalized
+        return value
+
+    @model_validator(mode="after")
+    def validate_fill_quantity(self) -> ExecutionReceipt:
+        if self.filled_quantity > self.quantity:
+            raise ValueError("filled quantity cannot exceed requested quantity")
+        return self
 
     @field_validator("filled_at")
     @classmethod

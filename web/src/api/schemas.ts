@@ -165,11 +165,12 @@ export const riskDecisionSchema = z.object({
 export const executionReceiptSchema = z.object({
   client_order_id: z.string(),
   alpaca_order_id: z.string().nullable(),
-  state: z.enum(['shadow', 'accepted', 'partially_filled', 'filled', 'cancelled', 'rejected']),
+  state: z.enum(['shadow', 'accepted', 'partially_filled', 'filled', 'done_for_day', 'cancelled', 'expired', 'rejected']),
   submitted_at: z.string(),
   filled_at: z.string().nullable(),
   limit_debit: z.number(),
   quantity: z.number(),
+  filled_quantity: z.number(),
   legs: z.tuple([optionLegSchema, optionLegSchema]),
   response_status: z.number().nullable(),
   message: z.string(),

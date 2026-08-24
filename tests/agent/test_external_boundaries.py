@@ -6,7 +6,13 @@ import pytest
 from pydantic import SecretStr
 
 from crowd_excess_lab.agent.alpaca import AlpacaPaperClient, UnsafeTradingConfiguration
-from crowd_excess_lab.agent.domain import EvidenceContext, ExitIntent, OptionLeg, TradeIntent
+from crowd_excess_lab.agent.domain import (
+    EvidenceContext,
+    ExecutionReceipt,
+    ExitIntent,
+    OptionLeg,
+    TradeIntent,
+)
 from crowd_excess_lab.agent.evidence import EvidenceUnavailable, OpenAIEvidenceClient
 
 
@@ -145,7 +151,9 @@ def test_alpaca_reuses_existing_client_order_without_duplicate_post() -> None:
             json={
                 "id": "existing-order",
                 "client_order_id": _intent().client_order_id,
-                "status": "accepted",
+                "status": "partially_filled",
+                "qty": "2",
+                "filled_qty": "1",
                 "submitted_at": "2026-08-31T15:00:00Z",
             },
         )
@@ -160,11 +168,58 @@ def test_alpaca_reuses_existing_client_order_without_duplicate_post() -> None:
     receipt = client.submit_spread(_intent())
 
     assert receipt.alpaca_order_id == "existing-order"
+    assert receipt.state == "partially_filled"
+    assert receipt.filled_quantity == 1
+    assert receipt.quantity == 2
     assert receipt.message == "Existing idempotent order"
     assert paths == [
         ("GET", "/v2/account"),
         ("GET", "/v2/orders:by_client_order_id"),
     ]
+
+
+def test_alpaca_reconciliation_preserves_terminal_partial_fill() -> None:
+    responses = iter(
+        (
+            {"id": "paper-account"},
+            {
+                "id": "existing-order",
+                "status": "expired",
+                "qty": "2",
+                "filled_qty": "1.000000000",
+                "submitted_at": "2026-08-31T15:00:00Z",
+            },
+        )
+    )
+
+    def handler(_: httpx.Request) -> httpx.Response:
+        return httpx.Response(200, json=next(responses))
+
+    intent = _intent()
+    client = AlpacaPaperClient(
+        SecretStr("key"),
+        SecretStr("secret"),
+        competition_account_id="paper-account",
+        client=httpx.Client(transport=httpx.MockTransport(handler)),
+    )
+    receipt = client.refresh_receipt(
+        ExecutionReceipt(
+            client_order_id=intent.client_order_id,
+            alpaca_order_id="existing-order",
+            state="partially_filled",
+            submitted_at=datetime(2026, 8, 31, 15, tzinfo=UTC),
+            limit_debit=intent.limit_debit,
+            quantity=intent.quantity,
+            filled_quantity=1,
+            legs=intent.legs,
+            symbol=intent.symbol,
+            direction=intent.direction,
+        )
+    )
+
+    assert receipt.state == "expired"
+    assert receipt.filled_quantity == 1
+    assert receipt.quantity == 2
 
 
 def test_alpaca_account_mismatch_stops_before_order_lookup() -> None:

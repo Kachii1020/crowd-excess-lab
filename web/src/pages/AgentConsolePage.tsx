@@ -153,7 +153,7 @@ export function AgentConsolePage() {
           <section className="receipt-summary">
             <p className="eyebrow">ALPACA RECEIPT</p>
             <strong>{receipt ? receipt.state.toUpperCase() : 'NO ORDER'}</strong>
-            <small>{receipt?.alpaca_order_id ?? receipt?.message ?? status.data?.last_run?.summary ?? 'A no-trade decision is valid.'}</small>
+            <small>{receipt ? `${receipt.filled_quantity}/${receipt.quantity} spread units filled · ${receipt.alpaca_order_id ?? receipt.message}` : status.data?.last_run?.summary ?? 'A no-trade decision is valid.'}</small>
             {latestRunId && <Link className="text-link" to={`/agent/runs/${latestRunId}`}>Open full audit trace <ArrowRight /></Link>}
           </section>
         </aside>

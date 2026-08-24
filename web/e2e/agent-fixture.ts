@@ -67,6 +67,7 @@ const run = {
 const receipt = {
   client_order_id: 'ce-fixture-judge-path', alpaca_order_id: null, state: 'shadow',
   submitted_at: '2026-08-31T15:00:00Z', filled_at: null, limit_debit: 2.9, quantity: 2,
+  filled_quantity: 0,
   legs, response_status: null, message: 'Synthetic fixture: no order was submitted.',
   action: 'open', symbol: 'AAPL', direction: 'bearish', parent_client_order_id: '',
   exit_reason: null, limit_credit: null,

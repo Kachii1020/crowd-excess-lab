@@ -5,6 +5,7 @@ import pytest
 from crowd_excess_lab.agent.domain import (
     EvidenceAssessment,
     ExecutionReceipt,
+    ExecutionState,
     ExitReason,
     OptionLeg,
     SignalSnapshot,
@@ -102,8 +103,40 @@ def test_stop_loss_and_signal_reversal_are_deterministic() -> None:
 def test_missing_leg_or_shadow_receipt_never_creates_exit() -> None:
     config = StrategyConfig(competition_account_id="paper-account")
     assert evaluate_exit(_receipt(), _positions(6.2)[:1], config, now=NOW) is None
-    shadow = _receipt().model_copy(update={"state": "shadow"})
+    shadow = _receipt().model_copy(update={"state": ExecutionState.SHADOW})
     assert evaluate_exit(shadow, _positions(6.2), config, now=NOW) is None
+
+
+def test_working_partial_fill_is_visible_but_waits_for_terminal_quantity() -> None:
+    config = StrategyConfig(competition_account_id="paper-account")
+    partial = _receipt().model_copy(
+        update={"state": ExecutionState.PARTIALLY_FILLED, "filled_quantity": 1}
+    )
+    events = (audit_event("20260831T150000Z-1234abcd", "execution", partial),)
+
+    projected = open_receipts(events)
+
+    assert len(projected) == 1
+    assert projected[0].quantity == 2
+    assert projected[0].filled_quantity == 1
+    assert evaluate_exit(partial, _positions(6.2), config, now=NOW) is None
+
+
+def test_cancelled_partial_fill_closes_only_actual_spread_quantity() -> None:
+    config = StrategyConfig(competition_account_id="paper-account")
+    terminal_partial = _receipt().model_copy(
+        update={"state": ExecutionState.CANCELLED, "filled_quantity": 1}
+    )
+    one_spread_positions = [
+        {"symbol": "AAPL-LONG", "qty": "1", "current_price": "6.2"},
+        {"symbol": "AAPL-SHORT", "qty": "-1", "current_price": "2.1"},
+    ]
+
+    intent = evaluate_exit(terminal_partial, one_spread_positions, config, now=NOW)
+
+    assert intent is not None
+    assert intent.quantity == 1
+    assert intent.limit_credit == pytest.approx(4.1)
 
 
 def test_durable_close_removes_entry_from_open_risk_projection() -> None:

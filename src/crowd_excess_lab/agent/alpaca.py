@@ -8,6 +8,7 @@ import shutil
 import subprocess
 from collections.abc import Sequence
 from datetime import UTC, datetime
+from decimal import Decimal, InvalidOperation
 from typing import Any
 
 import httpx
@@ -35,11 +36,26 @@ def _execution_state(value: str) -> ExecutionState:
     mapping = {
         "filled": ExecutionState.FILLED,
         "partially_filled": ExecutionState.PARTIALLY_FILLED,
+        "done_for_day": ExecutionState.DONE_FOR_DAY,
         "canceled": ExecutionState.CANCELLED,
         "cancelled": ExecutionState.CANCELLED,
+        "expired": ExecutionState.EXPIRED,
         "rejected": ExecutionState.REJECTED,
     }
     return mapping.get(value, ExecutionState.ACCEPTED)
+
+
+def _filled_quantity(payload: dict[str, Any], requested_quantity: int) -> int:
+    raw = payload.get("filled_qty")
+    if raw is None or raw == "":
+        raw = requested_quantity if payload.get("status") == "filled" else 0
+    try:
+        parsed = Decimal(str(raw))
+    except InvalidOperation as exc:
+        raise AlpacaUnavailable("Alpaca returned an invalid filled quantity") from exc
+    if parsed < 0 or parsed != parsed.to_integral_value():
+        raise AlpacaUnavailable("Alpaca returned an invalid filled quantity")
+    return int(parsed)
 
 
 class AlpacaCliClient:
@@ -192,6 +208,7 @@ class AlpacaPaperClient:
             if filled_raw
             else None
         )
+        filled_quantity = _filled_quantity(payload, intent.quantity)
         is_exit = isinstance(intent, ExitIntent)
         return ExecutionReceipt(
             client_order_id=intent.client_order_id,
@@ -201,6 +218,7 @@ class AlpacaPaperClient:
             filled_at=filled,
             limit_debit=0 if is_exit else intent.limit_debit,
             quantity=intent.quantity,
+            filled_quantity=filled_quantity,
             legs=intent.legs,
             response_status=status_code,
             message=(
@@ -299,11 +317,13 @@ class AlpacaPaperClient:
             if filled_raw
             else None
         )
+        filled_quantity = _filled_quantity(payload, receipt.quantity)
         return receipt.model_copy(
             update={
                 "alpaca_order_id": str(payload.get("id") or receipt.alpaca_order_id or ""),
                 "state": _execution_state(str(payload.get("status", receipt.state.value))),
                 "filled_at": filled,
+                "filled_quantity": filled_quantity,
                 "response_status": 200,
                 "message": "Paper order status reconciled.",
             }

@@ -24,6 +24,8 @@ deterministic risk, paper receipts, and portfolio state without adding a live-tr
 - [Structured evidence](../../../src/crowd_excess_lab/agent/evidence.py) validates model output.
 - [Deterministic risk](../../../src/crowd_excess_lab/agent/risk.py) owns contracts and quantity.
 - [Paper submission](../../../src/crowd_excess_lab/agent/alpaca.py) verifies account and idempotency.
+- [Exit projection](../../../src/crowd_excess_lab/agent/exits.py) distinguishes working quantity from
+  terminal filled exposure and closes only observable spread units.
 - [Audit migration](../../../supabase/migrations/202608240001_agent_audit.sql) separates public reads
   from runner writes and blocks mutation.
 - [Orchestrator](../../../src/crowd_excess_lab/agent/orchestrator.py) persists the risk decision
@@ -47,6 +49,10 @@ Failure/rollback: model or provider failures abstain; database failure blocks su
 Alpaca submission is recovered by client-order-ID lookup; Vercel rolls back by deployment/commit;
 database corrections use a forward migration rather than weakening RLS.
 
+Partial-fill rule: each Alpaca receipt preserves requested and filled spread units. A working partial
+entry stays visible and blocks unsafe quantity assumptions; once the entry becomes terminal, only the
+filled units supported by both option-leg positions may become a close intent.
+
 ## Verification evidence
 
 - Python: 102 tests passed; Ruff passed.
@@ -54,6 +60,8 @@ database corrections use a forward migration rather than weakening RLS.
 - Browser: desktop/mobile Playwright suite passed, including the clearly labelled synthetic judge
   path from Agent Console through audit, portfolio, and strategy.
 - External paper order and Supabase permission probe: pending real credentials and kickoff account.
+- Partial-fill boundary tests preserve `filled_qty`, retain working risk, wait for terminal quantity,
+  and close only the filled spread units.
 
 ## Teach-back
 
@@ -62,6 +70,11 @@ order, and name the checks that must succeed after it.
 
 Prediction prompt: if Alpaca accepted an order but the runner timed out before receiving the
 response, what prevents a duplicate on the next scheduled run?
+
+User response, 2026-08-24: immediately resubmitting after a timeout can cause an incorrect trade.
+Review: directionally correct. To reach `EXPLAIN`, the response still needs the missing causal link:
+the first order may already exist at Alpaca even though the client never received its response, so
+the deterministic client order ID must be looked up before any retry to prevent a duplicate spread.
 
 ## Contribution split
 

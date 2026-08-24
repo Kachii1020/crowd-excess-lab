@@ -154,7 +154,7 @@ class AgentRunner:
                 continue
             latest_order_events[receipt.client_order_id] = (event, receipt)
         for event, receipt in latest_order_events.values():
-            if receipt.state not in {"accepted", "partially_filled"}:
+            if receipt.state not in {"accepted", "partially_filled", "done_for_day"}:
                 continue
             updated = self._orchestrator.reconcile_receipt(event.run_id, receipt)
             if updated != receipt:

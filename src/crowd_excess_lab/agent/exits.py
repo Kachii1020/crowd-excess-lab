@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+from collections import defaultdict
 from collections.abc import Mapping, Sequence
 from datetime import UTC, datetime, timedelta
 from typing import Any
@@ -36,24 +37,39 @@ def evaluate_exit(
 ) -> ExitIntent | None:
     """Return one close intent when a declared exit condition is observable."""
 
-    if receipt.action is not TradeAction.OPEN or receipt.state not in {
+    if (
+        receipt.action is not TradeAction.OPEN
+        or receipt.filled_quantity <= 0
+        or receipt.state in {ExecutionState.SHADOW, ExecutionState.REJECTED}
+    ):
+        return None
+    # A working partial entry can still add spread units. Wait for its terminal state before
+    # constructing an exact close quantity; the next reconciliation keeps it visible.
+    if receipt.state in {
         ExecutionState.ACCEPTED,
         ExecutionState.PARTIALLY_FILLED,
-        ExecutionState.FILLED,
+        ExecutionState.DONE_FOR_DAY,
     }:
         return None
     by_symbol = {str(item.get("symbol", "")): item for item in positions}
     if any(leg.symbol not in by_symbol for leg in receipt.legs):
         return None
-    spread_value = 0.0
+    available_quantities: list[int] = []
+    unit_value = 0.0
     for leg in receipt.legs:
         position = by_symbol[leg.symbol]
-        quantity = float(position.get("qty") or 0)
+        position_quantity = abs(float(position.get("qty") or 0))
         current_price = abs(float(position.get("current_price") or 0))
-        if current_price <= 0:
+        if current_price <= 0 or position_quantity <= 0:
             return None
-        spread_value += quantity * current_price * 100
-    entry_value = receipt.limit_debit * receipt.quantity * 100
+        available_quantities.append(int(position_quantity // leg.ratio_qty))
+        direction = 1 if leg.side == "buy" else -1
+        unit_value += direction * current_price * leg.ratio_qty
+    close_quantity = min(receipt.filled_quantity, *available_quantities)
+    if close_quantity <= 0:
+        return None
+    spread_value = unit_value * close_quantity * 100
+    entry_value = receipt.limit_debit * close_quantity * 100
     if entry_value <= 0:
         return None
     pnl_ratio = (spread_value - entry_value) / entry_value
@@ -76,10 +92,10 @@ def evaluate_exit(
     if reason is None:
         return None
 
-    unit_credit = round(max(spread_value / receipt.quantity / 100, 0.01), 2)
+    unit_credit = round(max(unit_value, 0.01), 2)
     return ExitIntent(
         symbol=receipt.symbol,
-        quantity=receipt.quantity,
+        quantity=close_quantity,
         limit_credit=unit_credit,
         client_order_id=_client_order_id(receipt, now),
         parent_client_order_id=receipt.client_order_id,
@@ -110,7 +126,7 @@ def open_receipts(
     """Project entries that do not yet have a durable close receipt."""
 
     entries: dict[str, ExecutionReceipt] = {}
-    closed: set[str] = set()
+    closes: dict[str, ExecutionReceipt] = {}
     for event in events:
         event_type = getattr(event, "event_type", "")
         payload = getattr(event, "payload", None)
@@ -121,18 +137,33 @@ def open_receipts(
         except ValueError:
             continue
         if receipt.action is TradeAction.CLOSE and receipt.parent_client_order_id:
-            if receipt.state is ExecutionState.FILLED:
-                closed.add(receipt.parent_client_order_id)
+            closes[receipt.client_order_id] = receipt
         elif receipt.action is TradeAction.OPEN:
             entries[receipt.client_order_id] = receipt
-    return tuple(
-        receipt
-        for key, receipt in entries.items()
-        if key not in closed
-        and receipt.state
-        in {
+    closed_by_parent: defaultdict[str, int] = defaultdict(int)
+    for close in closes.values():
+        closed_by_parent[close.parent_client_order_id] += close.filled_quantity
+
+    projected: list[ExecutionReceipt] = []
+    for key, receipt in entries.items():
+        closed_quantity = closed_by_parent[key]
+        working = receipt.state in {
             ExecutionState.ACCEPTED,
             ExecutionState.PARTIALLY_FILLED,
-            ExecutionState.FILLED,
+            ExecutionState.DONE_FOR_DAY,
         }
-    )
+        remaining_filled = max(0, receipt.filled_quantity - closed_quantity)
+        at_risk_quantity = (
+            max(0, receipt.quantity - closed_quantity) if working else remaining_filled
+        )
+        if at_risk_quantity <= 0:
+            continue
+        projected.append(
+            receipt.model_copy(
+                update={
+                    "quantity": at_risk_quantity,
+                    "filled_quantity": remaining_filled,
+                }
+            )
+        )
+    return tuple(projected)
