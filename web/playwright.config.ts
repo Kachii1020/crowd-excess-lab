@@ -12,7 +12,7 @@ export default defineConfig({
     {
       command: 'uv run --project .. crowd-excess-api --study-root ../tests/fixtures/e2e_runs',
       url: 'http://127.0.0.1:8000/api/v1/health',
-      env: { UV_CACHE_DIR: '/private/tmp/crowd-excess-uv-cache', PYTHONPATH: '../src' },
+      env: { PYTHONPATH: '../src' },
       reuseExistingServer: true,
       timeout: 30_000,
     },
