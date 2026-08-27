@@ -93,6 +93,11 @@ Spread-unit follow-up, 2026-08-27: predicted a close quantity of two when termin
 quantity. One 1:1 vertical spread has a parent quantity of one and two legs of one contract each;
 the close parent quantity is therefore one.
 
+Parent-quantity follow-up, 2026-08-27: for `filled_qty=3`, predicted one parent spread and three
+contracts per leg. Review: the per-leg quantity is correct, but `filled_qty` is itself the number of
+filled parent spread units. Therefore the close parent quantity is three, and each 1:1 leg also has
+three contracts.
+
 ## Contribution split
 
 - User decisions: original crowd-overreaction thesis; clean terminal direction; English hackathon
