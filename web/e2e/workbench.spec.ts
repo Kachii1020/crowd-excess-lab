@@ -15,7 +15,7 @@ test('synthetic fixture event monitor and search stay inspectable', async ({ pag
   expect(errors).toEqual([])
 })
 
-test('judge path traces attention through risk and a clearly labelled shadow receipt', async ({ page }) => {
+test('judge path traces attention through risk and a clearly labelled shadow receipt', async ({ page }, testInfo) => {
   await installAgentFixture(page)
   const errors: string[] = []
   page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()) })
@@ -34,10 +34,16 @@ test('judge path traces attention through risk and a clearly labelled shadow rec
   await expect(page.getByRole('heading', { name: 'Approved by deterministic controls' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'SHADOW' })).toBeVisible()
 
+  if (testInfo.project.name === 'mobile-chromium') {
+    await page.getByRole('button', { name: 'Open navigation' }).click()
+  }
   await page.getByRole('link', { name: 'Paper Portfolio' }).click()
   await expect(page.getByRole('heading', { name: 'Paper Portfolio' })).toBeVisible()
   await expect(page.getByText('$100,250')).toBeVisible()
 
+  if (testInfo.project.name === 'mobile-chromium') {
+    await page.getByRole('button', { name: 'Open navigation' }).click()
+  }
   await page.getByRole('link', { name: 'Strategy & Risk' }).click()
   await expect(page.getByRole('heading', { name: 'Strategy & Risk' })).toBeVisible()
   await expect(page.getByText('Live Alpaca endpoint does not exist in configuration.')).toBeVisible()
