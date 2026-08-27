@@ -119,7 +119,7 @@ export function AppShell() {
         <div className="sidebar-mobile-head"><span>Navigation</span><button className="icon-button sidebar-close" type="button" aria-label="Close navigation" onClick={() => setMobileOpen(false)}><X aria-hidden="true" /></button></div>
         <nav aria-label="Primary navigation">
           {navigation.map(({ to, label, icon: Icon }) => (
-            <NavLink key={to} to={to} onClick={() => setMobileOpen(false)}>
+            <NavLink key={to} to={to} aria-label={label} title={label} onClick={() => setMobileOpen(false)}>
               <Icon aria-hidden="true" /><span>{label}</span>
             </NavLink>
           ))}
