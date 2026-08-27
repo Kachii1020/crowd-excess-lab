@@ -55,7 +55,7 @@ filled units supported by both option-leg positions may become a close intent.
 
 ## Verification evidence
 
-- Python: 102 tests passed; Ruff passed.
+- Python: 105 tests passed; Ruff passed.
 - Frontend: 5 Vitest tests, TypeScript, oxlint, and Vite production build passed.
 - Browser: desktop/mobile Playwright suite passed, including the clearly labelled synthetic judge
   path from Agent Console through audit, portfolio, and strategy.
@@ -75,6 +75,12 @@ User response, 2026-08-24: immediately resubmitting after a timeout can cause an
 Review: directionally correct. To reach `EXPLAIN`, the response still needs the missing causal link:
 the first order may already exist at Alpaca even though the client never received its response, so
 the deterministic client order ID must be looked up before any retry to prevent a duplicate spread.
+
+Partial-fill response, 2026-08-27: placing the close first is risky because the price may change
+before execution. Review: price movement is a valid execution risk, but the task-specific missing
+link is that the original entry order remains live and may fill additional spread units after the
+close. The entry must first reach a terminal state; then its final `filled_qty` and both leg
+positions determine the close quantity.
 
 ## Contribution split
 
