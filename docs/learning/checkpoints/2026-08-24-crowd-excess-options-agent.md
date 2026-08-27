@@ -88,6 +88,11 @@ events rather than net holdings. One entry fill minus one close plus two later e
 two open spreads. The state that must become terminal before sizing the close is the original entry
 order, not the close order.
 
+Spread-unit follow-up, 2026-08-27: predicted a close quantity of two when terminal entry
+`filled_qty` and both leg positions were one. Review: this conflates leg count with parent spread
+quantity. One 1:1 vertical spread has a parent quantity of one and two legs of one contract each;
+the close parent quantity is therefore one.
+
 ## Contribution split
 
 - User decisions: original crowd-overreaction thesis; clean terminal direction; English hackathon
