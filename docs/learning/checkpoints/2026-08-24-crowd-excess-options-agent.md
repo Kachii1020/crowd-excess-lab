@@ -82,6 +82,12 @@ link is that the original entry order remains live and may fill additional sprea
 close. The entry must first reach a terminal state; then its final `filled_qty` and both leg
 positions determine the close quantity.
 
+Partial-fill follow-up, 2026-08-27: predicted four remaining spreads and proposed confirming the
+close state. Review: the answer correctly recognized that order state matters, but counted trade
+events rather than net holdings. One entry fill minus one close plus two later entry fills leaves
+two open spreads. The state that must become terminal before sizing the close is the original entry
+order, not the close order.
+
 ## Contribution split
 
 - User decisions: original crowd-overreaction thesis; clean terminal direction; English hackathon
