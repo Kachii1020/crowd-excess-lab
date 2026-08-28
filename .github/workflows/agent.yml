@@ -81,7 +81,11 @@ jobs:
         run: |
           current_date="$(date -u +%Y-%m-%d)"
           if [[ "$current_date" < "2026-08-29" || "$current_date" > "2026-09-04" ]]; then
-            echo "Outside the declared competition window; no scan was attempted."
-            exit 0
+            if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" && "$AGENT_MODE" == "shadow" ]]; then
+              echo "Outside the competition window; allowing an explicit shadow-only verification."
+            else
+              echo "Outside the declared competition window; no scan was attempted."
+              exit 0
+            fi
           fi
           uv run --no-sync crowd-excess-agent run

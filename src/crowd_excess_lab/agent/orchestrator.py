@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+from contextlib import suppress
 from datetime import UTC, datetime
 from typing import Protocol
 
@@ -55,6 +56,26 @@ class AgentOrchestrator:
         self._mode = mode
         self._model = model
         self._executor = executor
+
+    def _record_failed_run(
+        self,
+        run_id: str,
+        run: AgentRunRecord,
+        exc: Exception,
+    ) -> AgentRunRecord:
+        """Best-effort terminal audit record without leaking provider details."""
+
+        failed = run.model_copy(
+            update={
+                "status": RunStatus.FAILED,
+                "completed_at": datetime.now(UTC),
+                "summary": "Agent execution failed safely; no automatic retry was attempted.",
+                "error": type(exc).__name__,
+            }
+        )
+        with suppress(Exception):
+            self._store.append(audit_event(run_id, "run_completed", failed))
+        return failed
 
     def reconcile_receipt(
         self,
@@ -110,28 +131,32 @@ class AgentOrchestrator:
         receipt: ExecutionReceipt | None = None
         status = RunStatus.ABSTAINED
         summary = decision.denial_reason
-        if decision.approved and decision.intent is not None:
-            if self._mode is AgentMode.SHADOW:
-                receipt = ExecutionReceipt(
-                    client_order_id=decision.intent.client_order_id,
-                    state=ExecutionState.SHADOW,
-                    submitted_at=started,
-                    limit_debit=decision.intent.limit_debit,
-                    quantity=decision.intent.quantity,
-                    legs=decision.intent.legs,
-                    message="Shadow mode: validated intent was not submitted.",
-                    symbol=decision.intent.symbol,
-                    direction=decision.intent.direction,
-                )
-            else:
-                if self._executor is None:
-                    raise RuntimeError("paper mode requires an Alpaca paper executor")
-                receipt = self._executor.submit_spread(decision.intent)
-            self._store.append(audit_event(run_id, "execution", receipt))
-            status = RunStatus.COMPLETED
-            summary = receipt.message
+        try:
+            if decision.approved and decision.intent is not None:
+                if self._mode is AgentMode.SHADOW:
+                    receipt = ExecutionReceipt(
+                        client_order_id=decision.intent.client_order_id,
+                        state=ExecutionState.SHADOW,
+                        submitted_at=started,
+                        limit_debit=decision.intent.limit_debit,
+                        quantity=decision.intent.quantity,
+                        legs=decision.intent.legs,
+                        message="Shadow mode: validated intent was not submitted.",
+                        symbol=decision.intent.symbol,
+                        direction=decision.intent.direction,
+                    )
+                else:
+                    if self._executor is None:
+                        raise RuntimeError("paper mode requires an Alpaca paper executor")
+                    receipt = self._executor.submit_spread(decision.intent)
+                self._store.append(audit_event(run_id, "execution", receipt))
+                status = RunStatus.COMPLETED
+                summary = receipt.message
 
-        self._store.append(audit_event(run_id, "portfolio", portfolio))
+            self._store.append(audit_event(run_id, "portfolio", portfolio))
+        except Exception as exc:
+            self._record_failed_run(run_id, run, exc)
+            raise
         completed = run.model_copy(
             update={
                 "status": status,
@@ -171,27 +196,31 @@ class AgentOrchestrator:
         )
         self._store.append(audit_event(run_id, "run_started", run))
         self._store.append(audit_event(run_id, "exit_intent", intent))
-        if self._mode is AgentMode.SHADOW:
-            receipt = ExecutionReceipt(
-                client_order_id=intent.client_order_id,
-                state=ExecutionState.SHADOW,
-                submitted_at=started_at,
-                limit_debit=0,
-                limit_credit=intent.limit_credit,
-                quantity=intent.quantity,
-                legs=intent.legs,
-                message="Shadow mode: validated close was not submitted.",
-                action="close",
-                symbol=intent.symbol,
-                parent_client_order_id=intent.parent_client_order_id,
-                exit_reason=intent.reason,
-            )
-        else:
-            if self._executor is None:
-                raise RuntimeError("paper mode requires an Alpaca paper executor")
-            receipt = self._executor.submit_close(intent)
-        self._store.append(audit_event(run_id, "position_exit", receipt))
-        self._store.append(audit_event(run_id, "portfolio", portfolio))
+        try:
+            if self._mode is AgentMode.SHADOW:
+                receipt = ExecutionReceipt(
+                    client_order_id=intent.client_order_id,
+                    state=ExecutionState.SHADOW,
+                    submitted_at=started_at,
+                    limit_debit=0,
+                    limit_credit=intent.limit_credit,
+                    quantity=intent.quantity,
+                    legs=intent.legs,
+                    message="Shadow mode: validated close was not submitted.",
+                    action="close",
+                    symbol=intent.symbol,
+                    parent_client_order_id=intent.parent_client_order_id,
+                    exit_reason=intent.reason,
+                )
+            else:
+                if self._executor is None:
+                    raise RuntimeError("paper mode requires an Alpaca paper executor")
+                receipt = self._executor.submit_close(intent)
+            self._store.append(audit_event(run_id, "position_exit", receipt))
+            self._store.append(audit_event(run_id, "portfolio", portfolio))
+        except Exception as exc:
+            self._record_failed_run(run_id, run, exc)
+            raise
         completed = run.model_copy(
             update={
                 "status": RunStatus.COMPLETED,

@@ -236,6 +236,35 @@ class AlpacaPaperClient:
             limit_credit=intent.limit_credit if is_exit else None,
         )
 
+    def _submit_order(
+        self,
+        intent: TradeIntent | ExitIntent,
+        payload: dict[str, Any],
+        *,
+        failure_message: str,
+    ) -> ExecutionReceipt:
+        """Submit once; an uncertain response is reconciled by client order ID."""
+
+        try:
+            response = self._client.post(
+                f"{self._base_url}/v2/orders",
+                headers=self._headers,
+                json=payload,
+            )
+        except httpx.RequestError as exc:
+            existing = self._existing_order(intent.client_order_id)
+            if existing is not None:
+                return self._receipt(existing, intent, 200)
+            raise AlpacaUnavailable(
+                f"{failure_message}; no order was found for the deterministic client order ID"
+            ) from exc
+        try:
+            response.raise_for_status()
+            result: dict[str, Any] = response.json()
+        except (httpx.HTTPError, ValueError) as exc:
+            raise AlpacaUnavailable(failure_message) from exc
+        return self._receipt(result, intent, response.status_code)
+
     def submit_spread(self, intent: TradeIntent) -> ExecutionReceipt:
         self._verify_account()
         existing = self._existing_order(intent.client_order_id)
@@ -258,17 +287,11 @@ class AlpacaPaperClient:
                 for leg in intent.legs
             ],
         }
-        try:
-            response = self._client.post(
-                f"{self._base_url}/v2/orders",
-                headers=self._headers,
-                json=payload,
-            )
-            response.raise_for_status()
-            result: dict[str, Any] = response.json()
-        except (httpx.HTTPError, ValueError) as exc:
-            raise AlpacaUnavailable("Alpaca paper spread submission failed") from exc
-        return self._receipt(result, intent, response.status_code)
+        return self._submit_order(
+            intent,
+            payload,
+            failure_message="Alpaca paper spread submission failed",
+        )
 
     def submit_close(self, intent: ExitIntent) -> ExecutionReceipt:
         self._verify_account()
@@ -292,17 +315,11 @@ class AlpacaPaperClient:
                 for leg in intent.legs
             ],
         }
-        try:
-            response = self._client.post(
-                f"{self._base_url}/v2/orders",
-                headers=self._headers,
-                json=payload,
-            )
-            response.raise_for_status()
-            result: dict[str, Any] = response.json()
-        except (httpx.HTTPError, ValueError) as exc:
-            raise AlpacaUnavailable("Alpaca paper spread close failed") from exc
-        return self._receipt(result, intent, response.status_code)
+        return self._submit_order(
+            intent,
+            payload,
+            failure_message="Alpaca paper spread close failed",
+        )
 
     def refresh_receipt(self, receipt: ExecutionReceipt) -> ExecutionReceipt:
         """Reconcile an accepted/partial receipt before sizing or retrying."""

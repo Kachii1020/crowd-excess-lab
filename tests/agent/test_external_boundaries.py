@@ -5,7 +5,11 @@ import httpx
 import pytest
 from pydantic import SecretStr
 
-from crowd_excess_lab.agent.alpaca import AlpacaPaperClient, UnsafeTradingConfiguration
+from crowd_excess_lab.agent.alpaca import (
+    AlpacaPaperClient,
+    AlpacaUnavailable,
+    UnsafeTradingConfiguration,
+)
 from crowd_excess_lab.agent.domain import (
     EvidenceContext,
     ExecutionReceipt,
@@ -174,6 +178,78 @@ def test_alpaca_reuses_existing_client_order_without_duplicate_post() -> None:
     assert receipt.message == "Existing idempotent order"
     assert paths == [
         ("GET", "/v2/account"),
+        ("GET", "/v2/orders:by_client_order_id"),
+    ]
+
+
+def test_alpaca_timeout_reconciles_by_client_order_id_without_retry() -> None:
+    paths: list[tuple[str, str]] = []
+    lookups = 0
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal lookups
+        paths.append((request.method, request.url.path))
+        if request.url.path == "/v2/account":
+            return httpx.Response(200, json={"id": "paper-account"})
+        if request.url.path == "/v2/orders:by_client_order_id":
+            lookups += 1
+            if lookups == 1:
+                return httpx.Response(404)
+            return httpx.Response(
+                200,
+                json={
+                    "id": "accepted-before-timeout",
+                    "client_order_id": _intent().client_order_id,
+                    "status": "accepted",
+                    "qty": "2",
+                    "submitted_at": "2026-08-31T15:00:00Z",
+                },
+            )
+        raise httpx.ReadTimeout("response lost", request=request)
+
+    client = AlpacaPaperClient(
+        SecretStr("key"),
+        SecretStr("secret"),
+        competition_account_id="paper-account",
+        client=httpx.Client(transport=httpx.MockTransport(handler)),
+    )
+
+    receipt = client.submit_spread(_intent())
+
+    assert receipt.alpaca_order_id == "accepted-before-timeout"
+    assert paths == [
+        ("GET", "/v2/account"),
+        ("GET", "/v2/orders:by_client_order_id"),
+        ("POST", "/v2/orders"),
+        ("GET", "/v2/orders:by_client_order_id"),
+    ]
+
+
+def test_alpaca_timeout_without_matching_order_fails_without_retry() -> None:
+    paths: list[tuple[str, str]] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        paths.append((request.method, request.url.path))
+        if request.url.path == "/v2/account":
+            return httpx.Response(200, json={"id": "paper-account"})
+        if request.url.path == "/v2/orders:by_client_order_id":
+            return httpx.Response(404)
+        raise httpx.ReadTimeout("response lost", request=request)
+
+    client = AlpacaPaperClient(
+        SecretStr("key"),
+        SecretStr("secret"),
+        competition_account_id="paper-account",
+        client=httpx.Client(transport=httpx.MockTransport(handler)),
+    )
+
+    with pytest.raises(AlpacaUnavailable, match="deterministic client order ID"):
+        client.submit_spread(_intent())
+
+    assert paths == [
+        ("GET", "/v2/account"),
+        ("GET", "/v2/orders:by_client_order_id"),
+        ("POST", "/v2/orders"),
         ("GET", "/v2/orders:by_client_order_id"),
     ]
 

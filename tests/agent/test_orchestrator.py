@@ -128,6 +128,32 @@ def test_paper_order_is_not_called_when_pre_execution_audit_fails() -> None:
     assert not executor.called
 
 
+def test_paper_execution_failure_records_terminal_failed_run() -> None:
+    class FailingExecutor:
+        def submit_spread(self, _intent):  # type: ignore[no-untyped-def]
+            raise RuntimeError("synthetic provider failure")
+
+    store = InMemoryAuditStore()
+    orchestrator = AgentOrchestrator(
+        store,
+        StrategyConfig(competition_account_id="paper-account"),
+        mode=AgentMode.PAPER,
+        executor=FailingExecutor(),  # type: ignore[arg-type]
+    )
+
+    with pytest.raises(RuntimeError, match="synthetic provider failure"):
+        orchestrator.run_candidate(*_prepared())
+
+    assert [event.event_type for event in store.events] == [
+        "run_started",
+        "signal",
+        "risk_decision",
+        "run_completed",
+    ]
+    assert store.events[-1].payload["status"] == "failed"
+    assert store.events[-1].payload["error"] == "RuntimeError"
+
+
 def test_paper_receipt_reconciliation_appends_instead_of_rewriting() -> None:
     class Reconciler:
         def refresh_receipt(self, receipt):  # type: ignore[no-untyped-def]
