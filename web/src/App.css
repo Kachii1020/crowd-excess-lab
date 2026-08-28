@@ -502,7 +502,7 @@ kbd { padding: 3px 5px; border: 1px solid var(--border-subtle); color: var(--tex
 @media (max-width: 620px) {
   .agent-console { padding: 12px 8px 0; }.agent-console-head { padding-inline: 4px; }.agent-console-head h1 { font-size: 27px; }
   .decision-flow { grid-template-columns: 1fr; overflow: visible; }.decision-flow > div { min-height: 50px; }.decision-flow strong { white-space: normal; }
-  .agent-kpi-strip { grid-template-columns: repeat(2, 1fr); }.agent-kpi-strip > div { border-top: 1px solid var(--border-subtle); }.agent-kpi-strip > div:nth-child(odd) { border-right: 1px solid var(--border-subtle); }.agent-kpi-strip > div:nth-child(even) { border-right: 0; }
+  .agent-kpi-strip { grid-template-columns: repeat(2, 1fr); }.agent-kpi-strip > div { border-top: 1px solid var(--border-subtle); }.agent-kpi-strip > div:nth-child(odd) { border-right: 1px solid var(--border-subtle); }.agent-kpi-strip > div:nth-child(even) { border-right: 0; }.agent-kpi-strip > div:last-child { grid-column: 1 / -1; border-right: 0; }
   .signal-table { min-width: 0; table-layout: fixed; }.signal-table th:nth-child(3), .signal-table td:nth-child(3), .signal-table th:nth-child(4), .signal-table td:nth-child(4), .signal-table th:nth-child(5), .signal-table td:nth-child(5) { display: none; }.signal-table th, .signal-table td { padding-inline: 6px; }.signal-table th:first-child { width: 29%; }
   .decision-inspector { display: block; }.decision-inspector > section { border-right: 0; border-bottom: 1px solid var(--border-subtle); }
   .run-detail-head { flex-direction: column; }.trace-meta { grid-template-columns: repeat(2, 1fr); }.audit-signal-grid { grid-template-columns: repeat(2, 1fr); }.full-gate-list, .receipt-detail { grid-template-columns: 1fr; }
