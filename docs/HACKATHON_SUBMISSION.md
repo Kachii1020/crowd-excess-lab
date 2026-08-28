@@ -35,6 +35,8 @@ repository, screenshots, slides, or recordings.
   has been verified without authentication.
 - **Agent console:** [crowd-excess-lab.vercel.app/agent](https://crowd-excess-lab.vercel.app/agent)
   is the primary judge path.
+- **Public source:** [github.com/Kachii1020/crowd-excess-lab](https://github.com/Kachii1020/crowd-excess-lab)
+  is available without authentication and retains the pre-hackathon provenance boundary.
 - **Alpaca paper account:** a dedicated account has been privately verified as `ACTIVE` with
   exactly **$100,000** starting equity. Its account ID is intentionally excluded from public
   artifacts and must be entered only in the official submission form.
@@ -125,7 +127,7 @@ small competition sample cannot establish durable alpha. A no-trade decision is 
 
 ### Verify before final recording and submission
 
-- [ ] Public GitHub repository works in a logged-out browser: `TBD — add URL after verification`.
+- [x] Public GitHub repository works in a logged-out browser.
 - [ ] At least one competition-period market-open autonomous run: `TBD — add run ID`.
 - [ ] Real Alpaca paper option receipt, if a candidate passes every gate: `TBD — add trace link`.
 - [ ] At least two full autonomous sessions: `TBD — list run IDs and outcomes`.
