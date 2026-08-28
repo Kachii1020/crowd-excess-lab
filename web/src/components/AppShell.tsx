@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
 import {
   Activity, BookOpenCheck, Bot, CheckCircle2, CircleDashed, Database,
   FileSearch, Menu, Search, ShieldCheck, SlidersHorizontal, WalletCards, X,
@@ -23,7 +23,9 @@ function AgentProvenanceRail({ status, lineage }: {
   lineage?: LineageResponse,
 }) {
   const sourceKeys = Object.keys(status?.sources ?? {})
-  const sourceReady = (prefix: string) => sourceKeys.some((key) => key.startsWith(prefix))
+  const sourceReady = (prefix: string) => sourceKeys.some(
+    (key) => key.startsWith(prefix) && status?.sources[key] === true,
+  )
   const items = [
     { name: 'NAVER', ready: sourceReady('naver_'), detail: 'Search attention' },
     { name: 'Alpaca', ready: sourceReady('alpaca_market_'), detail: 'Market + options' },
@@ -60,6 +62,7 @@ export function AppShell() {
   const [runId, setRunId] = useState('')
   const [mobileOpen, setMobileOpen] = useState(false)
   const [search, setSearch] = useState('')
+  const mobileMenuButton = useRef<HTMLButtonElement>(null)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -76,6 +79,22 @@ export function AppShell() {
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [])
+
+  useEffect(() => {
+    if (!mobileOpen) return
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return
+      setMobileOpen(false)
+      requestAnimationFrame(() => mobileMenuButton.current?.focus())
+    }
+    window.addEventListener('keydown', closeOnEscape)
+    return () => window.removeEventListener('keydown', closeOnEscape)
+  }, [mobileOpen])
+
+  const closeMobileNavigation = () => {
+    setMobileOpen(false)
+    requestAnimationFrame(() => mobileMenuButton.current?.focus())
+  }
 
   const onSearch = (event: FormEvent) => {
     event.preventDefault()
@@ -95,7 +114,7 @@ export function AppShell() {
         <Link className="brand" to="/agent" aria-label="Crowd Excess Agent home">
           <strong>CROWD EXCESS</strong><span>AGENT</span>
         </Link>
-        <button className="icon-button mobile-menu" type="button" aria-label="Open navigation" onClick={() => setMobileOpen(true)}><Menu aria-hidden="true" /></button>
+        <button ref={mobileMenuButton} className="icon-button mobile-menu" type="button" aria-label="Open navigation" aria-controls="primary-sidebar" aria-expanded={mobileOpen} onClick={() => setMobileOpen(true)}><Menu aria-hidden="true" /></button>
         <form className="command-search" role="search" onSubmit={onSearch}>
           <Search aria-hidden="true" />
           <label className="sr-only" htmlFor="global-search">Inspect a universe symbol</label>
@@ -115,8 +134,8 @@ export function AppShell() {
         </div>
       </header>
 
-      <aside className={`sidebar ${mobileOpen ? 'sidebar--open' : ''}`}>
-        <div className="sidebar-mobile-head"><span>Navigation</span><button className="icon-button sidebar-close" type="button" aria-label="Close navigation" onClick={() => setMobileOpen(false)}><X aria-hidden="true" /></button></div>
+      <aside id="primary-sidebar" className={`sidebar ${mobileOpen ? 'sidebar--open' : ''}`}>
+        <div className="sidebar-mobile-head"><span>Navigation</span><button className="icon-button sidebar-close" type="button" aria-label="Close navigation" onClick={closeMobileNavigation}><X aria-hidden="true" /></button></div>
         <nav aria-label="Primary navigation">
           {navigation.map(({ to, label, icon: Icon }) => (
             <NavLink key={to} to={to} aria-label={label} title={label} onClick={() => setMobileOpen(false)}>
@@ -139,7 +158,7 @@ export function AppShell() {
           <ShieldCheck aria-hidden="true" /> Alpaca paper trading only. No live mode, naked options, investment advice, or profitability claim.
         </footer>
       </div>
-      {mobileOpen && <button className="scrim" type="button" aria-label="Close navigation" onClick={() => setMobileOpen(false)} />}
+      {mobileOpen && <button className="scrim" type="button" aria-label="Close navigation" onClick={closeMobileNavigation} />}
     </div>
   )
 }

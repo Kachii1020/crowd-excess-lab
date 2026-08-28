@@ -23,7 +23,7 @@ test('judge path traces attention through risk and a clearly labelled shadow rec
   await page.goto('/')
   await expect(page).toHaveURL(/\/agent/)
   await expect(page.getByRole('heading', { name: 'Agent Console' })).toBeVisible()
-  await expect(page.getByText('NAVER heat')).toBeVisible()
+  await expect(page.getByText('Cross-border search')).toBeVisible()
   await expect(page.getByRole('cell', { name: 'AAPL INSPECTING' })).toBeVisible()
   await expect(page.getByText('Synthetic judge-path headlines do not explain the observed move.')).toBeVisible()
   await expect(page.getByText('SHADOW', { exact: true }).last()).toBeVisible()

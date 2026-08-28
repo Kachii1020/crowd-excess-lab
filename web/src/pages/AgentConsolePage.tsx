@@ -64,14 +64,14 @@ export function AgentConsolePage() {
       </header>
 
       <section className="decision-flow" aria-label="Agent decision flow">
-        <div><Activity /><span><small>01 / ATTENTION</small><strong>NAVER heat</strong></span></div><ArrowRight />
-        <div><Newspaper /><span><small>02 / EVIDENCE</small><strong>Price + news</strong></span></div><ArrowRight />
-        <div><BrainCircuit /><span><small>03 / RESIDUAL</small><strong>Crowd Excess</strong></span></div><ArrowRight />
-        <div><ShieldCheck /><span><small>04 / CONTROL</small><strong>Risk gates</strong></span></div><ArrowRight />
-        <div><WalletCards /><span><small>05 / RECEIPT</small><strong>Alpaca paper</strong></span></div>
+        <div><Activity aria-hidden="true" /><span><small>01 / ATTENTION</small><strong>Cross-border search</strong></span></div><ArrowRight aria-hidden="true" />
+        <div><Newspaper aria-hidden="true" /><span><small>02 / EVIDENCE</small><strong>Price + news</strong></span></div><ArrowRight aria-hidden="true" />
+        <div><BrainCircuit aria-hidden="true" /><span><small>03 / RESIDUAL</small><strong>Crowd Excess</strong></span></div><ArrowRight aria-hidden="true" />
+        <div><ShieldCheck aria-hidden="true" /><span><small>04 / CONTROL</small><strong>Risk gates</strong></span></div><ArrowRight aria-hidden="true" />
+        <div><WalletCards aria-hidden="true" /><span><small>05 / RECEIPT</small><strong>Alpaca paper</strong></span></div>
       </section>
 
-      <section className="agent-kpi-strip" aria-label="Current agent metrics">
+      <section className="agent-kpi-strip" aria-label="Current agent metrics" aria-live="polite" aria-atomic="true">
         <div><span>ACCOUNT EQUITY</span><strong>{portfolio.data ? usd.format(portfolio.data.equity) : '—'}</strong><small>{portfolio.data ? `${signed(portfolio.data.daily_pnl, 0)} today` : 'Awaiting paper account'}</small></div>
         <div><span>TOP RESIDUAL</span><strong>{selected ? signed(selected.crowd_excess_score) : '—'}</strong><small>{selected ? selected.symbol : 'No completed scan'}</small></div>
         <div><span>OPEN RISK</span><strong>{portfolio.data ? usd.format(portfolio.data.open_premium_risk) : '—'}</strong><small>{portfolio.data ? `${portfolio.data.open_spread_count} / ${strategy.data?.max_open_spreads} spreads` : 'No portfolio snapshot'}</small></div>
@@ -88,7 +88,7 @@ export function AgentConsolePage() {
 
       <div className="agent-terminal-grid">
         <section className="terminal-block run-tape">
-          <div className="block-head"><span><Bot />RUN TAPE</span><small>{runs.data?.length ?? 0} RECORDED</small></div>
+          <div className="block-head"><h2><Bot aria-hidden="true" />RUN TAPE</h2><small>{runs.data?.length ?? 0} RECORDED</small></div>
           <div className="run-list">
             {runs.data?.map((run) => (
               <Link to={`/agent/runs/${run.run_id}`} key={run.run_id}>
@@ -103,7 +103,7 @@ export function AgentConsolePage() {
         </section>
 
         <section className="terminal-block signal-matrix">
-          <div className="block-head"><span><Gauge />CROWD EXCESS MATRIX</span><small>SPY-ADJUSTED · LATEST SCAN</small></div>
+          <div className="block-head"><h2><Gauge aria-hidden="true" />CROWD EXCESS MATRIX</h2><small>SPY-ADJUSTED · LATEST SCAN</small></div>
           <div className="signal-table-wrap">
             <table className="signal-table">
               <thead><tr><th>Symbol</th><th>Attention Z</th><th>Move Z</th><th>Volume Z</th><th>Evidence</th><th>Residual</th><th>Action</th></tr></thead>
@@ -113,7 +113,7 @@ export function AgentConsolePage() {
                   const active = symbol === selectedSymbol
                   return (
                     <tr data-active={active} key={symbol}>
-                      <td><button type="button" onClick={() => setSearchParams({ symbol })}><strong>{symbol}</strong><small>{active ? 'INSPECTING' : 'UNIVERSE'}</small></button></td>
+                      <td><button type="button" aria-pressed={active} onClick={() => setSearchParams({ symbol })}><strong>{symbol}</strong><small>{active ? 'INSPECTING' : 'UNIVERSE'}</small></button></td>
                       <td>{signed(signal?.attention_z)}</td>
                       <td className={(signal?.move_z ?? 0) >= 0 ? 'positive' : 'negative'}>{signed(signal?.move_z)}</td>
                       <td>{signed(signal?.volume_z)}</td>
@@ -130,7 +130,7 @@ export function AgentConsolePage() {
         </section>
 
         <aside className="terminal-block decision-inspector">
-          <div className="block-head"><span><BrainCircuit />DECISION TRACE</span><small>{selectedSymbol}</small></div>
+          <div className="block-head"><h2><BrainCircuit aria-hidden="true" />DECISION TRACE</h2><small>{selectedSymbol}</small></div>
           <section>
             <p className="eyebrow">STRUCTURED EVIDENCE</p>
             <h2>{selected ? selected.evidence.rationale : 'Awaiting first complete scan'}</h2>
