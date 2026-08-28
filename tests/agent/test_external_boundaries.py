@@ -25,6 +25,20 @@ def test_openai_parses_only_strict_structured_evidence() -> None:
         body = json.loads(request.content)
         assert body["store"] is False
         assert body["text"]["format"]["type"] == "json_schema"
+        schema = body["text"]["format"]["schema"]
+        assert schema["required"] == sorted(
+            {
+                "direction",
+                "materiality",
+                "confidence",
+                "rationale",
+                "cited_headline_ids",
+                "abstention_reason",
+            }
+        )
+        assert set(schema["required"]) == set(schema["properties"])
+        assert schema["additionalProperties"] is False
+        assert all("default" not in value for value in schema["properties"].values())
         return httpx.Response(
             200,
             json={

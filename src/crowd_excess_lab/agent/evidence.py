@@ -17,6 +17,22 @@ class EvidenceUnavailable(RuntimeError):
     """A safe failure that must become an abstention upstream."""
 
 
+def _strict_evidence_schema() -> dict[str, Any]:
+    """Build the deterministic schema required by OpenAI Structured Outputs."""
+
+    schema = EvidenceAssessment.model_json_schema()
+    properties = schema.get("properties")
+    if not isinstance(properties, dict):
+        raise RuntimeError("EvidenceAssessment schema does not define object properties")
+
+    schema["required"] = sorted(properties)
+    schema["additionalProperties"] = False
+    for property_schema in properties.values():
+        if isinstance(property_schema, dict):
+            property_schema.pop("default", None)
+    return schema
+
+
 class OpenAIEvidenceClient:
     def __init__(
         self,
@@ -74,7 +90,7 @@ class OpenAIEvidenceClient:
                     "type": "json_schema",
                     "name": "evidence_assessment",
                     "strict": True,
-                    "schema": EvidenceAssessment.model_json_schema(),
+                    "schema": _strict_evidence_schema(),
                 }
             },
             "metadata": {"symbol": context.symbol, "input_sha256": input_sha256},
