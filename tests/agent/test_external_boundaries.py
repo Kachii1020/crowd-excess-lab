@@ -80,9 +80,7 @@ def test_openai_invalid_output_abstains_by_raising_safe_error() -> None:
             200,
             json={
                 "id": "resp_bad",
-                "output": [
-                    {"type": "message", "content": [{"type": "output_text", "text": "{}"}]}
-                ],
+                "output": [{"type": "message", "content": [{"type": "output_text", "text": "{}"}]}],
             },
         )
 
@@ -346,12 +344,8 @@ def test_alpaca_close_submits_only_explicit_close_intents() -> None:
         reason="take_profit",
         pnl_ratio=0.42,
         legs=(
-            entry.legs[0].model_copy(
-                update={"side": "sell", "position_intent": "sell_to_close"}
-            ),
-            entry.legs[1].model_copy(
-                update={"side": "buy", "position_intent": "buy_to_close"}
-            ),
+            entry.legs[0].model_copy(update={"side": "sell", "position_intent": "sell_to_close"}),
+            entry.legs[1].model_copy(update={"side": "buy", "position_intent": "buy_to_close"}),
         ),
     )
     client = AlpacaPaperClient(

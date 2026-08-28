@@ -204,9 +204,7 @@ class AlpacaPaperClient:
         )
         filled_raw = payload.get("filled_at")
         filled = (
-            datetime.fromisoformat(str(filled_raw).replace("Z", "+00:00"))
-            if filled_raw
-            else None
+            datetime.fromisoformat(str(filled_raw).replace("Z", "+00:00")) if filled_raw else None
         )
         filled_quantity = _filled_quantity(payload, intent.quantity)
         is_exit = isinstance(intent, ExitIntent)
@@ -330,9 +328,7 @@ class AlpacaPaperClient:
             raise AlpacaUnavailable("Alpaca could not find a previously recorded paper order")
         filled_raw = payload.get("filled_at")
         filled = (
-            datetime.fromisoformat(str(filled_raw).replace("Z", "+00:00"))
-            if filled_raw
-            else None
+            datetime.fromisoformat(str(filled_raw).replace("Z", "+00:00")) if filled_raw else None
         )
         filled_quantity = _filled_quantity(payload, receipt.quantity)
         return receipt.model_copy(
