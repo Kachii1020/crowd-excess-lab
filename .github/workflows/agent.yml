@@ -79,8 +79,8 @@ jobs:
       - name: Run competition-window scan
         shell: bash
         run: |
-          current_date="$(date -u +%Y-%m-%d)"
-          if [[ "$current_date" < "2026-08-29" || "$current_date" > "2026-09-04" ]]; then
+          current_time="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          if [[ "$current_time" < "2026-08-28T15:00:00Z" || "$current_time" > "2026-09-04T15:00:00Z" ]]; then
             if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" && "$AGENT_MODE" == "shadow" ]]; then
               echo "Outside the competition window; allowing an explicit shadow-only verification."
             else

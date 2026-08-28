@@ -24,6 +24,6 @@ def test_agent_workflow_keeps_live_trading_disabled_and_has_a_date_gate() -> Non
     assert 'ALPACA_PAPER_BASE_URL: https://paper-api.alpaca.markets' in workflow
     assert 'ALPACA_LIVE_TRADE: "false"' in workflow
     assert 'go install github.com/alpacahq/cli/cmd/alpaca@v0.0.13' in workflow
-    assert '"2026-08-29"' in workflow
-    assert '"2026-09-04"' in workflow
+    assert '"2026-08-28T15:00:00Z"' in workflow
+    assert '"2026-09-04T15:00:00Z"' in workflow
     assert "crowd-excess-agent run" in workflow
