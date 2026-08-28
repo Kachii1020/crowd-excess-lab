@@ -108,7 +108,7 @@ class SupabaseAuditStore:
                 headers=self._headers,
                 params={
                     "select": "run_id,event_type,recorded_at,payload",
-                    "order": "recorded_at.asc",
+                    "order": "recorded_at.desc,id.desc",
                     "limit": str(min(max(limit, 1), 2000)),
                 },
             )
@@ -116,7 +116,8 @@ class SupabaseAuditStore:
             rows = response.json()
             if not isinstance(rows, list):
                 raise ValueError("expected a list")
-            return tuple(AuditEvent.model_validate(row) for row in rows)
+            newest_first = tuple(AuditEvent.model_validate(row) for row in rows)
+            return tuple(reversed(newest_first))
         except (httpx.HTTPError, ValueError) as exc:
             raise AuditStoreUnavailable("Supabase audit read failed") from exc
 

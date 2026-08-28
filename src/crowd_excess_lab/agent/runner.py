@@ -15,6 +15,7 @@ from crowd_excess_lab.agent.domain import (
     EvidenceAssessment,
     EvidenceContext,
     ExecutionReceipt,
+    ExecutionState,
     OptionType,
     PortfolioSnapshot,
     PositionView,
@@ -74,22 +75,21 @@ def portfolio_from_alpaca(
         )
         for item in positions
     )
-    all_entries: list[ExecutionReceipt] = []
+    paper_entry_attempts: set[str] = set()
     for event in events:
         if event.event_type == "execution":
             try:
-                all_entries.append(ExecutionReceipt.model_validate(event.payload))
+                receipt = ExecutionReceipt.model_validate(event.payload)
             except ValueError:
                 continue
+            if (
+                receipt.submitted_at.date() == observed_at.date()
+                and receipt.state is not ExecutionState.SHADOW
+            ):
+                paper_entry_attempts.add(receipt.client_order_id)
     active_receipts = open_receipts(events)
-    new_today = sum(
-        receipt.submitted_at.date() == observed_at.date()
-        and receipt.state not in {"cancelled", "rejected", "shadow"}
-        for receipt in all_entries
-    )
-    open_risk = sum(
-        receipt.limit_debit * receipt.quantity * 100 for receipt in active_receipts
-    )
+    new_today = len(paper_entry_attempts)
+    open_risk = sum(receipt.limit_debit * receipt.quantity * 100 for receipt in active_receipts)
     return PortfolioSnapshot(
         account_id=str(account.get("id", "")),
         observed_at=observed_at,
@@ -174,9 +174,7 @@ class AgentRunner:
             event.event_type == "execution" and event.payload.get("state") != "shadow"
             for event in self._audit_events
         )
-        if not has_prior_entry and (
-            abs(portfolio.equity - 100_000) > 0.01 or len(positions) > 0
-        ):
+        if not has_prior_entry and (abs(portfolio.equity - 100_000) > 0.01 or len(positions) > 0):
             return self._orchestrator.run_abstention(
                 (),
                 portfolio,
@@ -295,9 +293,7 @@ class AgentRunner:
                         "evidence_output_tokens": evidence_result.output_tokens,
                     }
                 )
-                source_hashes[f"openai_evidence_{symbol.lower()}"] = (
-                    evidence_result.input_sha256
-                )
+                source_hashes[f"openai_evidence_{symbol.lower()}"] = evidence_result.input_sha256
             signal = signal.model_copy(update=signal_updates)
             signals.append(signal)
             source_hashes[f"naver_{symbol.lower()}"] = self._hash_points(points)
@@ -350,9 +346,7 @@ class AgentRunner:
                 expiration_end=observed_at.date() + timedelta(days=self._config.max_dte),
                 observed_at=observed_at,
             )
-            source_hashes[f"alpaca_options_{selected.symbol.lower()}"] = self._hash_points(
-                quotes
-            )
+            source_hashes[f"alpaca_options_{selected.symbol.lower()}"] = self._hash_points(quotes)
         except AlpacaMarketDataUnavailable as exc:
             return self._orchestrator.run_abstention(
                 tuple(signals),
@@ -373,9 +367,7 @@ class AgentRunner:
         try:
             volumes = self._market.option_session_volume(
                 (spread[0].symbol, spread[1].symbol),
-                start=datetime.combine(
-                    observed_at.date(), time.min, tzinfo=UTC
-                ),
+                start=datetime.combine(observed_at.date(), time.min, tzinfo=UTC),
                 end=observed_at,
             )
         except AlpacaMarketDataUnavailable as exc:

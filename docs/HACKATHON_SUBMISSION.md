@@ -1,11 +1,15 @@
 # Hackathon Submission Package
 
-All public claims must distinguish real paper execution, shadow decisions, and synthetic demo
-fixtures. Replace bracketed fields only after verifying them in a logged-out browser.
+This document contains the public submission copy and the evidence checklist for Crowd Excess
+Agent. Public claims must distinguish paper execution, shadow decisions, pre-kickoff verification,
+and synthetic test fixtures. Account identifiers and credentials must never appear in this
+repository, screenshots, slides, or recordings.
 
 ## Project identity
 
 **Title:** Crowd Excess Agent
+
+**Tagline:** Attention outruns evidence. Risk decides.
 
 **Short description (under 255 characters):**
 
@@ -25,56 +29,113 @@ fixtures. Replace bracketed fields only after verifying them in a logged-out bro
 > Alpaca paper receipts, and honest paper P&L. Live trading and naked options are structurally
 > unavailable.
 
+## Verified public evidence — August 28, 2026
+
+- **Public application:** [crowd-excess-lab.vercel.app](https://crowd-excess-lab.vercel.app)
+  has been verified without authentication.
+- **Agent console:** [crowd-excess-lab.vercel.app/agent](https://crowd-excess-lab.vercel.app/agent)
+  is the primary judge path.
+- **Alpaca paper account:** a dedicated account has been privately verified as `ACTIVE` with
+  exactly **$100,000** starting equity. Its account ID is intentionally excluded from public
+  artifacts and must be entered only in the official submission form.
+- **Pre-kickoff verification:** run
+  [`20260828T095104Z-cabc99f1`](https://crowd-excess-lab.vercel.app/agent/runs/20260828T095104Z-cabc99f1)
+  is a real credentialed **closed-market abstention** recorded before the competition window. It
+  proves the deployed audit path and safe market-hours gate; it is not an options trade, a full
+  market-session result, or P&L evidence.
+- **Market-open autonomous run:** `TBD — add verified competition-period run ID and link`.
+- **Alpaca paper receipt:** `TBD — add only after a real order attempt is recorded`.
+- **Paper P&L and drawdown:** `TBD — report exact values after the required market sessions`.
+
 ## One-page implementation write-up
+
+### Thesis and data boundary
+
+Crowd Excess asks whether investor attention and price have moved further than the objective news
+evidence supports. NAVER Search Trend is used only as **cross-border search attention**—never as
+community sentiment. The fixed decision universe is AAPL, MSFT, NVDA, TSLA, and QQQ, with SPY as
+the market benchmark. Complete historical days and timestamped inputs prevent look-ahead use.
 
 ### AI logic
 
-OpenAI receives normalized, timestamped price context and Alpaca headlines. With `store=false`, it
-returns only strict `EvidenceAssessment` fields: direction, materiality, confidence, rationale,
-cited supplied headline IDs, and an abstention reason. Invalid, refused, or unavailable output
-causes abstention. The model never sees an order tool and cannot select quantity or contracts.
+OpenAI receives normalized, timestamped price context and supplied Alpaca headlines. With
+`store=false`, it returns strict `EvidenceAssessment` fields: direction, materiality, confidence,
+rationale, cited supplied headline IDs, and an abstention reason. Invalid, refused, timed-out, or
+unavailable output causes abstention. The model never receives an order tool and cannot select
+contracts, determine quantity, or bypass a risk gate.
 
-### Signal and risk
+### Signal and deterministic risk
 
-Crowd Excess combines signed SPY-adjusted movement with NAVER attention heat, then subtracts news
-direction × materiality × confidence. A positive residual means upside enthusiasm appears
-excessive; a negative residual means downside pessimism appears excessive. The deterministic
-engine trades contrarian only after attention, move, confidence, liquidity, option shape, account,
-exposure, loss, and freeze gates pass. It permits one new defined-risk debit spread per day with a
-maximum debit of 1% of equity and total premium risk of 3%.
+Crowd Excess combines signed SPY-adjusted movement with attention heat, then subtracts news
+direction × materiality × confidence. A positive residual represents potentially excessive upside
+enthusiasm; a negative residual represents potentially excessive downside pessimism. The agent
+takes the opposite view only after attention, move, confidence, freshness, liquidity, option
+shape, account, exposure, loss, and competition-window gates pass.
 
-### Alpaca implementation
+Only 14–30 DTE call or put debit verticals are eligible. Maximum debit is 1% of account equity,
+total premium at risk is capped at 3%, and no more than one new position may be attempted per day.
+Missing quotes, Greeks, option volume, open interest, storage, or exact account identity results in
+`ABSTAIN`.
 
-Alpaca CLI is the primary account, clock, and position boundary. Official market/news/options APIs
-provide normalized facts. Multi-leg paper orders use the official Trading API only after exact
-paper-host and competition-account verification. Every order uses a deterministic client order ID;
-retries query that ID before submission. Supabase records sanitized append-only events, while the
-public FastAPI/Vercel app holds only anonymous read access.
+### Alpaca execution and auditability
 
-## Five-minute presentation
+Alpaca is the account, market-data, options, and paper-execution boundary. Multi-leg paper orders
+are submitted only after exact paper-host and dedicated-account verification. Every intent uses a
+deterministic client order ID. If submission times out, the runner queries that same ID before any
+further action, preventing a network timeout from becoming a duplicate trade.
 
-1. **0:00–0:30 — Thesis:** attention and price can outrun objective news.
-2. **0:30–1:10 — Honest data boundary:** NAVER is search attention, not sentiment.
-3. **1:10–2:20 — Live decision trace:** heat → market/news → residual → ranked candidate.
-4. **2:20–3:20 — Risk and Alpaca:** defined-risk legs, failed/passed gates, deterministic ID.
-5. **3:20–4:10 — Receipt and portfolio:** real paper receipt and honest P&L or abstention.
-6. **4:10–5:00 — Architecture and learning:** append-only audit, failure safety, limitations.
+Supabase stores sanitized append-only runs, signals, evidence assessments, risk decisions,
+receipts, and portfolio snapshots. The public FastAPI/Vercel application has read-only access;
+scans and orders cannot be initiated from the browser. This produces a judge-readable chain from
+timestamped inputs to model evidence, deterministic risk, Alpaca response, and honest portfolio
+outcome.
 
-## Asset checklist
+### Safety and limitations
 
-- [ ] Public GitHub URL: `[verify]`
-- [ ] Logged-out Vercel URL: `[verify]`
-- [ ] Fresh $100,000 Alpaca paper account ID: `[submit securely]`
-- [ ] At least one real end-to-end paper option order: `[verify receipt]`
-- [ ] At least two full autonomous sessions: `[list run IDs]`
-- [ ] 16:9 PNG/JPG cover: title, residual concept, Alpaca paper label
-- [ ] Maximum five-minute MP4 presentation
-- [ ] PDF pitch deck
-- [ ] Final title and descriptions
-- [ ] Up to five X/LinkedIn build-in-public links
-- [ ] All visible copy is English
-- [ ] Logged-out direct reload works for `/agent`, `/portfolio`, `/strategy`, and one run trace
-- [ ] No fixture is represented as real execution
-- [ ] No profitability claim; negative P&L remains visible if applicable
+This is a competition paper-trading system, not investment advice. It contains no live-trading
+mode, naked-option path, or profitability claim. Search attention is an imperfect cross-border
+proxy, structured news assessment can abstain, option liquidity can invalidate a candidate, and a
+small competition sample cannot establish durable alpha. A no-trade decision is a valid outcome.
+
+## Nine-slide pitch deck outline
+
+1. **Thesis:** Attention outruns evidence. Risk decides.
+2. **Data boundary:** NAVER attention, Alpaca market/news/options, and what each source does not say.
+3. **Signal:** attention heat + market-adjusted movement − objective news evidence.
+4. **Architecture:** provider inputs → structured evidence → deterministic engine → append-only audit.
+5. **Decision trace:** one verified market-open run from facts to ranked candidate or abstention.
+6. **Risk:** defined-risk debit vertical, liquidity checks, 1%/3% caps, and one attempt per day.
+7. **Receipt and portfolio:** real Alpaca paper response plus exact P&L/drawdown, once available.
+8. **Reliability:** strict schemas, paper/account lock, deterministic IDs, and timeout reconciliation.
+9. **Limitations and learning:** honest sample size, failures, abstentions, and next validation step.
+
+## Submission checklist
+
+### Verified now
+
+- [x] Public Vercel application works without authentication.
+- [x] Dedicated Alpaca paper account is `ACTIVE` with exactly $100,000 starting equity; ID withheld
+      from public artifacts.
+- [x] A real pre-kickoff closed-market abstention trace is publicly replayable and accurately
+      labelled.
+- [x] Final title, tagline, short description, long description, and implementation write-up exist.
+- [x] All current public product copy is English.
+- [x] No fixture is represented as real execution.
+- [x] No profitability claim is made.
+
+### Verify before final recording and submission
+
+- [ ] Public GitHub repository works in a logged-out browser: `TBD — add URL after verification`.
+- [ ] At least one competition-period market-open autonomous run: `TBD — add run ID`.
+- [ ] Real Alpaca paper option receipt, if a candidate passes every gate: `TBD — add trace link`.
+- [ ] At least two full autonomous sessions: `TBD — list run IDs and outcomes`.
+- [ ] Exact paper P&L and drawdown are shown, including negative values if applicable.
+- [x] 16:9 PNG cover uses the tagline and clearly says `ALPACA PAPER OPTIONS`.
+- [ ] Final MP4 is 4:30 or shorter and follows `docs/VIDEO_SCRIPT.md`.
+- [x] Nine-slide PDF pitch deck follows the outline above; editable PPTX is retained.
+- [ ] Three build-in-public posts use verified facts from `docs/SOCIAL_POSTS.md`.
+- [ ] Logged-out direct reload works for `/agent`, `/portfolio`, `/strategy`, and the selected run.
+- [ ] Submission form contains the paper account ID, but no public artifact exposes it.
+- [ ] Every placeholder in this document, the deck, video, and social posts has been removed.
 
 Internal submission cutoff: **September 4, 2026 at 20:00 JST**.

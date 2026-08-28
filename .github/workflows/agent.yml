@@ -42,6 +42,7 @@ jobs:
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
       AGENT_MODE: ${{ github.event.inputs.mode || vars.AGENT_MODE || 'shadow' }}
+      AUTO_PAPER_ON_APPROVED_SHADOW: ${{ vars.AUTO_PAPER_ON_APPROVED_SHADOW || 'false' }}
       AGENT_FREEZE_AT: "2026-09-03T20:00:00+00:00"
 
     steps:
@@ -79,8 +80,11 @@ jobs:
       - name: Run competition-window scan
         shell: bash
         run: |
+          set -euo pipefail
           current_time="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          competition_window="true"
           if [[ "$current_time" < "2026-08-28T15:00:00Z" || "$current_time" > "2026-09-04T15:00:00Z" ]]; then
+            competition_window="false"
             if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" && "$AGENT_MODE" == "shadow" ]]; then
               echo "Outside the competition window; allowing an explicit shadow-only verification."
             else
@@ -88,4 +92,42 @@ jobs:
               exit 0
             fi
           fi
-          uv run --no-sync crowd-excess-agent run
+
+          if [[ "$AGENT_MODE" != "shadow" && "$AGENT_MODE" != "paper" ]]; then
+            echo "Unsupported execution mode; live trading does not exist."
+            exit 1
+          fi
+
+          # Preserve explicit/manual and configured paper semantics. The runner still
+          # revalidates the paper endpoint, account, clock, data, and every risk gate.
+          if [[ "$AGENT_MODE" == "paper" ]]; then
+            uv run --no-sync crowd-excess-agent run
+            exit 0
+          fi
+
+          clock_output="$RUNNER_TEMP/alpaca-clock.json"
+          shadow_output="$RUNNER_TEMP/agent-shadow.json"
+          paper_output="$RUNNER_TEMP/agent-paper.json"
+
+          # The probe is intentionally not printed because it contains the account ID.
+          uv run --no-sync crowd-excess-agent probe > "$clock_output"
+          AGENT_MODE=shadow uv run --no-sync crowd-excess-agent run > "$shadow_output"
+          cat "$shadow_output"
+
+          if [[ "$competition_window" != "true" ]]; then
+            echo "Paper promotion is disabled outside the declared competition window."
+            exit 0
+          fi
+
+          promote="$(uv run --no-sync python scripts/auto_paper_gate.py \
+            --shadow-output "$shadow_output" \
+            --clock-output "$clock_output" \
+            --enabled "$AUTO_PAPER_ON_APPROVED_SHADOW")"
+          if [[ "$promote" != "true" ]]; then
+            echo "One-shot paper promotion was not approved."
+            exit 0
+          fi
+
+          echo "Approved shadow candidate found; starting one independent paper revalidation."
+          AGENT_MODE=paper uv run --no-sync crowd-excess-agent run > "$paper_output"
+          cat "$paper_output"

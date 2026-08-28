@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from datetime import UTC, date, datetime
 from enum import StrEnum
 from typing import Any
@@ -11,6 +12,11 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator, model_valida
 UNIVERSE = ("AAPL", "MSFT", "NVDA", "TSLA", "QQQ")
 BENCHMARK = "SPY"
 PAPER_BASE_URL = "https://paper-api.alpaca.markets"
+
+_OCC_OPTION_SYMBOL = re.compile(
+    r"^(?P<underlying>[A-Z]{1,6})(?P<expiration>[0-9]{6})"
+    r"(?P<option_type>[CP])(?P<strike>[0-9]{8})$"
+)
 
 
 class AgentModel(BaseModel):
@@ -229,11 +235,69 @@ class TradeIntent(AgentModel):
 
     @model_validator(mode="after")
     def legs_are_a_defined_risk_debit_vertical(self) -> TradeIntent:
-        if self.legs[0].symbol == self.legs[1].symbol:
+        long_leg, short_leg = self.legs
+        if long_leg.symbol == short_leg.symbol:
             raise ValueError("option legs must use unique symbols")
-        if self.legs[0].side != "buy" or self.legs[1].side != "sell":
+        if long_leg.side != "buy" or short_leg.side != "sell":
             raise ValueError("debit vertical must buy the first leg and sell the second")
+        if long_leg.position_intent != "buy_to_open" or short_leg.position_intent != "sell_to_open":
+            raise ValueError("entry legs must explicitly open one long and one short option")
+        if long_leg.ratio_qty != 1 or short_leg.ratio_qty != 1:
+            raise ValueError("debit vertical entry legs must use a 1:1 ratio")
+
+        expected_type = (
+            OptionType.CALL if self.direction is TradeDirection.BULLISH else OptionType.PUT
+        )
+        if self.option_type is not expected_type:
+            raise ValueError("bullish entries must use calls and bearish entries must use puts")
+        correctly_ordered = (
+            self.direction is TradeDirection.BULLISH and long_leg.strike < short_leg.strike
+        ) or (self.direction is TradeDirection.BEARISH and long_leg.strike > short_leg.strike)
+        if not correctly_ordered:
+            raise ValueError("leg strikes do not form the declared debit vertical")
+        if self.option_type is OptionType.CALL and min(long_leg.delta, short_leg.delta) < 0:
+            raise ValueError("call legs cannot carry negative deltas")
+        if self.option_type is OptionType.PUT and max(long_leg.delta, short_leg.delta) > 0:
+            raise ValueError("put legs cannot carry positive deltas")
+
+        parsed = tuple(_parse_occ_option_symbol(leg.symbol) for leg in self.legs)
+        if any(item is not None for item in parsed):
+            if any(item is None for item in parsed):
+                raise ValueError("both entry legs must use a consistent OCC option symbol format")
+            for leg, item in zip(self.legs, parsed, strict=True):
+                assert item is not None
+                underlying, expiration, option_type, strike = item
+                if underlying != self.symbol:
+                    raise ValueError("OCC leg underlying does not match the trade symbol")
+                if expiration != self.expiration:
+                    raise ValueError("OCC legs must match the declared expiration")
+                if option_type is not self.option_type:
+                    raise ValueError("OCC legs must match the declared option type")
+                if abs(strike - leg.strike) > 0.0005:
+                    raise ValueError("OCC leg strike does not match the declared strike")
         return self
+
+
+def _parse_occ_option_symbol(
+    symbol: str,
+) -> tuple[str, date, OptionType, float] | None:
+    """Return structural OCC fields when an Alpaca-style contract symbol is present."""
+
+    match = _OCC_OPTION_SYMBOL.fullmatch(symbol)
+    if match is None:
+        return None
+    raw_expiration = match.group("expiration")
+    try:
+        expiration = date(
+            2000 + int(raw_expiration[:2]),
+            int(raw_expiration[2:4]),
+            int(raw_expiration[4:]),
+        )
+    except ValueError as exc:
+        raise ValueError("OCC leg symbol contains an invalid expiration") from exc
+    option_type = OptionType.CALL if match.group("option_type") == "C" else OptionType.PUT
+    strike = int(match.group("strike")) / 1000
+    return match.group("underlying"), expiration, option_type, strike
 
 
 class ExitIntent(AgentModel):
@@ -241,9 +305,7 @@ class ExitIntent(AgentModel):
     quantity: int = Field(ge=1, le=100)
     limit_credit: float = Field(gt=0)
     client_order_id: str = Field(min_length=1, max_length=48, pattern=r"^[a-zA-Z0-9_-]+$")
-    parent_client_order_id: str = Field(
-        min_length=1, max_length=48, pattern=r"^[a-zA-Z0-9_-]+$"
-    )
+    parent_client_order_id: str = Field(min_length=1, max_length=48, pattern=r"^[a-zA-Z0-9_-]+$")
     reason: ExitReason
     pnl_ratio: float
     legs: tuple[OptionLeg, OptionLeg]

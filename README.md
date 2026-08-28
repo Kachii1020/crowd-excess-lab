@@ -6,6 +6,8 @@ Agents Hackathon.
 > It identifies when investor attention and price movement outrun objective news evidence,
 > then expresses a controlled mean-reversion view through defined-risk Alpaca option spreads.
 
+![Crowd Excess Agent — attention outruns evidence, risk decides](submission/crowd-excess-cover.png)
+
 The product began as a Korean-equity research tool. That pre-hackathon origin remains visible
 under `/research` and `/lineage`; it is not represented as US execution data or competition-period
 work. NAVER Search Trend is labelled **cross-border search attention**, never sentiment.
@@ -100,6 +102,18 @@ database migration, and a real paper order are deliberately not simulated by thi
 - [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md): logged-out Vercel publication and rollback.
 - [`docs/HACKATHON_SUBMISSION.md`](docs/HACKATHON_SUBMISSION.md): submission copy and asset checklist.
 - [`docs/learning/LEDGER.md`](docs/learning/LEDGER.md): operator learning evidence.
+
+## Submission assets
+
+- [Public Agent Console](https://crowd-excess-lab.vercel.app/agent)
+- [`submission/crowd-excess-cover.png`](submission/crowd-excess-cover.png): 16:9 project cover.
+- [`submission/crowd-excess-pitch-deck.pdf`](submission/crowd-excess-pitch-deck.pdf): verified nine-slide pitch deck.
+- [`submission/crowd-excess-pitch-deck.pptx`](submission/crowd-excess-pitch-deck.pptx): editable deck source.
+- [`docs/VIDEO_SCRIPT.md`](docs/VIDEO_SCRIPT.md): 4:30 presentation script and recording checklist.
+- [`docs/SOCIAL_POSTS.md`](docs/SOCIAL_POSTS.md): fact-gated build-in-public drafts.
+
+The real pre-kickoff run `20260828T095104Z-cabc99f1` is a closed-market abstention that verifies
+the audit path; it is not represented as competition-period performance or P&L.
 
 ## Licence
 
