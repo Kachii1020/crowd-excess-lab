@@ -47,14 +47,19 @@ export function AgentConsolePage() {
   const risk = detail.data?.risk_decision
   const receipt = detail.data?.receipt
   const runStatus = status.data?.last_run?.status ?? 'pending'
+  const lastRunSummary = status.data?.last_run?.summary ?? ''
+  const marketClosedNotSampled = runStatus === 'abstained'
+    && availableSignals.length === 0
+    && /market(?: clock)? is closed|market closed/i.test(lastRunSummary)
+  const noSignals = availableSignals.length === 0
 
   return (
     <div className="agent-console">
       <header className="agent-console-head">
         <div>
-          <p className="eyebrow">AUTONOMOUS PAPER OPTIONS / US EQUITIES</p>
-          <h1>Agent Console</h1>
-          <p>Attention and price can be loud. The agent trades only the unexplained residual—and only after every deterministic risk gate passes.</p>
+          <p className="eyebrow">READ-ONLY DECISION AUDIT / US EQUITIES</p>
+          <h1>Decision Workbench</h1>
+          <p>Inspect how attention, market movement, evidence, and fixed risk controls produced the latest paper-only decision.</p>
         </div>
         <div className="console-state">
           <span className={status.data?.configured ? 'signal-dot' : 'signal-dot signal-dot--off'} />
@@ -103,30 +108,42 @@ export function AgentConsolePage() {
         </section>
 
         <section className="terminal-block signal-matrix">
-          <div className="block-head"><h2><Gauge aria-hidden="true" />CROWD EXCESS MATRIX</h2><small>SPY-ADJUSTED · LATEST SCAN</small></div>
-          <div className="signal-table-wrap">
-            <table className="signal-table">
-              <thead><tr><th>Symbol</th><th>Attention Z</th><th>Move Z</th><th>Volume Z</th><th>Evidence</th><th>Residual</th><th>Action</th></tr></thead>
-              <tbody>
-                {UNIVERSE.map((symbol) => {
-                  const signal = signalFor(symbol, availableSignals)
-                  const active = symbol === selectedSymbol
-                  return (
-                    <tr data-active={active} key={symbol}>
-                      <td><button type="button" aria-pressed={active} onClick={() => setSearchParams({ symbol })}><strong>{symbol}</strong><small>{active ? 'INSPECTING' : 'UNIVERSE'}</small></button></td>
-                      <td>{signed(signal?.attention_z)}</td>
-                      <td className={(signal?.move_z ?? 0) >= 0 ? 'positive' : 'negative'}>{signed(signal?.move_z)}</td>
-                      <td>{signed(signal?.volume_z)}</td>
-                      <td>{signal ? `${Math.round(signal.evidence.confidence * 100)}%` : '—'}</td>
-                      <td className={(signal?.crowd_excess_score ?? 0) >= 0 ? 'positive' : 'negative'}><strong>{signed(signal?.crowd_excess_score)}</strong></td>
-                      <td>{signal?.eligible ? <StatusBadge status={signal.trade_direction ?? 'eligible'} /> : <StatusBadge status="abstain" />}</td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          </div>
-          <div className="matrix-legend"><span><i className="legend-up" /> Positive residual: excessive upside enthusiasm</span><span><i className="legend-down" /> Negative residual: excessive downside pessimism</span><span>Trade direction is contrarian.</span></div>
+          <div className="block-head"><h2><Gauge aria-hidden="true" />CROWD EXCESS MATRIX</h2><small>{noSignals ? 'NOT SAMPLED · LATEST CHECK' : 'SPY-ADJUSTED · LATEST SCAN'}</small></div>
+          {noSignals ? (
+            <div className="terminal-empty" role="status" aria-live="polite">
+              <CircleDashed aria-hidden="true" />
+              <strong>{marketClosedNotSampled ? 'Market closed — not sampled' : 'No completed scan recorded'}</strong>
+              <p>{marketClosedNotSampled ? lastRunSummary : 'The audit store does not contain a complete five-symbol market scan yet.'}</p>
+              {status.data?.last_run && <p>Observed {format.dateTime(status.data.last_run.started_at)}. No market, news, options, or evidence inputs were treated as current.</p>}
+              <p>{marketClosedNotSampled ? 'Return during the next US regular market window to inspect a complete five-symbol scan. No order was attempted.' : 'Return after the next eligible US-market automation check. Missing inputs are never treated as zero.'}</p>
+            </div>
+          ) : (
+            <>
+              <div className="signal-table-wrap">
+                <table className="signal-table">
+                  <thead><tr><th>Symbol</th><th>Attention Z</th><th>Move Z</th><th>Volume Z</th><th>Evidence</th><th>Residual</th><th>Action</th></tr></thead>
+                  <tbody>
+                    {UNIVERSE.map((symbol) => {
+                      const signal = signalFor(symbol, availableSignals)
+                      const active = symbol === selectedSymbol
+                      return (
+                        <tr data-active={active} key={symbol}>
+                          <td><button type="button" aria-pressed={active} onClick={() => setSearchParams({ symbol })}><strong>{symbol}</strong><small>{active ? 'INSPECTING' : 'UNIVERSE'}</small></button></td>
+                          <td>{signed(signal?.attention_z)}</td>
+                          <td className={(signal?.move_z ?? 0) >= 0 ? 'positive' : 'negative'}>{signed(signal?.move_z)}</td>
+                          <td>{signed(signal?.volume_z)}</td>
+                          <td>{signal ? `${Math.round(signal.evidence.confidence * 100)}%` : '—'}</td>
+                          <td className={(signal?.crowd_excess_score ?? 0) >= 0 ? 'positive' : 'negative'}><strong>{signed(signal?.crowd_excess_score)}</strong></td>
+                          <td>{signal?.eligible ? <StatusBadge status={signal.trade_direction ?? 'eligible'} /> : <StatusBadge status="abstain" />}</td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
+              <div className="matrix-legend"><span><i className="legend-up" /> Positive residual: excessive upside enthusiasm</span><span><i className="legend-down" /> Negative residual: excessive downside pessimism</span><span>Trade direction is contrarian.</span></div>
+            </>
+          )}
         </section>
 
         <aside className="terminal-block decision-inspector">

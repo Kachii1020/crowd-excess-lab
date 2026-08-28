@@ -64,6 +64,13 @@ const run = {
   source_hashes: { naver_aapl: 'b'.repeat(64), alpaca_market_aapl: 'c'.repeat(64) },
   summary: 'Synthetic judge-path shadow intent recorded.', error: '',
 }
+const CLOSED_RUN_ID = '20260831T110000Z-closed00'
+const closedRun = {
+  run_id: CLOSED_RUN_ID, mode: 'shadow', config_version: '2026-08-hackathon-v1', model: 'gpt-5.6-terra',
+  status: 'abstained', started_at: '2026-08-31T11:00:00Z', completed_at: '2026-08-31T11:00:01Z',
+  source_hashes: {},
+  summary: 'Market closed; outside the configured US market window.', error: '',
+}
 const receipt = {
   client_order_id: 'ce-fixture-judge-path', alpaca_order_id: null, state: 'shadow',
   submitted_at: '2026-08-31T15:00:00Z', filled_at: null, limit_debit: 2.9, quantity: 2,
@@ -104,4 +111,29 @@ export async function installAgentFixture(page: Page) {
   await jsonRoute(page, '/api/v1/strategy', strategy)
 }
 
-export { RUN_ID }
+export async function installClosedMarketFixture(page: Page) {
+  await jsonRoute(page, '/api/v1/agent/status', {
+    configured: true, mode: 'shadow', scheduler: 'Synthetic test scheduler', last_run: closedRun,
+    sources: {
+      naver_aapl: false,
+      alpaca_market_aapl: false,
+      openai_evidence_aapl: false,
+      risk_engine_aapl: false,
+    },
+    message: 'Synthetic closed-market fixture; no provider was sampled and no order was submitted.',
+  })
+  await jsonRoute(page, '/api/v1/agent/runs', [closedRun])
+  await jsonRoute(page, `/api/v1/agent/runs/${CLOSED_RUN_ID}`, {
+    run: closedRun,
+    signals: [],
+    risk_decision: null,
+    exit_intent: null,
+    receipt: null,
+    portfolio,
+  })
+  await jsonRoute(page, '/api/v1/agent/signals', [])
+  await jsonRoute(page, '/api/v1/portfolio', portfolio)
+  await jsonRoute(page, '/api/v1/strategy', strategy)
+}
+
+export { CLOSED_RUN_ID, RUN_ID }

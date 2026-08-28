@@ -1,68 +1,35 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import {
-  Activity, BookOpenCheck, Bot, CheckCircle2, CircleDashed, Database,
-  FileSearch, Menu, Search, ShieldCheck, SlidersHorizontal, WalletCards, X,
+  Activity, Archive, BookOpenCheck, Database, Ellipsis, FileSearch,
+  LayoutDashboard, Search, ShieldCheck, SlidersHorizontal, WalletCards, X,
 } from 'lucide-react'
-import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
-import { useAgentStatus, useLineage, useRuns } from '../api/queries.ts'
-import type { AgentStatus, LineageResponse } from '../api/schemas.ts'
+import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { useAgentStatus, useRuns } from '../api/queries.ts'
 
 export type WorkspaceContext = { runId: string }
 
-const navigation = [
-  { to: '/agent', label: 'Agent Console', icon: Bot },
-  { to: '/portfolio', label: 'Paper Portfolio', icon: WalletCards },
-  { to: '/strategy', label: 'Strategy & Risk', icon: SlidersHorizontal },
-  { to: '/research', label: 'Research Origin', icon: BookOpenCheck },
-  { to: '/events', label: 'Korea Event Study', icon: FileSearch },
-  { to: '/lineage', label: 'Data Lineage', icon: Database },
+const primaryNavigation = [
+  { to: '/agent', label: 'Overview', icon: LayoutDashboard },
+  { to: '/decisions', label: 'Decisions', icon: Activity },
+  { to: '/portfolio', label: 'Portfolio', icon: WalletCards },
+  { to: '/strategy', label: 'Strategy', icon: SlidersHorizontal },
 ]
 
-function AgentProvenanceRail({ status, lineage }: {
-  status?: AgentStatus,
-  lineage?: LineageResponse,
-}) {
-  const sourceKeys = Object.keys(status?.sources ?? {})
-  const sourceReady = (prefix: string) => sourceKeys.some(
-    (key) => key.startsWith(prefix) && status?.sources[key] === true,
-  )
-  const items = [
-    { name: 'NAVER', ready: sourceReady('naver_'), detail: 'Search attention' },
-    { name: 'Alpaca', ready: sourceReady('alpaca_market_'), detail: 'Market + options' },
-    { name: 'OpenAI', ready: Boolean(status?.last_run), detail: 'News evidence' },
-    { name: 'Risk Engine', ready: Boolean(status?.last_run), detail: 'Deterministic gates' },
-    {
-      name: 'Audit Store',
-      ready: Boolean(status?.configured),
-      detail: status?.configured ? 'Append-only' : 'Not connected',
-    },
-  ]
-
-  return (
-    <section className="provenance-rail agent-provenance" aria-label="Agent provenance">
-      <div className="provenance-title"><Activity aria-hidden="true" /><span>Decision Lineage</span></div>
-      {items.map((source) => (
-        <div className="provenance-source" data-ready={source.ready} key={source.name}>
-          {source.ready ? <CheckCircle2 aria-hidden="true" /> : <CircleDashed aria-hidden="true" />}
-          <span><strong>{source.name}</strong><small>{source.detail}</small></span>
-        </div>
-      ))}
-      <div className="provenance-run">
-        <span>LATEST RUN</span>
-        <strong>{status?.last_run?.run_id ?? 'No autonomous run yet'}</strong>
-        {lineage && <small>{lineage.total} retained research snapshots</small>}
-      </div>
-    </section>
-  )
-}
+const archiveNavigation = [
+  { to: '/research', label: 'Hypothesis', icon: BookOpenCheck },
+  { to: '/events', label: 'Korea Events', icon: FileSearch },
+  { to: '/lineage', label: 'Research Lineage', icon: Database },
+]
 
 export function AppShell() {
-  const runs = useRuns()
+  const researchRuns = useRuns()
   const agentStatus = useAgentStatus()
-  const [runId, setRunId] = useState('')
-  const [mobileOpen, setMobileOpen] = useState(false)
+  const [selectedResearchRunId, setSelectedResearchRunId] = useState('')
+  const [moreOpen, setMoreOpen] = useState(false)
   const [search, setSearch] = useState('')
-  const mobileMenuButton = useRef<HTMLButtonElement>(null)
+  const moreButton = useRef<HTMLButtonElement>(null)
+  const moreSheet = useRef<HTMLDivElement>(null)
+  const location = useLocation()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -81,31 +48,52 @@ export function AppShell() {
   }, [])
 
   useEffect(() => {
-    if (!mobileOpen) return
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape') return
-      setMobileOpen(false)
-      requestAnimationFrame(() => mobileMenuButton.current?.focus())
+    if (!moreOpen) return
+    const sheet = moreSheet.current
+    const focusable = () => Array.from(sheet?.querySelectorAll<HTMLElement>('a, button:not([disabled])') ?? [])
+    requestAnimationFrame(() => focusable()[0]?.focus())
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setMoreOpen(false)
+        requestAnimationFrame(() => moreButton.current?.focus())
+        return
+      }
+      if (event.key !== 'Tab') return
+      const items = focusable()
+      if (!items.length) return
+      const first = items[0]
+      const last = items[items.length - 1]
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault()
+        first.focus()
+      }
     }
-    window.addEventListener('keydown', closeOnEscape)
-    return () => window.removeEventListener('keydown', closeOnEscape)
-  }, [mobileOpen])
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [moreOpen])
 
-  const closeMobileNavigation = () => {
-    setMobileOpen(false)
-    requestAnimationFrame(() => mobileMenuButton.current?.focus())
+  const closeMore = () => {
+    setMoreOpen(false)
+    requestAnimationFrame(() => moreButton.current?.focus())
   }
 
   const onSearch = (event: FormEvent) => {
     event.preventDefault()
     const query = search.trim().toUpperCase()
-    navigate(query ? `/agent?symbol=${encodeURIComponent(query)}` : '/agent')
+    navigate(query ? `/decisions?symbol=${encodeURIComponent(query)}` : '/decisions')
   }
 
-  const selectedRunId = runId || runs.data?.[0]?.run_id || ''
-  const lineage = useLineage(selectedRunId)
-  const hasResearch = Boolean(runs.data?.length)
+  const researchRunId = selectedResearchRunId || researchRuns.data?.[0]?.run_id || ''
   const connected = Boolean(agentStatus.data?.configured)
+  const inResearchArchive = ['/research', '/events', '/lineage'].some(
+    (path) => location.pathname === path || location.pathname.startsWith(`${path}/`),
+  )
+  const primaryClass = (to: string, isActive: boolean) => (
+    isActive || (to === '/decisions' && location.pathname.startsWith('/agent/runs/')) ? 'active' : undefined
+  )
 
   return (
     <div className="app-shell">
@@ -114,7 +102,6 @@ export function AppShell() {
         <Link className="brand" to="/agent" aria-label="Crowd Excess Agent home">
           <strong>CROWD EXCESS</strong><span>AGENT</span>
         </Link>
-        <button ref={mobileMenuButton} className="icon-button mobile-menu" type="button" aria-label="Open navigation" aria-controls="primary-sidebar" aria-expanded={mobileOpen} onClick={() => setMobileOpen(true)}><Menu aria-hidden="true" /></button>
         <form className="command-search" role="search" onSubmit={onSearch}>
           <Search aria-hidden="true" />
           <label className="sr-only" htmlFor="global-search">Inspect a universe symbol</label>
@@ -124,41 +111,82 @@ export function AppShell() {
         <div className="header-actions">
           <span className="research-mode"><span className={connected ? 'signal-dot' : 'signal-dot signal-dot--off'} />{connected ? 'Audit Connected' : 'Setup Pending'}</span>
           <span className="mode-chip"><ShieldCheck aria-hidden="true" />{agentStatus.data?.mode?.toUpperCase() ?? 'SHADOW'} ONLY</span>
-          <label className="run-select research-run-select">
-            <span>RESEARCH</span>
-            <select name="research-run" aria-label="Select Korean research run" value={selectedRunId} onChange={(event) => setRunId(event.target.value)} disabled={!hasResearch}>
-              {!hasResearch && <option value="">No run</option>}
-              {runs.data?.map((run) => <option value={run.run_id} key={run.run_id}>{run.run_id}</option>)}
-            </select>
-          </label>
         </div>
       </header>
 
-      <aside id="primary-sidebar" className={`sidebar ${mobileOpen ? 'sidebar--open' : ''}`}>
-        <div className="sidebar-mobile-head"><span>Navigation</span><button className="icon-button sidebar-close" type="button" aria-label="Close navigation" onClick={closeMobileNavigation}><X aria-hidden="true" /></button></div>
+      <aside className="sidebar desktop-sidebar">
         <nav aria-label="Primary navigation">
-          {navigation.map(({ to, label, icon: Icon }) => (
-            <NavLink key={to} to={to} aria-label={label} title={label} onClick={() => setMobileOpen(false)}>
+          {primaryNavigation.map(({ to, label, icon: Icon }) => (
+            <NavLink key={to} to={to} end={to === '/agent'} className={({ isActive }) => primaryClass(to, isActive)} aria-label={label} title={label}>
+              <Icon aria-hidden="true" /><span>{label}</span>
+            </NavLink>
+          ))}
+          <div className="sidebar-group-label"><Archive aria-hidden="true" /><span>Research Archive</span></div>
+          {archiveNavigation.map(({ to, label, icon: Icon }) => (
+            <NavLink className="archive-nav-link" key={to} to={to} aria-label={label} title={label}>
               <Icon aria-hidden="true" /><span>{label}</span>
             </NavLink>
           ))}
         </nav>
         <div className="sidebar-footer">
-          <div className="connection-line"><span className={connected ? 'signal-dot' : 'signal-dot signal-dot--off'} />{connected ? 'Public audit ready' : 'Waiting for Supabase'}</div>
+          <div className="connection-line"><span className={connected ? 'signal-dot' : 'signal-dot signal-dot--off'} />{connected ? 'Public audit ready' : 'Waiting for audit store'}</div>
           <p>PAPER OPTIONS / DEFINED RISK</p>
         </div>
       </aside>
 
       <div className="workspace">
+        {inResearchArchive && (
+          <section className="archive-context" aria-labelledby="archive-context-title">
+            <div>
+              <p className="eyebrow">PRE-HACKATHON RESEARCH / KOREAN MARKET</p>
+              <h2 id="archive-context-title">Research Archive</h2>
+              <p>Retained provenance—not US agent execution.</p>
+            </div>
+            <label className="run-select archive-run-select">
+              <span>RESEARCH RUN</span>
+              <select aria-label="Select Korean research run" value={researchRunId} onChange={(event) => setSelectedResearchRunId(event.target.value)} disabled={!researchRuns.data?.length}>
+                {!researchRuns.data?.length && <option value="">No run</option>}
+                {researchRuns.data?.map((run) => <option key={run.run_id} value={run.run_id}>{run.run_id}</option>)}
+              </select>
+            </label>
+            <nav aria-label="Research Archive sections">
+              {archiveNavigation.map(({ to, label }) => <NavLink key={to} to={to}>{label}</NavLink>)}
+            </nav>
+          </section>
+        )}
         <main id="main-content" tabIndex={-1}>
-          <Outlet context={{ runId: selectedRunId } satisfies WorkspaceContext} />
+          <Outlet context={{ runId: researchRunId } satisfies WorkspaceContext} />
         </main>
-        <AgentProvenanceRail status={agentStatus.data} lineage={lineage.data} />
         <footer className="disclaimer">
           <ShieldCheck aria-hidden="true" /> Alpaca paper trading only. No live mode, naked options, investment advice, or profitability claim.
         </footer>
       </div>
-      {mobileOpen && <button className="scrim" type="button" aria-label="Close navigation" onClick={closeMobileNavigation} />}
+
+      <nav className="mobile-bottom-nav" aria-label="Mobile navigation">
+        {primaryNavigation.map(({ to, label, icon: Icon }) => (
+          <NavLink key={to} to={to} end={to === '/agent'} className={({ isActive }) => primaryClass(to, isActive)}>
+            <Icon aria-hidden="true" /><span>{label}</span>
+          </NavLink>
+        ))}
+        <button ref={moreButton} type="button" aria-haspopup="dialog" aria-expanded={moreOpen} aria-controls="mobile-more-sheet" onClick={() => setMoreOpen(true)}>
+          <Ellipsis aria-hidden="true" /><span>More</span>
+        </button>
+      </nav>
+
+      {moreOpen && (
+        <>
+          <button className="scrim mobile-more-scrim" type="button" aria-label="Close More menu" onClick={closeMore} />
+          <div ref={moreSheet} id="mobile-more-sheet" className="mobile-more-sheet" role="dialog" aria-modal="true" aria-labelledby="mobile-more-title">
+            <header><div><span className="eyebrow">ARCHIVE</span><h2 id="mobile-more-title">Research Archive</h2></div><button className="icon-button" type="button" aria-label="Close More menu" onClick={closeMore}><X aria-hidden="true" /></button></header>
+            <p>Pre-hackathon Korean-market research is preserved separately from US agent execution.</p>
+            <nav aria-label="Research Archive">
+              {archiveNavigation.map(({ to, label, icon: Icon }) => (
+                <NavLink key={to} to={to} onClick={() => setMoreOpen(false)}><Icon aria-hidden="true" /><span>{label}</span></NavLink>
+              ))}
+            </nav>
+          </div>
+        </>
+      )}
     </div>
   )
 }
