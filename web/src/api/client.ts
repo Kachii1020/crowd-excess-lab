@@ -7,6 +7,7 @@ import {
   eventSchema,
   eventsResponseSchema,
   lineageSchema,
+  portfolioHistorySchema,
   portfolioSchema,
   runSchema,
   signalSnapshotSchema,
@@ -54,6 +55,10 @@ export const api = {
   agentRun: (runId: string) => fetchParsed(`/api/v1/agent/runs/${runId}`, agentRunDetailSchema),
   agentSignals: () => fetchParsed('/api/v1/agent/signals', z.array(signalSnapshotSchema)),
   portfolio: () => fetchParsed('/api/v1/portfolio', portfolioSchema.nullable()),
+  portfolioHistory: (limit = 90) => {
+    const safeLimit = Math.min(90, Math.max(1, Number.isFinite(limit) ? Math.trunc(limit) : 90))
+    return fetchParsed(`/api/v1/portfolio/history?limit=${safeLimit}`, portfolioHistorySchema)
+  },
   strategy: () => fetchParsed('/api/v1/strategy', strategySchema),
   runs: () => fetchParsed('/api/v1/runs', z.array(runSchema)),
   run: (runId: string) => fetchParsed(`/api/v1/runs/${runId}`, runSchema),

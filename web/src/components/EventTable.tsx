@@ -35,8 +35,9 @@ export function EventTable({ events, sort, order, onSort, selectedReceipt, onSel
 }) {
   const location = useLocation()
   return (
-    <div className="table-wrap terminal-table-wrap">
-      <table className="data-table event-table">
+    <>
+      <div className="table-wrap terminal-table-wrap desktop-event-table">
+        <table className="data-table event-table">
         <thead>
           <tr>
             <th aria-sort={sortDirection('received_date', sort, order)}><SortButton field="received_date" current={sort} order={order} onSort={onSort}>Date</SortButton></th>
@@ -65,7 +66,24 @@ export function EventTable({ events, sort, order, onSort, selectedReceipt, onSel
             </tr>
           ))}
         </tbody>
-      </table>
-    </div>
+        </table>
+      </div>
+      <div className="mobile-event-list" aria-label="Event observations">
+        {events.map((event) => (
+          <article className="mobile-event-card" key={event.receipt_number} data-selected={selectedReceipt === event.receipt_number}>
+            <header><div><time dateTime={event.received_date}>{format.date(event.received_date)}</time><strong>{event.corporation_name}</strong><span>{event.ticker} · {label(event.market_class)}</span></div><StatusBadge status={event.attention_group} /></header>
+            <dl>
+              <div><dt>Contract / revenue</dt><dd>{format.percent(event.contract_revenue_ratio)}</dd></div>
+              <div><dt>AE score</dt><dd>{format.ratio(event.attention_excess)}</dd></div>
+              <div><dt>AR +1</dt><dd>{format.percent(event.abnormal_return_h1)}</dd></div>
+            </dl>
+            <div className="mobile-event-actions">
+              <button className="button" type="button" onClick={() => onSelect?.(event.receipt_number)} aria-pressed={selectedReceipt === event.receipt_number}>Inspect summary</button>
+              <Link className="icon-link" to={`/events/${event.receipt_number}`} state={{ from: `${location.pathname}${location.search}` }} aria-label={`Open full evidence for ${event.corporation_name}`}>Full evidence <ExternalLink aria-hidden="true" /></Link>
+            </div>
+          </article>
+        ))}
+      </div>
+    </>
   )
 }

@@ -8,6 +8,7 @@ export const queryKeys = {
   agentRun: (runId: string) => ['agent', 'runs', runId] as const,
   agentSignals: ['agent', 'signals'] as const,
   portfolio: ['portfolio'] as const,
+  portfolioHistory: (limit: number) => ['portfolio', 'history', limit] as const,
   strategy: ['strategy'] as const,
   runs: ['runs'] as const,
   run: (runId: string) => ['runs', runId] as const,
@@ -39,6 +40,15 @@ export function useAgentSignals() {
 
 export function usePortfolio() {
   return useQuery({ queryKey: queryKeys.portfolio, queryFn: api.portfolio, refetchInterval: 30_000 })
+}
+
+export function usePortfolioHistory(limit = 90) {
+  const safeLimit = Math.min(90, Math.max(1, Number.isFinite(limit) ? Math.trunc(limit) : 90))
+  return useQuery({
+    queryKey: queryKeys.portfolioHistory(safeLimit),
+    queryFn: () => api.portfolioHistory(safeLimit),
+    refetchInterval: 30_000,
+  })
 }
 
 export function useStrategy() {

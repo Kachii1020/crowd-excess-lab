@@ -2,6 +2,7 @@ import {
   Activity, ArrowRight, CheckCircle2, CircleDashed, Clock3, Database,
   Gauge, Newspaper, ShieldCheck, WalletCards,
 } from 'lucide-react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   useAgentRun, useAgentRuns, useAgentStatus, usePortfolio, useStrategy,
@@ -23,13 +24,16 @@ function latestNarrative(detail: AgentRunDetail | undefined) {
   const risk = detail?.risk_decision
   const receipt = detail?.receipt
   if (!signal) return 'Evidence was not sampled → no candidate reached risk evaluation → the agent placed no order.'
-  const evidence = `${signal.symbol} evidence confidence ${Math.round(signal.evidence.confidence * 100)}%`
+  const evidence = signal.evidence.abstention_reason
+    ? `${signal.symbol} evidence abstained: ${signal.evidence.abstention_reason.replaceAll('_', ' ')}`
+    : `${signal.symbol} evidence confidence ${Math.round(signal.evidence.confidence * 100)}%`
   const control = risk ? (risk.approved ? 'risk gates approved the candidate' : `risk gates abstained: ${risk.denial_reason || 'a required gate failed'}`) : 'no option candidate reached risk evaluation'
   const outcome = receipt ? `Alpaca paper receipt is ${receipt.state.replaceAll('_', ' ')}` : 'no order was submitted'
   return `${evidence} → ${control} → ${outcome}.`
 }
 
 export function AgentOverviewPage() {
+  const [renderedAt] = useState(() => Date.now())
   const status = useAgentStatus()
   const runs = useAgentRuns()
   const portfolio = usePortfolio()
@@ -46,7 +50,9 @@ export function AgentOverviewPage() {
   const sampledSignals = detail.data?.signals ?? []
   const sampled = sampledSignals.length > 0
   const latestText = `${latestRun?.summary ?? ''} ${latestRun?.error ?? ''} ${status.data?.message ?? ''}`.toLowerCase()
-  const closedWindow = !sampled && /(market.*closed|outside.*market|outside.*window|market window)/.test(latestText)
+  const closedWindow = !sampled && (latestRun?.market_clock
+    ? !latestRun.market_clock.is_open
+    : /(market.*closed|outside.*market|outside.*window|market window)/.test(latestText))
   const latestTitle = !latestRun
     ? 'No automation check recorded'
     : sampled
@@ -60,19 +66,24 @@ export function AgentOverviewPage() {
   const nextAction = !latestRun
     ? 'Wait for the first scheduled US-market scan, then return to inspect its inputs.'
     : !sampled
-      ? 'Return after the next eligible US-market scan; no missing values are treated as zero.'
+      ? latestRun?.market_clock?.next_open
+        ? `The recorded market clock reported its next open at ${format.dateTime(latestRun.market_clock.next_open)}. Return after a new eligible scan; no missing values are treated as zero.`
+        : 'Return after the next eligible US-market scan; no missing values are treated as zero.'
       : detail.data?.receipt
         ? 'Open the full trace to verify the order receipt and every input timestamp.'
         : 'Open the decision workbench to inspect the residual and the gate that caused abstention.'
-  const sourceKeys = Object.entries(status.data?.sources ?? {})
-  const sourceReady = (prefix: string) => sourceKeys.some(([key, ready]) => key.startsWith(prefix) && ready)
-  const observedAt = latestRun ? format.dateTime(latestRun.completed_at ?? latestRun.started_at) : 'Not observed'
+  const sourceKeys = Object.keys(detail.data?.run.source_hashes ?? latestRun?.source_hashes ?? {})
+  const sourceReady = (prefix: string) => sourceKeys.some((key) => key.startsWith(prefix))
+  const observedValue = latestRun?.market_clock?.observed_at ?? latestRun?.completed_at ?? latestRun?.started_at
+  const observedAt = observedValue ? format.dateTime(observedValue) : 'Not observed'
+  const stale = observedValue ? renderedAt - new Date(observedValue).getTime() > 24 * 60 * 60 * 1000 : false
+  const evidenceFailed = sampledSignals.some((signal) => Boolean(signal.evidence.abstention_reason))
   const health = [
-    { name: 'NAVER', ready: sourceReady('naver_'), detail: 'Cross-border search attention' },
-    { name: 'Alpaca', ready: sourceReady('alpaca_'), detail: 'Market, news, and option data' },
-    { name: 'OpenAI', ready: sampledSignals.some((signal) => Boolean(signal.evidence_response_id)), detail: 'Structured news evidence' },
-    { name: 'Risk Engine', ready: Boolean(detail.data?.risk_decision), detail: 'Deterministic execution gates' },
-    { name: 'Audit Store', ready: Boolean(status.data?.configured), detail: 'Sanitized read-only records' },
+    { name: 'NAVER', state: sourceReady('naver_') ? stale ? 'Stale' : 'Ready' : 'Not sampled', detail: 'Cross-border search attention' },
+    { name: 'Alpaca Market', state: sourceReady('alpaca_market_') ? stale ? 'Stale' : 'Ready' : 'Not sampled', detail: 'Market, volume, and news context' },
+    { name: 'OpenAI', state: evidenceFailed ? 'Error' : sampledSignals.some((signal) => Boolean(signal.evidence_response_id)) ? stale ? 'Stale' : 'Ready' : 'Not sampled', detail: 'Structured news evidence' },
+    { name: 'Risk Engine', state: detail.data?.risk_decision ? 'Ready' : 'Not sampled', detail: 'Deterministic execution gates' },
+    { name: 'Audit Store', state: status.data?.configured ? 'Ready' : 'Error', detail: 'Sanitized read-only records' },
   ]
 
   return (
@@ -125,13 +136,9 @@ export function AgentOverviewPage() {
         <div className="panel-heading"><div><p className="eyebrow">DATA HEALTH</p><h2>What the latest check actually observed</h2></div><span><Database aria-hidden="true" /> {observedAt}</span></div>
         <div className="health-source-grid">
           {health.map((source) => {
-            const state = source.ready
-              ? 'Ready'
-              : source.name === 'Audit Store'
-                ? 'Error'
-                : !sampled || source.name === 'Risk Engine' ? 'Not sampled' : 'Error'
+            const state = source.state
             const statusKey = state.toLowerCase().replace(' ', '_')
-            return <div key={source.name} data-state={statusKey.replace('_', '-')}><span>{source.ready ? <CheckCircle2 aria-hidden="true" /> : <CircleDashed aria-hidden="true" />}<strong>{source.name}</strong></span><StatusBadge status={statusKey}>{state}</StatusBadge><p>{source.detail}</p></div>
+            return <div key={source.name} data-state={statusKey.replace('_', '-')}><span>{state === 'Ready' ? <CheckCircle2 aria-hidden="true" /> : <CircleDashed aria-hidden="true" />}<strong>{source.name}</strong></span><StatusBadge status={statusKey}>{state}</StatusBadge><p>{source.detail}</p></div>
           })}
         </div>
       </section>

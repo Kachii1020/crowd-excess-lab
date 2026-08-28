@@ -180,6 +180,10 @@ class FakeEvidence:
 
 
 class FakeAlpacaCli:
+    def __init__(self, *, is_open: bool = True) -> None:
+        self.is_open = is_open
+        self.clock_calls = 0
+
     @staticmethod
     def account() -> dict[str, object]:
         return {
@@ -189,9 +193,14 @@ class FakeAlpacaCli:
             "buying_power": "100000",
         }
 
-    @staticmethod
-    def clock() -> dict[str, object]:
-        return {"is_open": True}
+    def clock(self) -> dict[str, object]:
+        self.clock_calls += 1
+        return {
+            "timestamp": NOW.isoformat(),
+            "is_open": self.is_open,
+            "next_open": (NOW + timedelta(hours=18)).isoformat(),
+            "next_close": (NOW + timedelta(hours=5)).isoformat(),
+        }
 
     @staticmethod
     def positions() -> list[dict[str, object]]:
@@ -252,10 +261,12 @@ def test_portfolio_counts_every_unique_paper_attempt_state_once() -> None:
 def _runner(
     *,
     audit_events: tuple[AuditEvent, ...] = (),
-) -> tuple[AgentRunner, FakeNaver, FakeEvidence, InMemoryAuditStore]:
+    market_open: bool = True,
+) -> tuple[AgentRunner, FakeNaver, FakeEvidence, InMemoryAuditStore, FakeAlpacaCli]:
     naver = FakeNaver()
     evidence = FakeEvidence()
     store = InMemoryAuditStore()
+    alpaca_cli = FakeAlpacaCli(is_open=market_open)
     config = StrategyConfig(competition_account_id="paper-account")
     orchestrator = AgentOrchestrator(store, config)
     return (
@@ -263,7 +274,7 @@ def _runner(
             naver=naver,  # type: ignore[arg-type]
             market=FakeMarket(),  # type: ignore[arg-type]
             evidence=evidence,  # type: ignore[arg-type]
-            alpaca_cli=FakeAlpacaCli(),  # type: ignore[arg-type]
+            alpaca_cli=alpaca_cli,  # type: ignore[arg-type]
             orchestrator=orchestrator,
             config=config,
             audit_events=audit_events,
@@ -271,11 +282,12 @@ def _runner(
         naver,
         evidence,
         store,
+        alpaca_cli,
     )
 
 
 def test_agent_runner_full_fake_provider_flow_persists_five_signals_and_shadow_intent() -> None:
-    runner, naver, evidence, store = _runner()
+    runner, naver, evidence, store, alpaca_cli = _runner()
 
     detail = runner.run(now=NOW)
 
@@ -288,6 +300,31 @@ def test_agent_runner_full_fake_provider_flow_persists_five_signals_and_shadow_i
     assert sum(event.event_type == "signal" for event in store.events) == 5
     assert all(signal.evidence_response_id for signal in detail.signals)
     assert "alpaca_options_aapl" in detail.run.source_hashes
+    assert alpaca_cli.clock_calls == 1
+    assert detail.run.market_clock is not None
+    assert detail.run.market_clock.is_open is True
+    assert detail.run.market_clock.observed_at == NOW
+    run_events = [event for event in store.events if event.event_type.startswith("run_")]
+    assert all(event.payload["market_clock"]["is_open"] is True for event in run_events)
+
+
+def test_closed_market_clock_is_recorded_on_abstention_without_sampling() -> None:
+    runner, naver, evidence, store, alpaca_cli = _runner(market_open=False)
+
+    detail = runner.run(now=NOW)
+
+    assert detail.run.status == "abstained"
+    assert detail.run.market_clock is not None
+    assert detail.run.market_clock.is_open is False
+    assert detail.run.market_clock.next_open == NOW + timedelta(hours=18)
+    assert alpaca_cli.clock_calls == 1
+    assert naver.calls == []
+    assert evidence.calls == []
+    assert all(
+        event.payload["market_clock"]["is_open"] is False
+        for event in store.events
+        if event.event_type.startswith("run_")
+    )
 
 
 def test_prior_rejected_paper_attempt_blocks_later_candidate_that_day() -> None:
@@ -296,7 +333,7 @@ def test_prior_rejected_paper_attempt_blocks_later_candidate_that_day() -> None:
         "execution",
         _receipt("rejected-order", "rejected"),
     )
-    runner, _, _, _ = _runner(audit_events=(rejected_event,))
+    runner, _, _, _, _ = _runner(audit_events=(rejected_event,))
 
     detail = runner.run(now=NOW)
 

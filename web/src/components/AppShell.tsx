@@ -15,6 +15,11 @@ const primaryNavigation = [
   { to: '/strategy', label: 'Strategy', icon: SlidersHorizontal },
 ]
 
+const desktopNavigation = [
+  ...primaryNavigation,
+  { to: '/data', label: 'Data Health', icon: Database },
+]
+
 const archiveNavigation = [
   { to: '/research', label: 'Hypothesis', icon: BookOpenCheck },
   { to: '/events', label: 'Korea Events', icon: FileSearch },
@@ -91,6 +96,7 @@ export function AppShell() {
   const inResearchArchive = ['/research', '/events', '/lineage'].some(
     (path) => location.pathname === path || location.pathname.startsWith(`${path}/`),
   )
+  const moreSectionActive = location.pathname === '/data' || inResearchArchive
   const primaryClass = (to: string, isActive: boolean) => (
     isActive || (to === '/decisions' && location.pathname.startsWith('/agent/runs/')) ? 'active' : undefined
   )
@@ -116,7 +122,7 @@ export function AppShell() {
 
       <aside className="sidebar desktop-sidebar">
         <nav aria-label="Primary navigation">
-          {primaryNavigation.map(({ to, label, icon: Icon }) => (
+          {desktopNavigation.map(({ to, label, icon: Icon }) => (
             <NavLink key={to} to={to} end={to === '/agent'} className={({ isActive }) => primaryClass(to, isActive)} aria-label={label} title={label}>
               <Icon aria-hidden="true" /><span>{label}</span>
             </NavLink>
@@ -168,7 +174,7 @@ export function AppShell() {
             <Icon aria-hidden="true" /><span>{label}</span>
           </NavLink>
         ))}
-        <button ref={moreButton} type="button" aria-haspopup="dialog" aria-expanded={moreOpen} aria-controls="mobile-more-sheet" onClick={() => setMoreOpen(true)}>
+        <button ref={moreButton} type="button" data-active={moreSectionActive} aria-haspopup="dialog" aria-expanded={moreOpen} aria-controls="mobile-more-sheet" onClick={() => setMoreOpen(true)}>
           <Ellipsis aria-hidden="true" /><span>More</span>
         </button>
       </nav>
@@ -177,7 +183,10 @@ export function AppShell() {
         <>
           <button className="scrim mobile-more-scrim" type="button" aria-label="Close More menu" onClick={closeMore} />
           <div ref={moreSheet} id="mobile-more-sheet" className="mobile-more-sheet" role="dialog" aria-modal="true" aria-labelledby="mobile-more-title">
-            <header><div><span className="eyebrow">ARCHIVE</span><h2 id="mobile-more-title">Research Archive</h2></div><button className="icon-button" type="button" aria-label="Close More menu" onClick={closeMore}><X aria-hidden="true" /></button></header>
+            <header><div><span className="eyebrow">MORE</span><h2 id="mobile-more-title">Data &amp; Research</h2></div><button className="icon-button" type="button" aria-label="Close More menu" onClick={closeMore}><X aria-hidden="true" /></button></header>
+            <nav aria-label="Agent data">
+              <NavLink to="/data" onClick={() => setMoreOpen(false)}><Database aria-hidden="true" /><span>Data Health</span></NavLink>
+            </nav>
             <p>Pre-hackathon Korean-market research is preserved separately from US agent execution.</p>
             <nav aria-label="Research Archive">
               {archiveNavigation.map(({ to, label, icon: Icon }) => (

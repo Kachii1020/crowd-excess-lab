@@ -134,9 +134,7 @@ def _api_router(settings: Settings) -> APIRouter:
     @router.get("/agent/runs/{run_id}", response_model=AgentRunDetail)
     def agent_run(
         request: Request,
-        run_id: Annotated[
-            str, ApiPath(pattern=r"^[0-9]{8}T[0-9]{6}Z-[0-9a-f]{8}$")
-        ],
+        run_id: Annotated[str, ApiPath(pattern=r"^[0-9]{8}T[0-9]{6}Z-[0-9a-f]{8}$")],
     ) -> AgentRunDetail:
         try:
             detail = _agent_repository(request).get_run(run_id)
@@ -161,6 +159,18 @@ def _api_router(settings: Settings) -> APIRouter:
     def portfolio(request: Request) -> PortfolioSnapshot | None:
         try:
             return _agent_repository(request).latest_portfolio()
+        except AuditStoreUnavailable as exc:
+            raise HTTPException(
+                status_code=503, detail="Agent audit data is temporarily unavailable."
+            ) from exc
+
+    @router.get("/portfolio/history", response_model=tuple[PortfolioSnapshot, ...])
+    def portfolio_history(
+        request: Request,
+        limit: Annotated[int, Query(ge=1, le=90)] = 90,
+    ) -> tuple[PortfolioSnapshot, ...]:
+        try:
+            return _agent_repository(request).portfolio_history(limit)
         except AuditStoreUnavailable as exc:
             raise HTTPException(
                 status_code=503, detail="Agent audit data is temporarily unavailable."

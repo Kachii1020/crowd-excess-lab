@@ -361,6 +361,19 @@ class PortfolioSnapshot(AgentModel):
     _normalize_observed = field_validator("observed_at")(_aware_utc)
 
 
+class MarketClockSnapshot(AgentModel):
+    """The single Alpaca market-clock observation used for an agent run."""
+
+    observed_at: datetime
+    is_open: bool
+    next_open: datetime
+    next_close: datetime
+
+    _normalize_observed = field_validator("observed_at")(_aware_utc)
+    _normalize_next_open = field_validator("next_open")(_aware_utc)
+    _normalize_next_close = field_validator("next_close")(_aware_utc)
+
+
 class ExecutionReceipt(AgentModel):
     client_order_id: str
     alpaca_order_id: str | None = None
@@ -417,6 +430,7 @@ class AgentRunRecord(AgentModel):
     status: RunStatus
     started_at: datetime
     completed_at: datetime | None = None
+    market_clock: MarketClockSnapshot | None = None
     source_hashes: dict[str, str] = Field(default_factory=dict)
     summary: str = ""
     error: str = ""

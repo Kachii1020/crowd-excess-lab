@@ -67,7 +67,7 @@ export function EventsPage() {
           <label><span>Outcome</span><select name="outcome" value={filters.outcome_state} onChange={(event) => setFilter('outcome', event.target.value)}><option value="">All outcomes</option><option value="observed">Observed</option><option value="partial">Partial</option><option value="missing">Missing</option></select></label>
           <button className="icon-button" type="button" aria-label="Reset filters" title="Reset filters" onClick={() => setParams({})}><RotateCcw aria-hidden="true" /></button>
         </section>
-        <div className="event-count"><span><Filter aria-hidden="true" /><strong>{format.integer(total)}</strong> matching {total === 1 ? 'observation' : 'observations'}</span><span>Click a row to inspect evidence</span></div>
+        <div className="event-count"><span><Filter aria-hidden="true" /><strong>{format.integer(total)}</strong> matching {total === 1 ? 'observation' : 'observations'}</span><span>Select an observation to inspect evidence</span></div>
         {items.length
           ? <EventTable events={items} sort={filters.sort ?? ''} order={filters.order ?? ''} onSort={onSort} selectedReceipt={selected?.receipt_number} onSelect={selectEvent} />
           : <EmptyState title="No events match these filters"><button className="button" type="button" onClick={() => setParams({})}>Reset filters</button></EmptyState>}

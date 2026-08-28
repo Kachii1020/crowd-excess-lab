@@ -192,6 +192,19 @@ class AgentAuditRepository:
                 latest = PortfolioSnapshot.model_validate(event.payload)
         return latest
 
+    def portfolio_history(self, limit: int = 90) -> tuple[PortfolioSnapshot, ...]:
+        """Return unique portfolio observations in chronological order."""
+
+        bounded_limit = min(max(limit, 1), 90)
+        by_observed_at: dict[datetime, PortfolioSnapshot] = {}
+        for event in self._events():
+            if event.event_type != "portfolio":
+                continue
+            snapshot = PortfolioSnapshot.model_validate(event.payload)
+            by_observed_at[snapshot.observed_at] = snapshot
+        chronological = sorted(by_observed_at.values(), key=lambda item: item.observed_at)
+        return tuple(chronological[-bounded_limit:])
+
     def source_readiness(self) -> dict[str, bool]:
         readiness: defaultdict[str, bool] = defaultdict(bool)
         for run in self.list_runs():

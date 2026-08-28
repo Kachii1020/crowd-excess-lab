@@ -14,6 +14,7 @@ from crowd_excess_lab.agent.domain import (
     ExecutionReceipt,
     ExecutionState,
     ExitIntent,
+    MarketClockSnapshot,
     OptionQuote,
     PortfolioSnapshot,
     RunStatus,
@@ -101,6 +102,7 @@ class AgentOrchestrator:
         *,
         additional_signals: tuple[SignalSnapshot, ...] = (),
         source_hashes: dict[str, str] | None = None,
+        market_clock: MarketClockSnapshot | None = None,
     ) -> AgentRunDetail:
         started = signal.decision_at.astimezone(UTC)
         run_id = make_run_id(started, signal.symbol, self._config.version)
@@ -111,6 +113,7 @@ class AgentOrchestrator:
             model=self._model,
             status=RunStatus.RUNNING,
             started_at=started,
+            market_clock=market_clock,
             source_hashes=source_hashes or {},
             summary="Candidate evaluation started.",
         )
@@ -180,6 +183,7 @@ class AgentOrchestrator:
         *,
         started_at: datetime,
         source_hashes: dict[str, str] | None = None,
+        market_clock: MarketClockSnapshot | None = None,
     ) -> AgentRunDetail:
         """Persist and submit one deterministic position close."""
 
@@ -191,6 +195,7 @@ class AgentOrchestrator:
             model=self._model,
             status=RunStatus.RUNNING,
             started_at=started_at,
+            market_clock=market_clock,
             source_hashes=source_hashes or {},
             summary=f"Exit evaluation: {intent.reason.value}.",
         )
@@ -244,6 +249,7 @@ class AgentOrchestrator:
         *,
         started_at: datetime,
         source_hashes: dict[str, str] | None = None,
+        market_clock: MarketClockSnapshot | None = None,
     ) -> AgentRunDetail:
         """Persist a visible no-trade decision without constructing an order."""
 
@@ -260,6 +266,7 @@ class AgentOrchestrator:
             model=self._model,
             status=RunStatus.RUNNING,
             started_at=started_at,
+            market_clock=market_clock,
             source_hashes=source_hashes or {},
             summary="Scan started.",
         )

@@ -110,6 +110,10 @@ def test_public_agent_endpoints_are_read_only_and_traceable(study_root) -> None:
     assert portfolio.status_code == 200
     assert portfolio.json()["equity"] == 100_250
 
+    history = client.get("/api/v1/portfolio/history?limit=90")
+    assert history.status_code == 200
+    assert [item["equity"] for item in history.json()] == [100_250]
+
     strategy = client.get("/api/v1/strategy")
     assert strategy.status_code == 200
     assert strategy.json()["paper_base_url"] == "https://paper-api.alpaca.markets"
@@ -117,6 +121,7 @@ def test_public_agent_endpoints_are_read_only_and_traceable(study_root) -> None:
 
     assert client.post("/api/v1/agent/runs").status_code == 405
     assert client.post("/api/v1/orders").status_code == 404
+    assert client.post("/api/v1/portfolio/history").status_code == 405
 
 
 def test_unconfigured_public_agent_returns_honest_empty_state(api_client: TestClient) -> None:
@@ -127,9 +132,18 @@ def test_unconfigured_public_agent_returns_honest_empty_state(api_client: TestCl
     assert api_client.get("/api/v1/agent/runs").json() == []
     assert api_client.get("/api/v1/agent/signals").json() == []
     assert api_client.get("/api/v1/portfolio").json() is None
+    assert api_client.get("/api/v1/portfolio/history").json() == []
 
 
 def test_invalid_agent_run_identifier_is_rejected(study_root) -> None:  # type: ignore[no-untyped-def]
     client = _agent_client(study_root)
     response = client.get("/api/v1/agent/runs/../../.env")
     assert response.status_code in {404, 422}
+
+
+def test_portfolio_history_limit_is_strictly_bounded(study_root) -> None:  # type: ignore[no-untyped-def]
+    client = _agent_client(study_root)
+
+    assert client.get("/api/v1/portfolio/history?limit=0").status_code == 422
+    assert client.get("/api/v1/portfolio/history?limit=91").status_code == 422
+    assert client.get("/api/v1/portfolio/history?limit=invalid").status_code == 422

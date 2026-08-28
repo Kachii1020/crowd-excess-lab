@@ -212,6 +212,15 @@ export const portfolioSchema = z.object({
   })),
 })
 
+export const portfolioHistorySchema = z.array(portfolioSchema)
+
+export const marketClockSchema = z.object({
+  observed_at: z.string(),
+  is_open: z.boolean(),
+  next_open: z.string().nullable(),
+  next_close: z.string().nullable(),
+})
+
 export const agentRunSchema = z.object({
   run_id: z.string(),
   mode: z.enum(['shadow', 'paper']),
@@ -223,6 +232,8 @@ export const agentRunSchema = z.object({
   source_hashes: z.record(z.string(), z.string()),
   summary: z.string(),
   error: z.string(),
+  // Optional as well as nullable so pre-market-clock audit rows remain readable.
+  market_clock: marketClockSchema.nullable().optional(),
 })
 
 export const agentRunDetailSchema = z.object({
@@ -279,6 +290,8 @@ export type AgentRun = z.infer<typeof agentRunSchema>
 export type AgentRunDetail = z.infer<typeof agentRunDetailSchema>
 export type SignalSnapshot = z.infer<typeof signalSnapshotSchema>
 export type Portfolio = z.infer<typeof portfolioSchema>
+export type PortfolioHistory = z.infer<typeof portfolioHistorySchema>
+export type MarketClock = z.infer<typeof marketClockSchema>
 export type Strategy = z.infer<typeof strategySchema>
 
 export type EventFilters = {

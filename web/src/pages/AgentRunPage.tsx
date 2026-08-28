@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { ArrowLeft, Bot, BrainCircuit, CheckCircle2, CircleDashed, Copy, ShieldCheck, WalletCards } from 'lucide-react'
 import { Link, useParams } from 'react-router-dom'
-import { useAgentRun } from '../api/queries.ts'
+import { useAgentRun, useAgentRuns } from '../api/queries.ts'
 import { ErrorState, LoadingState } from '../components/States.tsx'
 import { StatusBadge } from '../components/StatusBadge.tsx'
 import { format } from '../lib/format.ts'
@@ -9,11 +9,23 @@ import { format } from '../lib/format.ts'
 export function AgentRunPage() {
   const { runId = '' } = useParams()
   const query = useAgentRun(runId)
+  const runsQuery = useAgentRuns()
   const [copyStatus, setCopyStatus] = useState('')
   if (query.isLoading) return <LoadingState label="Reconstructing the decision trace" />
   if (query.error) return <ErrorState error={query.error} retry={() => void query.refetch()} />
   if (!query.data) return null
   const { run, signals, risk_decision: risk, exit_intent: exitIntent, receipt, portfolio } = query.data
+  const runIndex = runsQuery.data?.findIndex((candidate) => candidate.run_id === run.run_id) ?? -1
+  const previousRun = runIndex >= 0 ? runsQuery.data?.[runIndex + 1] : undefined
+  const comparisonSymbol = [...signals]
+    .sort((a, b) => Math.abs(b.crowd_excess_score) - Math.abs(a.crowd_excess_score))[0]?.symbol
+  const compareParams = previousRun
+    ? new URLSearchParams({
+        run: run.run_id,
+        compare: previousRun.run_id,
+        ...(comparisonSymbol ? { symbol: comparisonSymbol } : {}),
+      })
+    : null
   const hasExecutionReceipt = Boolean(receipt && receipt.state !== 'shadow')
   const focusStage = hasExecutionReceipt || receipt
     ? 'receipt'
@@ -46,6 +58,7 @@ export function AgentRunPage() {
         <div>
           <StatusBadge status={run.status} />
           <span className="mode-chip"><ShieldCheck />{run.mode.toUpperCase()} ONLY</span>
+          {compareParams && <Link className="mode-chip" to={`/decisions?${compareParams.toString()}`}>Compare with previous</Link>}
           <button className="mode-chip" type="button" onClick={() => void copyRunLink()} aria-describedby="copy-run-status"><Copy aria-hidden="true" />Copy run link</button>
           <span className="sr-only" id="copy-run-status" aria-live="polite">{copyStatus}</span>
         </div>
@@ -56,6 +69,7 @@ export function AgentRunPage() {
         <div><span>MODEL</span><strong>{run.model}</strong></div>
         <div><span>CONFIG</span><strong>{run.config_version}</strong></div>
         <div><span>SOURCE HASHES</span><strong>{Object.keys(run.source_hashes).length}</strong></div>
+        {run.market_clock && <div><span>MARKET AT CHECK</span><strong>{run.market_clock.is_open ? 'OPEN' : 'CLOSED'} · {format.dateTime(run.market_clock.observed_at)}</strong></div>}
       </section>
 
       <div className="audit-timeline">

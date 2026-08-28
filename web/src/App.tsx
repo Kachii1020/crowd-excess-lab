@@ -14,6 +14,7 @@ const AgentConsolePage = lazy(() => import('./pages/AgentConsolePage.tsx').then(
 const AgentRunPage = lazy(() => import('./pages/AgentRunPage.tsx').then((module) => ({ default: module.AgentRunPage })))
 const PortfolioPage = lazy(() => import('./pages/PortfolioPage.tsx').then((module) => ({ default: module.PortfolioPage })))
 const StrategyPage = lazy(() => import('./pages/StrategyPage.tsx').then((module) => ({ default: module.StrategyPage })))
+const DataHealthPage = lazy(() => import('./pages/DataHealthPage.tsx').then((module) => ({ default: module.DataHealthPage })))
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="agent/runs/:runId" element={<AgentRunPage />} />
             <Route path="portfolio" element={<PortfolioPage />} />
             <Route path="strategy" element={<StrategyPage />} />
+            <Route path="data" element={<DataHealthPage />} />
             <Route path="dashboard" element={<Navigate replace to="/agent" />} />
             <Route path="events" element={<EventsPage />} />
             <Route path="events/:receiptNumber" element={<EventEvidencePage />} />

@@ -16,6 +16,7 @@ from crowd_excess_lab.agent.domain import (
     EvidenceContext,
     ExecutionReceipt,
     ExecutionState,
+    MarketClockSnapshot,
     OptionType,
     PortfolioSnapshot,
     PositionView,
@@ -54,6 +55,19 @@ def previous_us_close(now: datetime) -> datetime:
     while candidate.weekday() >= 5:
         candidate -= timedelta(days=1)
     return datetime.combine(candidate, time(16, 0), ZoneInfo("America/New_York")).astimezone(UTC)
+
+
+def market_clock_from_alpaca(payload: dict[str, object]) -> MarketClockSnapshot:
+    """Validate and normalize one real Alpaca clock response."""
+
+    return MarketClockSnapshot.model_validate(
+        {
+            "observed_at": payload.get("timestamp"),
+            "is_open": payload.get("is_open"),
+            "next_open": payload.get("next_open"),
+            "next_close": payload.get("next_close"),
+        }
+    )
 
 
 def portfolio_from_alpaca(
@@ -139,10 +153,11 @@ class AgentRunner:
 
     def run(self, *, now: datetime | None = None) -> AgentRunDetail:
         observed_at = (now or datetime.now(UTC)).astimezone(UTC)
-        account = self._alpaca_cli.account()
         clock = self._alpaca_cli.clock()
+        market_clock = market_clock_from_alpaca(clock)
+        account = self._alpaca_cli.account()
         positions = self._alpaca_cli.positions()
-        market_open = bool(clock.get("is_open", False))
+        market_open = market_clock.is_open
         reconciled_events = list(self._audit_events)
         latest_order_events: dict[str, tuple[AuditEvent, ExecutionReceipt]] = {}
         for event in self._audit_events:
@@ -180,6 +195,7 @@ class AgentRunner:
                 portfolio,
                 "Fresh competition account must start at exactly $100,000 with no positions.",
                 started_at=observed_at,
+                market_clock=market_clock,
             )
         if not market_open:
             return self._orchestrator.run_abstention(
@@ -187,6 +203,7 @@ class AgentRunner:
                 portfolio,
                 "Alpaca market clock is closed; no scan or order was attempted.",
                 started_at=observed_at,
+                market_clock=market_clock,
             )
         active_receipts = open_receipts(self._audit_events)
         for receipt in active_receipts:
@@ -201,6 +218,7 @@ class AgentRunner:
                     exit_intent,
                     portfolio,
                     started_at=observed_at,
+                    market_clock=market_clock,
                 )
         if observed_at >= self._config.freeze_at:
             return self._orchestrator.run_abstention(
@@ -208,6 +226,7 @@ class AgentRunner:
                 portfolio,
                 "Competition freeze time has passed; new positions are disabled.",
                 started_at=observed_at,
+                market_clock=market_clock,
             )
 
         symbols = (*UNIVERSE, self._config.benchmark)
@@ -217,7 +236,11 @@ class AgentRunner:
             bars = self._market.daily_bars(symbols, start=history_start, end=observed_at)
         except AlpacaMarketDataUnavailable as exc:
             return self._orchestrator.run_abstention(
-                (), portfolio, str(exc), started_at=observed_at
+                (),
+                portfolio,
+                str(exc),
+                started_at=observed_at,
+                market_clock=market_clock,
             )
 
         signals: list[SignalSnapshot] = []
@@ -226,7 +249,11 @@ class AgentRunner:
         benchmark = snapshots.get(self._config.benchmark)
         if benchmark is None:
             return self._orchestrator.run_abstention(
-                (), portfolio, "SPY benchmark snapshot was unavailable.", started_at=observed_at
+                (),
+                portfolio,
+                "SPY benchmark snapshot was unavailable.",
+                started_at=observed_at,
+                market_clock=market_clock,
             )
 
         for symbol in UNIVERSE:
@@ -315,6 +342,7 @@ class AgentRunner:
                     portfolio,
                     started_at=observed_at,
                     source_hashes=source_hashes,
+                    market_clock=market_clock,
                 )
 
         eligible = sorted(
@@ -329,6 +357,7 @@ class AgentRunner:
                 "No symbol passed attention, move, evidence, and market gates.",
                 started_at=observed_at,
                 source_hashes=source_hashes,
+                market_clock=market_clock,
             )
 
         selected = eligible[0]
@@ -354,6 +383,7 @@ class AgentRunner:
                 str(exc),
                 started_at=observed_at,
                 source_hashes=source_hashes,
+                market_clock=market_clock,
             )
         spread = select_debit_vertical(quotes, selected.trade_direction)
         if spread is None:
@@ -363,6 +393,7 @@ class AgentRunner:
                 "No 14-30 DTE option pair matched the declared delta shape.",
                 started_at=observed_at,
                 source_hashes=source_hashes,
+                market_clock=market_clock,
             )
         try:
             volumes = self._market.option_session_volume(
@@ -377,6 +408,7 @@ class AgentRunner:
                 str(exc),
                 started_at=observed_at,
                 source_hashes=source_hashes,
+                market_clock=market_clock,
             )
         spread = (
             spread[0].model_copy(update={"volume": volumes.get(spread[0].symbol, 0)}),
@@ -389,4 +421,5 @@ class AgentRunner:
             portfolio,
             additional_signals=others,
             source_hashes=source_hashes,
+            market_clock=market_clock,
         )

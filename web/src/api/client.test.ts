@@ -25,4 +25,17 @@ describe('typed API client', () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(JSON.stringify({ detail: 'research run was not found' }), { status: 404 })))
     await expect(api.run(TEST_RUN.run_id)).rejects.toEqual(new ApiError('research run was not found', 404))
   })
+
+  it('strictly bounds the public portfolio history URL', async () => {
+    const fetchMock = vi.fn().mockImplementation(async () => new Response(JSON.stringify([]), { status: 200 }))
+    vi.stubGlobal('fetch', fetchMock)
+
+    await api.portfolioHistory(999)
+    await api.portfolioHistory(0)
+    await api.portfolioHistory(Number.NaN)
+
+    expect(fetchMock).toHaveBeenNthCalledWith(1, '/api/v1/portfolio/history?limit=90', expect.anything())
+    expect(fetchMock).toHaveBeenNthCalledWith(2, '/api/v1/portfolio/history?limit=1', expect.anything())
+    expect(fetchMock).toHaveBeenNthCalledWith(3, '/api/v1/portfolio/history?limit=90', expect.anything())
+  })
 })
