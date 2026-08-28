@@ -14,7 +14,8 @@ on:
   schedule:
     # Alpaca's market clock remains the final gate. This window covers US regular
     # hours during daylight saving time with a buffer for clock transitions.
-    - cron: "*/15 13-20 * * 1-5"
+    # Stagger away from quarter-hour load spikes where GitHub may delay/drop jobs.
+    - cron: "10,25,40,55 13-20 * * 1-5"
 
 permissions:
   contents: read
