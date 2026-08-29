@@ -1,9 +1,15 @@
 import { expect, test, type Locator, type Page } from '@playwright/test'
 import {
   CLOSED_RUN_ID,
+  installAccountUnavailableFixture,
   installAgentFixture,
+  installAuditUnavailableFixture,
   installClosedMarketFixture,
+  installEvidenceUnavailableFixture,
+  installNoRunsFixture,
+  installNewerFailureAfterSampleFixture,
   installOneRunFixture,
+  installPartialSignalFixture,
   installPostSampleFailureFixture,
   installQuoteWidthFixture,
   QUOTE_RUN_ID,
@@ -75,27 +81,40 @@ test('synthetic fixture event monitor and search stay inspectable', async ({ pag
   expect(errors).toEqual([])
 })
 
-test('overview answers status, decision, risk, and next action in the first desktop viewport', async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name !== 'desktop-chromium', '1280 by 800 desktop contract')
+test('product definition, sampled verdict, and primary CTA lead the first viewport', async ({ page }, testInfo) => {
+  test.skip(!CORE_PROJECTS.has(testInfo.project.name), '1280 desktop and 390 mobile contract')
   await installAgentFixture(page)
   const errors = collectConsoleErrors(page)
 
   await page.goto('/agent')
   await expect(page).toHaveURL(/\/agent$/)
-  await expect(page.getByRole('heading', { name: 'Today at a glance' })).toBeVisible()
-  await expect(page.getByText('$100,025', { exact: true }).first()).toBeVisible()
-  await expect(page.getByText('$0', { exact: true }).first()).toBeVisible()
-  await expect(page.getByText('Evidence → Risk → Outcome', { exact: true })).toBeVisible()
-  await expect(page.getByText('Last three runs', { exact: true })).toBeVisible()
+  await expect(page.getByText('MARKET REACTION FILTER / PAPER OPTIONS', { exact: true })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Find When Market Attention Outruns the Evidence' })).toBeVisible()
+  await expect(page.getByText('CROWD EXCESS = (PRICE MOVE × ATTENTION) − NEWS EVIDENCE', { exact: true })).toBeVisible()
+  for (const step of ['Measure the Reaction', 'Test the Explanation', 'Decide or Abstain']) {
+    await expect(page.getByText(step, { exact: true })).toBeVisible()
+  }
+  await expect(page.getByRole('heading', { name: 'No Tradable Crowd Excess Found' })).toBeVisible()
+  await expect(
+    page.getByRole('region', { name: 'No Tradable Crowd Excess Found' })
+      .getByText('No symbol passed attention, move, evidence, and market gates.', { exact: true }),
+  ).toBeVisible()
+  const scanLink = page.getByRole('link', { name: 'Review Latest Market Scan' })
+  await expect(scanLink).toHaveAttribute('href', `/decisions?run=${RUN_ID}`)
 
-  await expectInFirstViewport(page, page.getByRole('heading', { name: 'Today at a glance' }))
-  await expectInFirstViewport(page, page.getByText('Account equity', { exact: true }))
-  await expectInFirstViewport(page, page.getByText('Open risk', { exact: true }))
-  await expectInFirstViewport(page, page.getByText('Evidence → Risk → Outcome', { exact: true }))
-  await expectInFirstViewport(page, page.getByRole('link', { name: /Open Decision Workbench/ }))
-  await expect(page.getByRole('link', { name: /Open Decision Workbench/ })).toHaveAttribute('href', `/decisions?run=${RUN_ID}`)
+  await expectInFirstViewport(page, page.getByRole('heading', { name: 'Find When Market Attention Outruns the Evidence' }))
+  await expectInFirstViewport(page, page.getByRole('heading', { name: 'No Tradable Crowd Excess Found' }))
+  await expectInFirstViewport(page, scanLink)
+  if (testInfo.project.name === 'mobile-chromium') {
+    await expectInFirstViewport(page, page.locator('.overview-observed'))
+  }
+  if (testInfo.project.name === 'desktop-chromium') {
+    await expect(page.getByRole('heading', { name: 'Paper Account & Risk' })).toBeVisible()
+    await expectInFirstViewport(page, page.getByText('Account Equity', { exact: true }))
+    await expectInFirstViewport(page, page.getByText('Open Risk', { exact: true }))
+  }
   const overviewType = await page.evaluate(() => ({
-    body: Number.parseFloat(getComputedStyle(document.querySelector('.latest-check-body > p')!).fontSize),
+    body: Number.parseFloat(getComputedStyle(document.querySelector('.overview-definition')!).fontSize),
     metadata: Number.parseFloat(getComputedStyle(document.querySelector('.agent-overview .eyebrow')!).fontSize),
   }))
   expect(overviewType.body).toBeGreaterThanOrEqual(12)
@@ -104,24 +123,79 @@ test('overview answers status, decision, risk, and next action in the first desk
   expect(errors).toEqual([])
 })
 
-test('closed-market overview reports a past check and marks providers not sampled', async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name !== 'desktop-chromium', 'state contract is covered once')
+test('closed automation context keeps the prior sampled scan as the primary verdict', async ({ page }, testInfo) => {
+  test.skip(!CORE_PROJECTS.has(testInfo.project.name), 'production-like closed context is covered on desktop and mobile')
   await installClosedMarketFixture(page)
 
   await page.goto('/agent')
-  await expect(page.getByRole('heading', { name: 'Market window was closed at the latest check' })).toBeVisible()
-  await expect(page.getByText(/This is a past check result, not a claim about the market right now\./)).toBeVisible()
-  await expect(page.getByText(/Return after the next eligible US-market scan/)).toBeVisible()
-  await expect(page.getByText('Not sampled', { exact: true })).toHaveCount(4)
-  await expect(page.getByText('Unavailable', { exact: true })).toHaveCount(0)
-  await expect(page.getByText(/Evidence was not sampled → no candidate reached risk evaluation → the agent placed no order\./)).toBeVisible()
-  await expect(page.getByRole('heading', { name: 'Crowd Excess Matrix' })).toHaveCount(0)
-  const sampledLink = page.getByRole('link', { name: /Open Decision Workbench for latest sampled run/ })
+  await expect(page.getByRole('heading', { name: 'No Tradable Crowd Excess Found' })).toBeVisible()
+  await expect(page.getByText('Market closed at the latest automation check. Showing the most recent completed market scan.', { exact: true })).toBeVisible()
+  const sampledLink = page.getByRole('link', { name: 'Review Latest Market Scan' })
   await expect(sampledLink).toHaveAttribute('href', `/decisions?run=${RUN_ID}`)
+  await expectInFirstViewport(page, sampledLink)
   await sampledLink.click()
   await expect(page).toHaveURL(new RegExp(`/decisions\\?run=${RUN_ID}$`))
   await page.reload()
-  await expect(page.getByRole('heading', { name: 'Decision Workbench' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Crowd Excess Market Scan' })).toBeVisible()
+  await expect(page.getByRole('cell', { name: 'AAPL INSPECTING' })).toBeVisible()
+})
+
+test('overview gives an honest no-runs verdict and status CTA', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop-chromium', 'empty-state contract is covered once')
+  await installNoRunsFixture(page)
+
+  await page.goto('/agent')
+  await expect(page.getByRole('heading', { name: 'Waiting for the First Market Scan' })).toBeVisible()
+  const statusLink = page.getByRole('link', { name: 'View Market Scan Status' })
+  await expect(statusLink).toHaveAttribute('href', '/decisions')
+  await expect(page.getByText('No market scans recorded', { exact: true })).toBeVisible()
+  await expect(page.getByText('Not observed', { exact: true }).first()).toBeVisible()
+})
+
+test('overview keeps the product definition and safe first action when the audit is unavailable', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop-chromium', 'audit outage contract is covered once')
+  await installAuditUnavailableFixture(page)
+
+  await page.goto('/agent')
+  await expect(page.getByRole('heading', { name: 'Find When Market Attention Outruns the Evidence' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Market Scan Status Unavailable' })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'View Market Scan Status' })).toHaveAttribute('href', '/decisions')
+  await expect(page.getByRole('link', { name: 'See How It Works' })).toHaveAttribute('href', '/strategy')
+  await expect(page.getByRole('heading', { name: 'Paper Account & Risk' })).toHaveCount(0)
+})
+
+test('overview keeps a complete scan readable when only paper account metrics are unavailable', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop-chromium', 'ancillary outage contract is covered once')
+  await installAccountUnavailableFixture(page)
+
+  await page.goto('/agent')
+  await expect(page.getByRole('heading', { name: 'No Tradable Crowd Excess Found' })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Review Latest Market Scan' })).toHaveAttribute('href', `/decisions?run=${RUN_ID}`)
+  await expect(page.getByRole('alert')).toContainText('Paper account metrics are temporarily unavailable. The market scan remains readable.')
+  await expect(page.getByRole('heading', { name: 'Market Scan Status Unavailable' })).toHaveCount(0)
+})
+
+test('overview treats incomplete fixed-universe coverage as a safely stopped scan', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop-chromium', 'coverage completeness is covered once')
+  await installPartialSignalFixture(page)
+
+  await page.goto('/agent')
+  await expect(page.getByRole('heading', { name: 'Scan Stopped Safely' })).toBeVisible()
+  await expect(
+    page.getByRole('region', { name: 'Scan Stopped Safely' })
+      .getByText('Only four symbol observations were recorded; the scan stopped safely.', { exact: true }),
+  ).toBeVisible()
+})
+
+test('overview discloses a newer unsampled automation failure without replacing the sampled verdict', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop-chromium', 'newer automation context is covered once')
+  await installNewerFailureAfterSampleFixture(page)
+
+  await page.goto('/agent')
+  await expect(page.getByRole('heading', { name: 'No Tradable Crowd Excess Found' })).toBeVisible()
+  await expect(page.getByText(/A newer failed automation check is recorded: A newer automation check failed before provider sampling\./)).toBeVisible()
+  await expect(page.locator('.overview-account-risk').getByText('FAILED', { exact: true })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Review Latest Market Scan' })).toHaveAttribute('href', `/decisions?run=${RUN_ID}`)
 })
 
 test('judge path traces five sampled symbols through risk to an honest abstention', async ({ page }, testInfo) => {
@@ -131,7 +205,7 @@ test('judge path traces five sampled symbols through risk to an honest abstentio
 
   await page.goto('/decisions?symbol=AAPL')
   await expect(page).toHaveURL(/\/decisions\?symbol=AAPL/)
-  await expect(page.getByRole('heading', { name: 'Decision Workbench' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Crowd Excess Market Scan' })).toBeVisible()
   await expect(page.getByText('Cross-border search')).toBeVisible()
   await expect(page.getByRole('cell', { name: 'AAPL INSPECTING' })).toBeVisible()
   await expect(page.getByRole('row')).toHaveCount(6)
@@ -160,7 +234,7 @@ test('judge path traces five sampled symbols through risk to an honest abstentio
   await expect(page.getByText('$100,025')).toBeVisible()
   await expect(page.getByText('No open risk', { exact: true })).toBeVisible()
 
-  await page.getByRole('link', { name: 'Strategy', exact: true }).click()
+  await page.getByRole('link', { name: 'How It Works', exact: true }).click()
   await expect(page.getByRole('heading', { name: 'Strategy & Risk' })).toBeVisible()
   await expect(page.getByText('Live Alpaca endpoint does not exist in configuration.')).toBeVisible()
   expect(errors).toEqual([])
@@ -170,14 +244,14 @@ test('keyboard path connects overview, workbench, run detail, and portfolio', as
   test.skip(testInfo.project.name !== 'desktop-chromium', 'desktop keyboard assertion')
   await installAgentFixture(page)
   await page.goto('/agent')
-  await expect(page.getByRole('heading', { name: 'Today at a glance' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Find When Market Attention Outruns the Evidence' })).toBeVisible()
 
   await page.keyboard.press('Tab')
   await expect(page.getByRole('link', { name: 'Skip to content' })).toBeFocused()
   await page.keyboard.press('Enter')
   await expect(page.locator('#main-content')).toBeFocused()
 
-  const workbenchLink = page.getByRole('link', { name: /Open Decision Workbench/ })
+  const workbenchLink = page.getByRole('link', { name: 'Review Latest Market Scan' })
   await workbenchLink.focus()
   await expect(workbenchLink).toBeFocused()
   expect(await workbenchLink.evaluate((element) => element.matches(':focus-visible'))).toBe(true)
@@ -200,14 +274,15 @@ test('global search focuses from the shortcut and opens the decision workbench',
   test.skip(testInfo.project.name !== 'desktop-chromium', 'desktop keyboard assertion')
   await installAgentFixture(page)
   await page.goto('/agent')
-  const search = page.locator('#global-search')
+  const search = page.getByRole('textbox', { name: 'Inspect a Symbol in Market Scan' })
   await expect(search).toBeVisible()
+  await expect(search).toHaveAttribute('placeholder', 'Inspect AAPL, MSFT, NVDA, TSLA, or QQQ…')
   await page.keyboard.press('ControlOrMeta+K')
   await expect(search).toBeFocused()
   await search.fill('aapl')
   await search.press('Enter')
-  await expect(page).toHaveURL(/\/decisions\?symbol=AAPL/)
-  await expect(page.getByRole('heading', { name: 'Decision Workbench' })).toBeVisible()
+  await expect(page).toHaveURL(new RegExp(`/decisions\\?run=${RUN_ID}&symbol=AAPL$`))
+  await expect(page.getByRole('heading', { name: 'Crowd Excess Market Scan' })).toBeVisible()
 })
 
 test('redirects and legacy research deep links remain compatible', async ({ page }, testInfo) => {
@@ -216,7 +291,7 @@ test('redirects and legacy research deep links remain compatible', async ({ page
 
   await page.goto('/dashboard')
   await expect(page).toHaveURL(/\/agent$/)
-  await expect(page.getByRole('heading', { name: 'Today at a glance' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Find When Market Attention Outruns the Evidence' })).toBeVisible()
 
   await page.goto('/settings')
   await expect(page).toHaveURL(/\/strategy$/)
@@ -347,6 +422,7 @@ test('run detail links to its previous immutable run and accepts a legacy clockl
 
   await page.goto(`/agent/runs/${RUN_ID}`)
   await expect(page.getByText(/OPEN ·/)).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Back to Market Scan' })).toHaveAttribute('href', `/decisions?run=${RUN_ID}&symbol=AAPL`)
   const compare = page.getByRole('link', { name: 'Compare with previous' })
   await expect(compare).toHaveAttribute('href', `/decisions?run=${RUN_ID}&compare=${CLOSED_RUN_ID}&symbol=AAPL`)
   await compare.click()
@@ -378,7 +454,11 @@ test('portfolio renders chronological history, zero-risk summary, and declared u
 
 test('Data Health maps the kickoff five-signal evidence abstention without claiming readiness', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop-chromium', 'provider-state contract is covered once')
-  await installAgentFixture(page)
+  await installEvidenceUnavailableFixture(page)
+
+  await page.goto('/agent')
+  await expect(page.getByRole('heading', { name: 'Scan Stopped Safely' })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Review Latest Market Scan' })).toHaveAttribute('href', `/decisions?run=${RUN_ID}`)
   await page.goto('/data')
 
   await expect(page.getByRole('heading', { name: 'Data Health' })).toBeVisible()
@@ -440,8 +520,8 @@ test('wide and tablet viewports keep new audit pages readable without overflow',
     : { width: 900, height: 1024 }
   expect(page.viewportSize()).toEqual(expectedViewport)
   const routes = [
-    { path: '/agent', heading: 'Today at a glance' },
-    { path: `/decisions?run=${RUN_ID}&compare=${CLOSED_RUN_ID}&symbol=AAPL`, heading: 'Decision Workbench' },
+    { path: '/agent', heading: 'Find When Market Attention Outruns the Evidence' },
+    { path: `/decisions?run=${RUN_ID}&compare=${CLOSED_RUN_ID}&symbol=AAPL`, heading: 'Crowd Excess Market Scan' },
     { path: '/portfolio', heading: 'Paper Portfolio' },
     { path: '/data', heading: 'Data Health' },
   ]
@@ -461,7 +541,7 @@ test('mobile bottom navigation and More sheet meet focus and touch contracts', a
 
   const mobileNavigation = page.getByRole('navigation', { name: 'Mobile navigation' })
   await expect(mobileNavigation).toBeVisible()
-  for (const name of ['Overview', 'Decisions', 'Portfolio', 'Strategy']) {
+  for (const name of ['Overview', 'Market Scan', 'Portfolio', 'How It Works']) {
     await expectTouchTarget(mobileNavigation.getByRole('link', { name, exact: true }))
   }
   const more = mobileNavigation.getByRole('button', { name: 'More', exact: true })
@@ -499,8 +579,8 @@ test('mobile primary and legacy pages have no body-level horizontal overflow', a
   test.skip(testInfo.project.name !== 'mobile-chromium', '390 by 844 mobile contract')
   await installAgentFixture(page)
   const routes = [
-    { path: '/agent', heading: 'Today at a glance' },
-    { path: '/decisions?symbol=AAPL', heading: 'Decision Workbench' },
+    { path: '/agent', heading: 'Find When Market Attention Outruns the Evidence' },
+    { path: '/decisions?symbol=AAPL', heading: 'Crowd Excess Market Scan' },
     { path: `/agent/runs/${RUN_ID}`, heading: RUN_ID },
     { path: '/portfolio', heading: 'Paper Portfolio' },
     { path: '/strategy', heading: 'Strategy & Risk' },

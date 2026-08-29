@@ -10,9 +10,9 @@ export type WorkspaceContext = { runId: string }
 
 const primaryNavigation = [
   { to: '/agent', label: 'Overview', icon: LayoutDashboard },
-  { to: '/decisions', label: 'Decisions', icon: Activity },
+  { to: '/decisions', label: 'Market Scan', icon: Activity },
   { to: '/portfolio', label: 'Portfolio', icon: WalletCards },
-  { to: '/strategy', label: 'Strategy', icon: SlidersHorizontal },
+  { to: '/strategy', label: 'How It Works', icon: SlidersHorizontal },
 ]
 
 const desktopNavigation = [
@@ -88,7 +88,15 @@ export function AppShell() {
   const onSearch = (event: FormEvent) => {
     event.preventDefault()
     const query = search.trim().toUpperCase()
-    navigate(query ? `/decisions?symbol=${encodeURIComponent(query)}` : '/decisions')
+    if (!query) {
+      navigate('/decisions')
+      return
+    }
+    const params = new URLSearchParams()
+    const sampledRunId = agentStatus.data?.latest_sampled_run?.run_id
+    if (sampledRunId) params.set('run', sampledRunId)
+    params.set('symbol', query)
+    navigate(`/decisions?${params.toString()}`)
   }
 
   const researchRunId = selectedResearchRunId || researchRuns.data?.[0]?.run_id || ''
@@ -110,7 +118,7 @@ export function AppShell() {
         </Link>
         <form className="command-search" role="search" onSubmit={onSearch}>
           <Search aria-hidden="true" />
-          <label className="sr-only" htmlFor="global-search">Inspect a universe symbol</label>
+          <label className="sr-only" htmlFor="global-search">Inspect a Symbol in Market Scan</label>
           <input id="global-search" name="global-search" autoComplete="off" spellCheck={false} value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Inspect AAPL, MSFT, NVDA, TSLA, or QQQ…" />
           <kbd>⌘ K</kbd>
         </form>

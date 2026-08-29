@@ -26,6 +26,10 @@ export function AgentRunPage() {
         ...(comparisonSymbol ? { symbol: comparisonSymbol } : {}),
       })
     : null
+  const backParams = new URLSearchParams({
+    run: run.run_id,
+    ...(comparisonSymbol ? { symbol: comparisonSymbol } : {}),
+  })
   const hasExecutionReceipt = Boolean(receipt && receipt.state !== 'shadow')
   const focusStage = hasExecutionReceipt || receipt
     ? 'receipt'
@@ -52,7 +56,7 @@ export function AgentRunPage() {
 
   return (
     <div className="page agent-run-page">
-      <Link className="back-link" to="/decisions"><ArrowLeft />Back to Decision Workbench</Link>
+      <Link className="back-link" to={`/decisions?${backParams.toString()}`}><ArrowLeft />Back to Market Scan</Link>
       <header className="run-detail-head">
         <div><p className="eyebrow">IMMUTABLE DECISION TRACE</p><h1>{run.run_id}</h1><p>{run.summary || 'Agent run audit.'}</p></div>
         <div>

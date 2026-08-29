@@ -4,6 +4,8 @@ const RUN_ID = '20260831T150000Z-1234abcd'
 const CLOSED_RUN_ID = '20260831T110000Z-c10ced00'
 const QUOTE_RUN_ID = '20260831T151000Z-90a7e123'
 const POST_SAMPLE_FAILURE_RUN_ID = '20260831T153000Z-fa11ed00'
+const PARTIAL_RUN_ID = '20260831T154000Z-da7a0004'
+const UNSAMPLED_FAILURE_RUN_ID = '20260831T155000Z-fa110000'
 
 const signalInputs = [
   { symbol: 'AAPL', attentionExcess: 0.82, attentionZ: 2.35, move: 0.028, moveZ: 1.74, volumeZ: 1.22, residual: 0.37, eligible: true, hash: 'a' },
@@ -67,6 +69,13 @@ const signals = quoteSignals.map((signal) => ({
   eligible: false,
   missing_reason: 'openai_evidence_unavailable',
 }))
+const marketScanSignals = quoteSignals.map((signal) => ({
+  ...signal,
+  crowd_excess_score: signal.symbol === 'AAPL' ? 0.31 : signal.crowd_excess_score,
+  trade_direction: null,
+  eligible: false,
+  missing_reason: 'signal_thresholds_not_met',
+}))
 
 const legs = [
   { symbol: 'AAPL260918P00200000', side: 'buy', position_intent: 'buy_to_open', ratio_qty: 1, strike: 200, delta: -0.52 },
@@ -119,9 +128,12 @@ const sourceHashes = Object.fromEntries(signalInputs.flatMap(({ symbol, hash }) 
     [`alpaca_market_${key}`, hash.repeat(64)],
   ]
 }))
-const quoteSourceHashes = {
+const modelSourceHashes = {
   ...sourceHashes,
   ...Object.fromEntries(signalInputs.map(({ symbol, hash }) => [`openai_evidence_${symbol.toLowerCase()}`, hash.repeat(64)])),
+}
+const quoteSourceHashes = {
+  ...modelSourceHashes,
   alpaca_options_aapl: 'f'.repeat(64),
 }
 
@@ -132,9 +144,14 @@ const run = {
     observed_at: '2026-08-31T15:00:00Z', is_open: true,
     next_open: null, next_close: '2026-08-31T20:00:00Z',
   },
-  source_hashes: sourceHashes,
-  summary: 'No symbol passed complete evidence validation; five signals abstained before option construction.',
+  source_hashes: modelSourceHashes,
+  summary: 'No symbol passed attention, move, evidence, and market gates.',
   error: '',
+}
+const evidenceUnavailableRun = {
+  ...run,
+  source_hashes: sourceHashes,
+  summary: 'OpenAI structured evidence was unavailable; five signals abstained before option construction.',
 }
 const closedRun = {
   run_id: CLOSED_RUN_ID, mode: 'shadow', config_version: '2026-08-hackathon-v1', model: 'gpt-5.6-terra',
@@ -171,6 +188,24 @@ const postSampleFailureRun = {
   failure_stage: 'execution',
   failure_code: 'alpaca_execution_unavailable',
 }
+const partialRun = {
+  ...run,
+  run_id: PARTIAL_RUN_ID,
+  started_at: '2026-08-31T15:40:00Z',
+  completed_at: '2026-08-31T15:40:04Z',
+  summary: 'Only four symbol observations were recorded; the scan stopped safely.',
+}
+const unsampledFailureRun = {
+  ...closedRun,
+  run_id: UNSAMPLED_FAILURE_RUN_ID,
+  status: 'failed',
+  started_at: '2026-08-31T15:50:00Z',
+  completed_at: '2026-08-31T15:50:01Z',
+  summary: 'A newer automation check failed before provider sampling.',
+  error: 'Synthetic pre-sampling failure.',
+  failure_stage: 'execution',
+  failure_code: 'alpaca_execution_unavailable',
+}
 
 const strategy = {
   version: '2026-08-hackathon-v1', universe: ['AAPL', 'MSFT', 'NVDA', 'TSLA', 'QQQ'], benchmark: 'SPY',
@@ -190,11 +225,11 @@ async function jsonRoute(page: Page, path: string, body: unknown, status = 200) 
 }
 
 async function installShared(page: Page, options: {
-  latestRun: typeof run | typeof closedRun | typeof quoteRun | typeof postSampleFailureRun,
-  runs: Array<typeof run | typeof closedRun | typeof quoteRun | typeof postSampleFailureRun>,
+  latestRun: typeof run | typeof closedRun | typeof quoteRun | typeof postSampleFailureRun | null,
+  runs: Array<typeof run | typeof closedRun | typeof quoteRun | typeof postSampleFailureRun | typeof partialRun | typeof unsampledFailureRun>,
   details: Array<{ runId: string, body: unknown }>,
   latestSignals: unknown[],
-  currentPortfolio: typeof portfolio,
+  currentPortfolio: typeof portfolio | null,
   portfolioHistory: typeof history,
   sources: Record<string, boolean>,
   message: string,
@@ -221,7 +256,10 @@ async function installShared(page: Page, options: {
 }
 
 const runDetail = {
-  run, signals, risk_decision: null, exit_intent: null, receipt: null, portfolio,
+  run, signals: marketScanSignals, risk_decision: null, exit_intent: null, receipt: null, portfolio,
+}
+const evidenceUnavailableDetail = {
+  run: evidenceUnavailableRun, signals, risk_decision: null, exit_intent: null, receipt: null, portfolio,
 }
 const closedRunDetail = {
   run: closedRun, signals: [], risk_decision: null, exit_intent: null, receipt: null, portfolio: closedPortfolio,
@@ -232,6 +270,9 @@ const quoteRunDetail = {
 const postSampleFailureDetail = {
   run: postSampleFailureRun, signals: quoteSignals, risk_decision: risk, exit_intent: null, receipt: null, portfolio,
 }
+const partialRunDetail = {
+  run: partialRun, signals: marketScanSignals.slice(0, 4), risk_decision: null, exit_intent: null, receipt: null, portfolio,
+}
 
 export async function installAgentFixture(page: Page) {
   await installShared(page, {
@@ -241,11 +282,24 @@ export async function installAgentFixture(page: Page) {
       { runId: RUN_ID, body: runDetail },
       { runId: CLOSED_RUN_ID, body: closedRunDetail },
     ],
+    latestSignals: marketScanSignals,
+    currentPortfolio: portfolio,
+    portfolioHistory: history,
+    sources: { naver_aapl: true, alpaca_market_aapl: true, alpaca_options_aapl: false, openai_evidence_aapl: true },
+    message: 'Production-shaped five-symbol market scan fixture with valid evidence and an honest no-trade result.',
+  })
+}
+
+export async function installEvidenceUnavailableFixture(page: Page) {
+  await installShared(page, {
+    latestRun: evidenceUnavailableRun,
+    runs: [evidenceUnavailableRun],
+    details: [{ runId: RUN_ID, body: evidenceUnavailableDetail }],
     latestSignals: signals,
     currentPortfolio: portfolio,
     portfolioHistory: history,
     sources: { naver_aapl: true, alpaca_market_aapl: true, alpaca_options_aapl: false, openai_evidence_aapl: false },
-    message: 'Production-shaped five-symbol kickoff abstention fixture; all evidence assessments were unavailable.',
+    message: 'Production-shaped evidence-unavailable fixture; all affected signals failed closed.',
   })
 }
 
@@ -254,7 +308,7 @@ export async function installOneRunFixture(page: Page) {
     latestRun: run,
     runs: [run],
     details: [{ runId: RUN_ID, body: runDetail }],
-    latestSignals: signals,
+    latestSignals: marketScanSignals,
     currentPortfolio: portfolio,
     portfolioHistory: history,
     sources: { naver_aapl: true, alpaca_market_aapl: true, alpaca_options_aapl: false, openai_evidence_aapl: false },
@@ -304,6 +358,66 @@ export async function installPostSampleFailureFixture(page: Page) {
     portfolioHistory: history,
     sources: { naver_aapl: true, alpaca_market_aapl: true, alpaca_options_aapl: true, openai_evidence_aapl: true },
     message: 'Synthetic failed run after provider records persisted; provider health remains independently attributable.',
+  })
+}
+
+export async function installNoRunsFixture(page: Page) {
+  await installShared(page, {
+    latestRun: null,
+    latestSampledRun: null,
+    runs: [],
+    details: [],
+    latestSignals: [],
+    currentPortfolio: null,
+    portfolioHistory: [],
+    sources: {},
+    message: 'Synthetic empty audit store awaiting its first market scan.',
+  })
+}
+
+export async function installAuditUnavailableFixture(page: Page) {
+  const unavailable = { detail: 'Synthetic public audit outage.' }
+  await jsonRoute(page, '/api/v1/agent/status', unavailable, 503)
+  await jsonRoute(page, '/api/v1/agent/runs', unavailable, 503)
+  await jsonRoute(page, '/api/v1/portfolio', unavailable, 503)
+  await jsonRoute(page, '/api/v1/portfolio/history?limit=90', unavailable, 503)
+  await jsonRoute(page, '/api/v1/strategy', unavailable, 503)
+}
+
+export async function installAccountUnavailableFixture(page: Page) {
+  await installAgentFixture(page)
+  const unavailable = { detail: 'Synthetic paper account outage.' }
+  await jsonRoute(page, '/api/v1/portfolio', unavailable, 503)
+  await jsonRoute(page, '/api/v1/strategy', unavailable, 503)
+}
+
+export async function installPartialSignalFixture(page: Page) {
+  await installShared(page, {
+    latestRun: partialRun,
+    runs: [partialRun],
+    details: [{ runId: PARTIAL_RUN_ID, body: partialRunDetail }],
+    latestSignals: marketScanSignals.slice(0, 4),
+    currentPortfolio: portfolio,
+    portfolioHistory: history,
+    sources: { naver_aapl: true, alpaca_market_aapl: true, openai_evidence_aapl: true },
+    message: 'Synthetic incomplete-universe fixture; no trade was attempted.',
+  })
+}
+
+export async function installNewerFailureAfterSampleFixture(page: Page) {
+  await installShared(page, {
+    latestRun: unsampledFailureRun,
+    latestSampledRun: run,
+    runs: [unsampledFailureRun, run],
+    details: [
+      { runId: UNSAMPLED_FAILURE_RUN_ID, body: { run: unsampledFailureRun, signals: [], risk_decision: null, exit_intent: null, receipt: null, portfolio } },
+      { runId: RUN_ID, body: runDetail },
+    ],
+    latestSignals: [],
+    currentPortfolio: portfolio,
+    portfolioHistory: history,
+    sources: { naver_aapl: true, alpaca_market_aapl: true, openai_evidence_aapl: true },
+    message: 'Synthetic newer pre-sampling failure after a complete sampled scan.',
   })
 }
 

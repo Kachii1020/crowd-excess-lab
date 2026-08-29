@@ -92,7 +92,10 @@ export function AgentConsolePage() {
   const requestedPrimaryRunId = searchParams.get('run') ?? ''
   const primaryRunId = recordedRuns.some((run) => run.run_id === requestedPrimaryRunId)
     ? requestedPrimaryRunId
-    : status.data?.last_run?.run_id ?? recordedRuns[0]?.run_id ?? ''
+    : status.data?.latest_sampled_run?.run_id
+      ?? status.data?.last_run?.run_id
+      ?? recordedRuns[0]?.run_id
+      ?? ''
   const requestedCompareRunId = searchParams.get('compare') ?? ''
   const compareRunId = requestedCompareRunId !== primaryRunId
     && recordedRuns.some((run) => run.run_id === requestedCompareRunId)
@@ -155,8 +158,8 @@ export function AgentConsolePage() {
       <header className="agent-console-head">
         <div>
           <p className="eyebrow">READ-ONLY DECISION AUDIT / US EQUITIES</p>
-          <h1>Decision Workbench</h1>
-          <p>Inspect how attention, market movement, evidence, and fixed risk controls produced the latest paper-only decision.</p>
+          <h1>Crowd Excess Market Scan</h1>
+          <p>Compare attention, price movement and news evidence across the fixed universe, then inspect why the agent traded—or abstained.</p>
         </div>
         <div className="console-state">
           <span className={status.data?.configured ? 'signal-dot' : 'signal-dot signal-dot--off'} />

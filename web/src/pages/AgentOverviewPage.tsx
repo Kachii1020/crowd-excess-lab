@@ -1,35 +1,71 @@
 import {
-  Activity, ArrowRight, CheckCircle2, CircleDashed, Clock3, Database,
-  Gauge, Newspaper, ShieldCheck, WalletCards,
+  Activity, ArrowRight, CircleAlert, CircleDashed, Clock3, Database,
+  Gauge, ShieldCheck, WalletCards,
 } from 'lucide-react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   useAgentRun, useAgentRuns, useAgentStatus, usePortfolio, useStrategy,
 } from '../api/queries.ts'
-import type { AgentRunDetail, SignalSnapshot } from '../api/schemas.ts'
-import { ErrorState, LoadingState } from '../components/States.tsx'
+import type { AgentRun, SignalSnapshot } from '../api/schemas.ts'
 import { StatusBadge } from '../components/StatusBadge.tsx'
 import { format } from '../lib/format.ts'
 
-const usd = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })
-const signedUsd = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0, signDisplay: 'always' })
+const usd = new Intl.NumberFormat('en-US', {
+  style: 'currency', currency: 'USD', maximumFractionDigits: 0,
+})
+const signedUsd = new Intl.NumberFormat('en-US', {
+  style: 'currency', currency: 'USD', maximumFractionDigits: 0, signDisplay: 'always',
+})
 
-function topSignal(signals: SignalSnapshot[]) {
-  return [...signals].sort((a, b) => Math.abs(b.crowd_excess_score) - Math.abs(a.crowd_excess_score))[0]
+const scanSteps = [
+  { title: 'Measure the Reaction', detail: 'Search attention, price and volume' },
+  { title: 'Test the Explanation', detail: 'OpenAI assesses supplied headlines only' },
+  { title: 'Decide or Abstain', detail: 'Deterministic option, liquidity and risk gates decide' },
+]
+
+function scanVerdict(run: AgentRun | null | undefined, signals: SignalSnapshot[]) {
+  if (!run) {
+    return {
+      title: 'Waiting for the First Market Scan',
+      description: 'The first completed US-market scan will appear here with its evidence, gates and outcome.',
+    }
+  }
+  if (run.status === 'failed' || run.failure_stage) {
+    return {
+      title: 'Scan Stopped Safely',
+      description: 'The scan stopped before a safe decision could advance. Review the immutable trace for the recorded boundary and outcome.',
+    }
+  }
+  const allowedNoTradeReasons = new Set(['', 'signal_thresholds_not_met', 'evidence_abstained'])
+  const incompleteSignal = signals.length !== 5 || signals.some((signal) => (
+    signal.evidence.abstention_reason === 'openai_evidence_unavailable'
+    || signal.missing_reason.split(',').some((reason) => !allowedNoTradeReasons.has(reason))
+  ))
+  if (incompleteSignal) {
+    return {
+      title: 'Scan Stopped Safely',
+      description: 'A required provider observation was unavailable, so the scan preserved the no-trade boundary instead of inferring missing evidence.',
+    }
+  }
+  if (run.status === 'completed') {
+    return {
+      title: 'Candidate Advanced to Risk Review',
+      description: 'A candidate passed the market scan and advanced to deterministic risk review. Inspect the trace for the final decision and any paper receipt.',
+    }
+  }
+  return {
+    title: 'No Tradable Crowd Excess Found',
+    description: 'Across all monitored names, no candidate met the thresholds for unexplained market reaction after accounting for news evidence and passing liquidity and risk checks.',
+  }
 }
 
-function latestNarrative(detail: AgentRunDetail | undefined) {
-  const signal = topSignal(detail?.signals ?? [])
-  const risk = detail?.risk_decision
-  const receipt = detail?.receipt
-  if (!signal) return 'Evidence was not sampled → no candidate reached risk evaluation → the agent placed no order.'
-  const evidence = signal.evidence.abstention_reason
-    ? `${signal.symbol} evidence abstained: ${signal.evidence.abstention_reason.replaceAll('_', ' ')}`
-    : `${signal.symbol} evidence confidence ${Math.round(signal.evidence.confidence * 100)}%`
-  const control = risk ? (risk.approved ? 'risk gates approved the candidate' : `risk gates abstained: ${risk.denial_reason || 'a required gate failed'}`) : 'no option candidate reached risk evaluation'
-  const outcome = receipt ? `Alpaca paper receipt is ${receipt.state.replaceAll('_', ' ')}` : 'no order was submitted'
-  return `${evidence} → ${control} → ${outcome}.`
+function runWasClosed(run: AgentRun | null | undefined) {
+  if (!run) return false
+  if (run.market_clock) return !run.market_clock.is_open
+  return /market(?: clock)? (?:is )?closed|outside.*market|outside.*window/i.test(
+    `${run.summary} ${run.error}`,
+  )
 }
 
 export function AgentOverviewPage() {
@@ -38,121 +74,144 @@ export function AgentOverviewPage() {
   const runs = useAgentRuns()
   const portfolio = usePortfolio()
   const strategy = useStrategy()
-  const latestRun = status.data?.last_run ?? runs.data?.[0]
+  const latestRun = status.data?.last_run ?? runs.data?.[0] ?? null
   const latestSampledRun = status.data?.latest_sampled_run
-  const detail = useAgentRun(latestRun?.run_id ?? '')
+    ?? runs.data?.find((run) => Object.keys(run.source_hashes).length > 0)
+    ?? null
+  const sampledDetail = useAgentRun(latestSampledRun?.run_id ?? '')
 
-  if (status.isLoading || runs.isLoading || portfolio.isLoading || strategy.isLoading || detail.isLoading) {
-    return <LoadingState label="Loading the daily audit summary" />
-  }
-  const error = status.error || runs.error || portfolio.error || strategy.error || detail.error
-  if (error) return <ErrorState error={error} retry={() => window.location.reload()} />
-
-  const sampledSignals = detail.data?.signals ?? []
-  const sampled = sampledSignals.length > 0
-  const latestText = `${latestRun?.summary ?? ''} ${latestRun?.error ?? ''} ${status.data?.message ?? ''}`.toLowerCase()
-  const closedWindow = !sampled && (latestRun?.market_clock
-    ? !latestRun.market_clock.is_open
-    : /(market.*closed|outside.*market|outside.*window|market window)/.test(latestText))
-  const latestTitle = !latestRun
-    ? 'No automation check recorded'
-    : sampled
-      ? `${sampledSignals.length} symbols sampled in the latest check`
-      : closedWindow ? 'Market window was closed at the latest check' : 'No providers were sampled in the latest check'
-  const latestCause = !latestRun
-    ? 'The read-only audit store will show the first scheduled run after it is recorded.'
-    : sampled
-      ? latestRun.summary || 'The completed observations are available in the decision workbench.'
-      : `${latestRun.summary || 'The run ended before market, news, or option data was collected.'} This is a past check result, not a claim about the market right now.`
-  const nextAction = !latestRun
-    ? 'Wait for the first scheduled US-market scan, then return to inspect its inputs.'
-    : !sampled
-      ? latestRun?.market_clock?.next_open
-        ? `The recorded market clock reported its next open at ${format.dateTime(latestRun.market_clock.next_open)}. Return after a new eligible scan; no missing values are treated as zero.`
-        : 'Return after the next eligible US-market scan; no missing values are treated as zero.'
-      : detail.data?.receipt
-        ? 'Open the full trace to verify the order receipt and every input timestamp.'
-        : 'Open the decision workbench to inspect the residual and the gate that caused abstention.'
-  const sourceKeys = Object.keys(detail.data?.run.source_hashes ?? latestRun?.source_hashes ?? {})
-  const sourceReady = (prefix: string) => sourceKeys.some((key) => key.startsWith(prefix))
-  const observedValue = latestRun?.market_clock?.observed_at ?? latestRun?.completed_at ?? latestRun?.started_at
+  const scanLoading = status.isLoading || runs.isLoading
+    || (Boolean(latestSampledRun) && sampledDetail.isLoading)
+  const scanError = status.error || runs.error || sampledDetail.error
+  const accountLoading = portfolio.isLoading || strategy.isLoading
+  const accountError = portfolio.error || strategy.error
+  const sampledRun = sampledDetail.data?.run ?? latestSampledRun
+  const sampledSignals = sampledDetail.data?.signals ?? []
+  const verdict = scanError
+    ? {
+        title: 'Market Scan Status Unavailable',
+        description: 'The public audit could not be read. No market inputs, risk decision or order state is inferred while the trace is unavailable.',
+      }
+    : scanLoading
+      ? {
+          title: 'Loading Market Scan Status',
+          description: 'The product definition remains available while the latest read-only audit trace is loading.',
+        }
+      : scanVerdict(sampledRun, sampledSignals)
+  const verdictDescription = scanLoading || scanError
+    ? verdict.description
+    : sampledRun?.summary || verdict.description
+  const newerAutomationCheck = Boolean(
+    latestRun
+    && latestRun.run_id !== sampledRun?.run_id
+  )
+  const automationContext = runWasClosed(latestRun)
+    ? 'Market closed at the latest automation check. Showing the most recent completed market scan.'
+    : `A newer ${latestRun?.status ?? 'unsampled'} automation check is recorded${latestRun?.summary ? `: ${latestRun.summary}` : '.'} Showing the most recent completed market scan.`
+  const observedValue = sampledRun?.market_clock?.observed_at
+    ?? sampledRun?.completed_at
+    ?? sampledRun?.started_at
   const observedAt = observedValue ? format.dateTime(observedValue) : 'Not observed'
-  const stale = observedValue ? renderedAt - new Date(observedValue).getTime() > 24 * 60 * 60 * 1000 : false
-  const evidenceFailed = sampledSignals.some((signal) => Boolean(signal.evidence.abstention_reason))
+  const stale = observedValue
+    ? renderedAt - new Date(observedValue).getTime() > 24 * 60 * 60 * 1000
+    : false
+  const sourceKeys = Object.keys(sampledRun?.source_hashes ?? {})
+  const sourceReady = (prefix: string) => sourceKeys.some((key) => key.startsWith(prefix))
+  const evidenceFailed = sampledSignals.some(
+    (signal) => signal.evidence.abstention_reason === 'openai_evidence_unavailable',
+  )
   const health = [
     { name: 'NAVER', state: sourceReady('naver_') ? stale ? 'Stale' : 'Ready' : 'Not sampled', detail: 'Cross-border search attention' },
     { name: 'Alpaca Market', state: sourceReady('alpaca_market_') ? stale ? 'Stale' : 'Ready' : 'Not sampled', detail: 'Market, volume, and news context' },
     { name: 'OpenAI', state: evidenceFailed ? 'Error' : sampledSignals.some((signal) => Boolean(signal.evidence_response_id)) ? stale ? 'Stale' : 'Ready' : 'Not sampled', detail: 'Structured news evidence' },
-    { name: 'Risk Engine', state: detail.data?.risk_decision ? 'Ready' : 'Not sampled', detail: 'Deterministic execution gates' },
+    { name: 'Risk Engine', state: sampledDetail.data?.risk_decision ? 'Ready' : 'Not sampled', detail: 'Deterministic execution gates' },
     { name: 'Audit Store', state: status.data?.configured ? 'Ready' : 'Error', detail: 'Sanitized read-only records' },
   ]
+  const sampledScanReadable = !scanLoading && !scanError && Boolean(sampledRun)
+  const primaryScanUrl = sampledScanReadable ? `/decisions?run=${sampledRun?.run_id}` : '/decisions'
 
   return (
     <div className="page agent-overview">
-      <header className="overview-hero">
-        <div>
-          <p className="eyebrow">US OPTIONS AGENT / READ-ONLY AUDIT</p>
-          <h1>Today at a glance</h1>
-          <p>Understand the latest autonomous check, current paper risk, and why the system acted—or safely did not.</p>
-        </div>
-        <div className="overview-mode"><span className={status.data?.configured ? 'signal-dot' : 'signal-dot signal-dot--off'} /><div><strong>{status.data?.configured ? 'Audit connected' : 'Audit not connected'}</strong><small>{status.data?.mode.toUpperCase() ?? 'SHADOW'} ONLY · NO LIVE PATH</small></div></div>
+      <header className="overview-product-hero">
+        <p className="eyebrow">MARKET REACTION FILTER / PAPER OPTIONS</p>
+        <h1>Find When Market Attention Outruns the Evidence</h1>
+        <p className="overview-definition">Crowd Excess compares cross-border search attention and SPY-adjusted price moves with the news that could explain them. It flags possible overreactions, then blocks any option trade that fails liquidity or risk checks.</p>
+        <p className="overview-formula">CROWD EXCESS = (PRICE MOVE × ATTENTION) − NEWS EVIDENCE</p>
+        <p className="overview-formula-definition">The residual shows how much of the market reaction remains unexplained.</p>
+        <ol className="overview-scan-flow" aria-label="How Crowd Excess reaches a decision">
+          {scanSteps.map((step, index) => (
+            <li key={step.title}>
+              <span aria-hidden="true">{index + 1}</span>
+              <div><strong>{step.title}</strong><small>{step.detail}</small></div>
+            </li>
+          ))}
+        </ol>
       </header>
 
-      <section className="overview-metrics" aria-label="Current paper account summary" aria-live="polite">
-        <div><WalletCards aria-hidden="true" /><span>Account equity</span><strong>{portfolio.data ? usd.format(portfolio.data.equity) : 'Not observed'}</strong><small>Latest paper snapshot</small></div>
-        <div><Activity aria-hidden="true" /><span>Daily P&amp;L</span><strong data-tone={(portfolio.data?.daily_pnl ?? 0) >= 0 ? 'positive' : 'negative'}>{portfolio.data ? signedUsd.format(portfolio.data.daily_pnl) : 'Not observed'}</strong><small>No profitability claim</small></div>
-        <div><ShieldCheck aria-hidden="true" /><span>Open risk</span><strong>{portfolio.data ? usd.format(portfolio.data.open_premium_risk) : 'Not observed'}</strong><small>{portfolio.data ? `${portfolio.data.open_spread_count} / ${strategy.data?.max_open_spreads ?? 3} spreads` : 'No portfolio snapshot'}</small></div>
-        <div><Gauge aria-hidden="true" /><span>Latest outcome</span><strong>{latestRun?.status.toUpperCase() ?? 'WAITING'}</strong><small>{latestRun ? format.dateTime(latestRun.started_at) : 'No autonomous run yet'}</small></div>
+      <section className="overview-latest-scan" aria-labelledby="latest-market-scan-title" aria-live="polite" data-state={scanError ? 'error' : scanLoading ? 'loading' : 'ready'}>
+        <p className="eyebrow">LATEST COMPLETED SCAN</p>
+        <div className="overview-verdict-grid">
+          <div className="overview-verdict">
+            <div className="overview-verdict-title">
+              <CircleAlert aria-hidden="true" />
+              <h2 id="latest-market-scan-title">{verdict.title}</h2>
+            </div>
+            <p>{verdictDescription}</p>
+            {!scanLoading && !scanError && <span className="overview-observed"><small>OBSERVATION TIME</small>{observedAt}</span>}
+          </div>
+          {newerAutomationCheck && (
+            <aside className="overview-automation-context">
+              <Clock3 aria-hidden="true" />
+              <p>{automationContext}</p>
+            </aside>
+          )}
+          <div className="overview-actions">
+            <Link className="button button--primary" to={primaryScanUrl}>
+              {sampledScanReadable ? 'Review Latest Market Scan' : 'View Market Scan Status'}
+              <ArrowRight aria-hidden="true" />
+            </Link>
+            <Link className="button" to="/strategy">See How It Works <ArrowRight aria-hidden="true" /></Link>
+          </div>
+        </div>
       </section>
 
-      <div className="overview-primary-grid">
-        <section className="panel latest-check-card">
-          <div className="panel-heading"><div><p className="eyebrow">LATEST CHECK</p><h2>{latestTitle}</h2></div>{sampled ? <CheckCircle2 aria-hidden="true" /> : <Clock3 aria-hidden="true" />}</div>
-          <div className="latest-check-body">
-            <p>{latestCause}</p>
-            <div className="decision-sentence"><Newspaper aria-hidden="true" /><p><strong>Evidence → Risk → Outcome</strong><span>{latestNarrative(detail.data)}</span></p></div>
-            <div className="next-action"><strong>What to do next</strong><p>{nextAction}</p></div>
-            <div className="overview-actions">
-              {latestSampledRun ? (
-                <Link
-                  aria-label="Open Decision Workbench for latest sampled run"
-                  className="button button--primary"
-                  to={`/decisions?run=${latestSampledRun.run_id}`}
-                >
-                  Open latest sampled run <ArrowRight aria-hidden="true" />
-                </Link>
-              ) : (
-                <Link className="button button--primary" to="/decisions">Open Decision Workbench <ArrowRight aria-hidden="true" /></Link>
-              )}
-              {latestRun && <Link className="button" to={`/agent/runs/${latestRun.run_id}`}>Open Full Trace</Link>}
-            </div>
-          </div>
-        </section>
+      {!scanLoading && !scanError && <><section className="overview-account-risk" aria-labelledby="paper-account-risk-title">
+        <h2 className="eyebrow" id="paper-account-risk-title">Paper Account &amp; Risk</h2>
+        {(accountLoading || accountError) && <p className="overview-secondary-status" role={accountError ? 'alert' : 'status'}>{accountError ? 'Paper account metrics are temporarily unavailable. The market scan remains readable.' : 'Loading paper account metrics…'}</p>}
+        <div className="overview-metrics" aria-label="Current paper account and risk" aria-live="polite">
+          <div><WalletCards aria-hidden="true" /><span>Account Equity</span><strong>{portfolio.data ? usd.format(portfolio.data.equity) : 'Not observed'}</strong><small>Latest paper snapshot</small></div>
+          <div><Activity aria-hidden="true" /><span>Daily P&amp;L</span><strong data-tone={(portfolio.data?.daily_pnl ?? 0) >= 0 ? 'positive' : 'negative'}>{portfolio.data ? signedUsd.format(portfolio.data.daily_pnl) : 'Not observed'}</strong><small>No profitability claim</small></div>
+          <div><ShieldCheck aria-hidden="true" /><span>Open Risk</span><strong>{portfolio.data ? usd.format(portfolio.data.open_premium_risk) : 'Not observed'}</strong><small>{portfolio.data ? `${portfolio.data.open_spread_count} / ${strategy.data?.max_open_spreads ?? 3} spreads` : 'No portfolio snapshot'}</small></div>
+          <div><Gauge aria-hidden="true" /><span>Latest Outcome</span><strong>{latestRun?.status.toUpperCase() ?? 'WAITING'}</strong><small>{latestRun ? format.dateTime(latestRun.started_at) : 'No automation check yet'}</small></div>
+        </div>
+      </section>
 
-        <section className="panel recent-runs-card">
-          <div className="panel-heading"><div><p className="eyebrow">RECENT ACTIVITY</p><h2>Last three runs</h2></div><small>{runs.data?.length ?? 0} recorded</small></div>
-          <div className="overview-run-list">
-            {runs.data?.slice(0, 3).map((run) => (
-              <Link to={`/agent/runs/${run.run_id}`} key={run.run_id}>
-                <time>{format.dateTime(run.started_at)}</time><StatusBadge status={run.status} />
-                <strong>{run.summary || 'Decision trace recorded.'}</strong><ArrowRight aria-hidden="true" />
-              </Link>
-            ))}
-            {!runs.data?.length && <div className="overview-empty"><CircleDashed aria-hidden="true" /><strong>No runs recorded</strong><p>The first scheduled audit will appear here.</p></div>}
-          </div>
-        </section>
-      </div>
+      <section className="overview-recent-scans" aria-labelledby="recent-market-scans-title">
+        <header>
+          <h2 className="eyebrow" id="recent-market-scans-title">Recent Market Scans</h2>
+          <Link className="text-link" to="/decisions">View all scans <ArrowRight aria-hidden="true" /></Link>
+        </header>
+        <div className="overview-run-list">
+          {runs.data?.slice(0, 3).map((run) => (
+            <Link to={`/agent/runs/${run.run_id}`} key={run.run_id}>
+              <time>{format.dateTime(run.started_at)}</time><StatusBadge status={run.status} />
+              <strong>{run.summary || 'Market scan trace recorded.'}</strong><ArrowRight aria-hidden="true" />
+            </Link>
+          ))}
+          {!runs.data?.length && <div className="overview-empty"><CircleDashed aria-hidden="true" /><strong>No market scans recorded</strong><p>The first scheduled US-market scan will appear here.</p></div>}
+        </div>
+      </section>
 
       <section className="panel data-health-summary">
-        <div className="panel-heading"><div><p className="eyebrow">DATA HEALTH</p><h2>What the latest check actually observed</h2></div><span><Database aria-hidden="true" /> {observedAt}</span></div>
+        <div className="panel-heading"><div><p className="eyebrow">DATA HEALTH</p><h2>What the latest completed scan actually observed</h2></div><span><Database aria-hidden="true" /> {observedAt}</span></div>
         <div className="health-source-grid">
           {health.map((source) => {
             const state = source.state
             const statusKey = state.toLowerCase().replace(' ', '_')
-            return <div key={source.name} data-state={statusKey.replace('_', '-')}><span>{state === 'Ready' ? <CheckCircle2 aria-hidden="true" /> : <CircleDashed aria-hidden="true" />}<strong>{source.name}</strong></span><StatusBadge status={statusKey}>{state}</StatusBadge><p>{source.detail}</p></div>
+            return <div key={source.name} data-state={statusKey.replace('_', '-')}><span>{state === 'Ready' ? <ShieldCheck aria-hidden="true" /> : <CircleDashed aria-hidden="true" />}<strong>{source.name}</strong></span><StatusBadge status={statusKey}>{state}</StatusBadge><p>{source.detail}</p></div>
           })}
         </div>
-      </section>
+      </section></>}
     </div>
   )
 }
