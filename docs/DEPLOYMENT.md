@@ -10,10 +10,10 @@ Allowed Vercel environment variables:
 
 - `SUPABASE_URL`
 - `SUPABASE_ANON_KEY`
-- `ALPACA_COMPETITION_ACCOUNT_ID` (optional public identifier)
 
-Forbidden in Vercel: `OPENAI_API_KEY`, NAVER secrets, Alpaca key/secret, and
-`SUPABASE_SERVICE_ROLE_KEY`. Public endpoints are GET-only:
+Paper-account identity remains runner-side and is not a Vercel variable. Forbidden in Vercel:
+`OPENAI_API_KEY`, NAVER secrets, Alpaca key/secret, and `SUPABASE_SERVICE_ROLE_KEY`. Public
+endpoints are GET-only:
 
 - `/api/v1/agent/status`
 - `/api/v1/agent/runs`
@@ -68,7 +68,9 @@ Create or connect the GitHub repository only after the security gate passes. Con
 variable `AGENT_MODE=shadow` until the paper-promotion checklist passes.
 
 The scheduled workflow is competition-date bounded, checks Alpaca's market clock, and has no live
-mode. A manual workflow dispatch is the safest first run.
+mode. Hosted cron is best-effort. The local fail-closed watchdog may request a missing shadow run
+after checking audit freshness, active workflows, and cooldown state; it cannot request paper mode
+or submit an order. A manual workflow dispatch remains the safest first run.
 
 ## 4. Vercel preview
 
@@ -85,10 +87,11 @@ Configure only the allowed public environment variables. In a logged-out browser
 - `/api/v1/health` returns the v1 health response.
 - `/api/v1/agent/status` returns a connected or explicit unconfigured state.
 - `/agent`, `/portfolio`, `/strategy`, `/research`, and `/lineage` load directly and on refresh.
-- A recorded `/agent/runs/<run-id>` shows evidence, risk gates, and a shadow/paper label.
+- A recorded `/agent/runs/<run-id>` shows evidence, outcome, and a shadow/paper label. Risk and
+  execution sections appear only when those records exist; an abstention does not imply a receipt.
 - There is no scan/order button and POST requests to agent/order paths fail.
 - The footer says paper-only and makes no profitability claim.
-- Browser source and network payloads contain no write credential.
+- Browser source and network payloads contain no write credential or paper-account identifier.
 
 ## 5. Production and rollback
 

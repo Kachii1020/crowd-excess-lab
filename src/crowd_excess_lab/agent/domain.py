@@ -45,6 +45,23 @@ class RunStatus(StrEnum):
     FAILED = "failed"
 
 
+class FailureStage(StrEnum):
+    OPTION_CHAIN = "option_chain"
+    OPTION_PAIR_SELECTION = "option_pair_selection"
+    OPTION_SESSION_VOLUME = "option_session_volume"
+    RISK_EVALUATION = "risk_evaluation"
+    EXECUTION = "execution"
+
+
+class FailureCode(StrEnum):
+    ALPACA_OPTION_CHAIN_UNAVAILABLE = "alpaca_option_chain_unavailable"
+    OPTION_SHAPE_UNAVAILABLE = "option_shape_unavailable"
+    ALPACA_OPTION_VOLUME_UNAVAILABLE = "alpaca_option_volume_unavailable"
+    RISK_GATE_REJECTED = "risk_gate_rejected"
+    RISK_EVALUATION_UNAVAILABLE = "risk_evaluation_unavailable"
+    ALPACA_EXECUTION_UNAVAILABLE = "alpaca_execution_unavailable"
+
+
 class ExecutionState(StrEnum):
     SHADOW = "shadow"
     ACCEPTED = "accepted"
@@ -434,6 +451,13 @@ class AgentRunRecord(AgentModel):
     source_hashes: dict[str, str] = Field(default_factory=dict)
     summary: str = ""
     error: str = ""
+    failure_stage: FailureStage | None = None
+    failure_code: str | None = Field(
+        default=None,
+        min_length=1,
+        max_length=80,
+        pattern=r"^[a-z0-9_]+$",
+    )
 
     _normalize_started = field_validator("started_at")(_aware_utc)
 
@@ -441,6 +465,12 @@ class AgentRunRecord(AgentModel):
     @classmethod
     def normalize_optional_completed(cls, value: datetime | None) -> datetime | None:
         return _aware_utc(value) if value is not None else None
+
+    @model_validator(mode="after")
+    def diagnostic_fields_are_paired(self) -> AgentRunRecord:
+        if (self.failure_stage is None) != (self.failure_code is None):
+            raise ValueError("failure stage and code must be recorded together")
+        return self
 
 
 class AgentRunDetail(AgentModel):
@@ -457,6 +487,7 @@ class PublicAgentState(AgentModel):
     mode: AgentMode
     scheduler: str
     last_run: AgentRunRecord | None = None
+    latest_sampled_run: AgentRunRecord | None = None
     sources: dict[str, bool]
     message: str
 

@@ -7,6 +7,16 @@ from enum import StrEnum
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from crowd_excess_lab.agent.domain import (
+    AgentRunRecord,
+    ExecutionReceipt,
+    ExitIntent,
+    PortfolioSnapshot,
+    PositionView,
+    RiskDecision,
+    SignalSnapshot,
+    StrategyConfig,
+)
 from crowd_excess_lab.study import StudyStageStatus
 
 
@@ -119,3 +129,61 @@ class CapabilityView(ApiModel):
     detail: str
     limitation: str
     checked_at: datetime
+
+
+class PublicPortfolioSnapshot(ApiModel):
+    """Read-only portfolio facts with the private Alpaca account identifier removed."""
+
+    observed_at: datetime
+    equity: float = Field(gt=0)
+    buying_power: float = Field(ge=0)
+    daily_pnl: float
+    total_pnl: float
+    drawdown: float = Field(ge=0)
+    open_premium_risk: float = Field(ge=0)
+    open_spread_count: int = Field(ge=0)
+    new_positions_today: int = Field(ge=0)
+    positions: tuple[PositionView, ...] = ()
+
+    @classmethod
+    def from_internal(cls, snapshot: PortfolioSnapshot) -> PublicPortfolioSnapshot:
+        return cls.model_validate(snapshot.model_dump(exclude={"account_id"}))
+
+
+class PublicAgentRunDetail(ApiModel):
+    run: AgentRunRecord
+    signals: tuple[SignalSnapshot, ...] = ()
+    risk_decision: RiskDecision | None = None
+    exit_intent: ExitIntent | None = None
+    receipt: ExecutionReceipt | None = None
+    portfolio: PublicPortfolioSnapshot | None = None
+
+
+class PublicStrategyConfig(ApiModel):
+    """Declared strategy controls without the competition account identifier."""
+
+    version: str
+    universe: tuple[str, ...]
+    benchmark: str
+    paper_base_url: str
+    min_attention_z: float
+    attention_weight: float
+    min_move_z: float
+    min_evidence_confidence: float
+    max_event_materiality: float
+    min_crowd_excess: float
+    min_dte: int
+    max_dte: int
+    max_quote_width_pct: float
+    max_market_data_age_seconds: int
+    min_open_interest: int
+    max_position_risk_pct: float
+    max_total_risk_pct: float
+    daily_loss_limit_pct: float
+    max_open_spreads: int
+    max_new_positions_per_day: int
+    freeze_at: datetime
+
+    @classmethod
+    def from_internal(cls, config: StrategyConfig) -> PublicStrategyConfig:
+        return cls.model_validate(config.model_dump(exclude={"competition_account_id"}))

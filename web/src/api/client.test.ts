@@ -38,4 +38,22 @@ describe('typed API client', () => {
     expect(fetchMock).toHaveBeenNthCalledWith(2, '/api/v1/portfolio/history?limit=1', expect.anything())
     expect(fetchMock).toHaveBeenNthCalledWith(3, '/api/v1/portfolio/history?limit=90', expect.anything())
   })
+
+  it('rejects a public portfolio payload that contains an account identifier', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      account_id: 'must-not-cross-public-boundary',
+      observed_at: '2026-08-31T15:00:00Z',
+      equity: 100000,
+      buying_power: 100000,
+      daily_pnl: 0,
+      total_pnl: 0,
+      drawdown: 0,
+      open_premium_risk: 0,
+      open_spread_count: 0,
+      new_positions_today: 0,
+      positions: [],
+    }), { status: 200 })))
+
+    await expect(api.portfolio()).rejects.toThrow()
+  })
 })

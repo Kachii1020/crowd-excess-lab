@@ -12,7 +12,6 @@ from crowd_excess_lab.agent.domain import (
     AgentMode,
     AgentRunDetail,
     AgentRunRecord,
-    PortfolioSnapshot,
     PublicAgentState,
     SignalSnapshot,
     StrategyConfig,
@@ -35,6 +34,9 @@ from crowd_excess_lab.api.schemas import (
     LineageResponse,
     OutcomeState,
     PaginatedEvents,
+    PublicAgentRunDetail,
+    PublicPortfolioSnapshot,
+    PublicStrategyConfig,
     ResearchRunSummary,
 )
 from crowd_excess_lab.capabilities import offline_capabilities
@@ -74,6 +76,23 @@ def _sort_events(
     return [*observed, *missing]
 
 
+def _public_agent_detail(detail: AgentRunDetail) -> PublicAgentRunDetail:
+    """Project an internal audit detail into its redacted public contract."""
+
+    return PublicAgentRunDetail(
+        run=detail.run,
+        signals=detail.signals,
+        risk_decision=detail.risk_decision,
+        exit_intent=detail.exit_intent,
+        receipt=detail.receipt,
+        portfolio=(
+            PublicPortfolioSnapshot.from_internal(detail.portfolio)
+            if detail.portfolio is not None
+            else None
+        ),
+    )
+
+
 def _api_router(settings: Settings) -> APIRouter:
     router = APIRouter(prefix="/api/v1")
 
@@ -101,6 +120,7 @@ def _api_router(settings: Settings) -> APIRouter:
         try:
             runs = repository.list_runs()
             sources = repository.source_readiness()
+            latest_sampled_run = repository.latest_sampled_run()
         except AuditStoreUnavailable as exc:
             raise HTTPException(
                 status_code=503, detail="Agent audit data is temporarily unavailable."
@@ -111,6 +131,7 @@ def _api_router(settings: Settings) -> APIRouter:
             mode=AgentMode(settings.agent_mode),
             scheduler="GitHub Actions / every 15 minutes during the US market window",
             last_run=runs[0] if runs else None,
+            latest_sampled_run=latest_sampled_run,
             sources=sources,
             message=(
                 "Append-only paper-agent audit is connected."
@@ -131,11 +152,11 @@ def _api_router(settings: Settings) -> APIRouter:
                 status_code=503, detail="Agent audit data is temporarily unavailable."
             ) from exc
 
-    @router.get("/agent/runs/{run_id}", response_model=AgentRunDetail)
+    @router.get("/agent/runs/{run_id}", response_model=PublicAgentRunDetail)
     def agent_run(
         request: Request,
         run_id: Annotated[str, ApiPath(pattern=r"^[0-9]{8}T[0-9]{6}Z-[0-9a-f]{8}$")],
-    ) -> AgentRunDetail:
+    ) -> PublicAgentRunDetail:
         try:
             detail = _agent_repository(request).get_run(run_id)
         except AuditStoreUnavailable as exc:
@@ -144,7 +165,7 @@ def _api_router(settings: Settings) -> APIRouter:
             ) from exc
         if detail is None:
             raise HTTPException(status_code=404, detail="Agent run was not found.")
-        return detail
+        return _public_agent_detail(detail)
 
     @router.get("/agent/signals", response_model=tuple[SignalSnapshot, ...])
     def agent_signals(request: Request) -> tuple[SignalSnapshot, ...]:
@@ -155,30 +176,34 @@ def _api_router(settings: Settings) -> APIRouter:
                 status_code=503, detail="Agent audit data is temporarily unavailable."
             ) from exc
 
-    @router.get("/portfolio", response_model=PortfolioSnapshot | None)
-    def portfolio(request: Request) -> PortfolioSnapshot | None:
+    @router.get("/portfolio", response_model=PublicPortfolioSnapshot | None)
+    def portfolio(request: Request) -> PublicPortfolioSnapshot | None:
         try:
-            return _agent_repository(request).latest_portfolio()
+            snapshot = _agent_repository(request).latest_portfolio()
+            return PublicPortfolioSnapshot.from_internal(snapshot) if snapshot is not None else None
         except AuditStoreUnavailable as exc:
             raise HTTPException(
                 status_code=503, detail="Agent audit data is temporarily unavailable."
             ) from exc
 
-    @router.get("/portfolio/history", response_model=tuple[PortfolioSnapshot, ...])
+    @router.get("/portfolio/history", response_model=tuple[PublicPortfolioSnapshot, ...])
     def portfolio_history(
         request: Request,
         limit: Annotated[int, Query(ge=1, le=90)] = 90,
-    ) -> tuple[PortfolioSnapshot, ...]:
+    ) -> tuple[PublicPortfolioSnapshot, ...]:
         try:
-            return _agent_repository(request).portfolio_history(limit)
+            return tuple(
+                PublicPortfolioSnapshot.from_internal(snapshot)
+                for snapshot in _agent_repository(request).portfolio_history(limit)
+            )
         except AuditStoreUnavailable as exc:
             raise HTTPException(
                 status_code=503, detail="Agent audit data is temporarily unavailable."
             ) from exc
 
-    @router.get("/strategy", response_model=StrategyConfig)
-    def strategy() -> StrategyConfig:
-        return StrategyConfig(
+    @router.get("/strategy", response_model=PublicStrategyConfig)
+    def strategy() -> PublicStrategyConfig:
+        internal = StrategyConfig(
             competition_account_id=settings.alpaca_competition_account_id or "unconfigured",
             paper_base_url=settings.alpaca_paper_base_url,
             attention_weight=settings.agent_attention_weight,
@@ -187,6 +212,7 @@ def _api_router(settings: Settings) -> APIRouter:
             daily_loss_limit_pct=settings.agent_daily_loss_limit_pct,
             freeze_at=settings.agent_freeze_at,
         )
+        return PublicStrategyConfig.from_internal(internal)
 
     @router.get("/runs", response_model=tuple[ResearchRunSummary, ...])
     def runs(request: Request) -> tuple[ResearchRunSummary, ...]:

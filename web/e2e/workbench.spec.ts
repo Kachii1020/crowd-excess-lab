@@ -93,6 +93,7 @@ test('overview answers status, decision, risk, and next action in the first desk
   await expectInFirstViewport(page, page.getByText('Open risk', { exact: true }))
   await expectInFirstViewport(page, page.getByText('Evidence → Risk → Outcome', { exact: true }))
   await expectInFirstViewport(page, page.getByRole('link', { name: /Open Decision Workbench/ }))
+  await expect(page.getByRole('link', { name: /Open Decision Workbench/ })).toHaveAttribute('href', `/decisions?run=${RUN_ID}`)
   const overviewType = await page.evaluate(() => ({
     body: Number.parseFloat(getComputedStyle(document.querySelector('.latest-check-body > p')!).fontSize),
     metadata: Number.parseFloat(getComputedStyle(document.querySelector('.agent-overview .eyebrow')!).fontSize),
@@ -115,6 +116,12 @@ test('closed-market overview reports a past check and marks providers not sample
   await expect(page.getByText('Unavailable', { exact: true })).toHaveCount(0)
   await expect(page.getByText(/Evidence was not sampled → no candidate reached risk evaluation → the agent placed no order\./)).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Crowd Excess Matrix' })).toHaveCount(0)
+  const sampledLink = page.getByRole('link', { name: /Open Decision Workbench for latest sampled run/ })
+  await expect(sampledLink).toHaveAttribute('href', `/decisions?run=${RUN_ID}`)
+  await sampledLink.click()
+  await expect(page).toHaveURL(new RegExp(`/decisions\\?run=${RUN_ID}$`))
+  await page.reload()
+  await expect(page.getByRole('heading', { name: 'Decision Workbench' })).toBeVisible()
 })
 
 test('judge path traces five sampled symbols through risk to an honest abstention', async ({ page }, testInfo) => {
@@ -142,6 +149,9 @@ test('judge path traces five sampled symbols through risk to an honest abstentio
   await expect(page).toHaveURL(new RegExp(`/agent/runs/${QUOTE_RUN_ID}`))
   await expect(page.getByRole('heading', { name: QUOTE_RUN_ID })).toBeVisible()
   await expect(page.getByText(/Abstained — quote_width: synthetic spread exceeded the declared liquidity limit/)).toBeVisible()
+  await expect(page.getByText('FAILURE STAGE', { exact: true })).toBeVisible()
+  await expect(page.getByText('risk evaluation', { exact: true })).toBeVisible()
+  await expect(page.getByText('risk_gate_rejected', { exact: true })).toBeVisible()
   await expect(page.getByText('No order submitted', { exact: true })).toBeVisible()
   await expect(page.getByText(/OPEN ·/)).toBeVisible()
 
@@ -172,7 +182,7 @@ test('keyboard path connects overview, workbench, run detail, and portfolio', as
   await expect(workbenchLink).toBeFocused()
   expect(await workbenchLink.evaluate((element) => element.matches(':focus-visible'))).toBe(true)
   await page.keyboard.press('Enter')
-  await expect(page).toHaveURL(/\/decisions$/)
+  await expect(page).toHaveURL(new RegExp(`/decisions\\?run=${RUN_ID}$`))
 
   const traceLink = page.getByRole('link', { name: /Open full audit trace/ })
   await traceLink.focus()
@@ -416,6 +426,9 @@ test('Data Health preserves sampled provider facts when the run fails later', as
     const article = page.locator('article.health-detail').filter({ has: page.getByRole('heading', { name: provider }) })
     await expect(article.getByText('Ready', { exact: true })).toBeVisible()
   }
+  await expect(page.getByRole('status').filter({ hasText: 'Latest boundary outcome' })).toContainText(
+    'Stage execution · code alpaca_execution_unavailable',
+  )
 })
 
 test('wide and tablet viewports keep new audit pages readable without overflow', async ({ page }, testInfo) => {

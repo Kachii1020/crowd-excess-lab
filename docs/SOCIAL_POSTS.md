@@ -1,99 +1,100 @@
-# Crowd Excess Agent — Build-in-Public Posts
+# Crowd Excess Agent — Fact-Locked Build-in-Public Posts
 
-Each theme has a compact X draft and an expanded LinkedIn draft. Replace every bracketed field with
-a verified public fact before publishing. Never include the Alpaca account ID, credentials,
-screenshots of private dashboards, or unverified P&L.
+Each theme has a compact X draft and an expanded LinkedIn draft. These versions match the public
+August 28 market-open shadow session and can be published without implying an order or profit.
 
-## Post 1 — Architecture and safety (ready after public GitHub verification)
+## Post 1 — Architecture and safety
 
 ### X
 
-> Building Crowd Excess Agent: NAVER attention + Alpaca market/news/options + strict OpenAI
-> evidence, with deterministic risk and paper-only debit spreads. Every decision is auditable; the
-> public app cannot place orders. Demo: https://crowd-excess-lab.vercel.app/agent
+> Crowd Excess Agent combines NAVER attention, Alpaca market/news/options data, and strict OpenAI
+> evidence. Deterministic code owns risk and paper-only debit spreads. Every result is auditable;
+> the public app cannot place orders. https://crowd-excess-lab.vercel.app/agent
 
 ### LinkedIn
 
-> I’m building Crowd Excess Agent for the Alpaca AI Trading Agents Hackathon.
+> I built Crowd Excess Agent for the Alpaca AI Trading Agents Hackathon.
 >
-> The thesis: price + attention can outrun objective news evidence.
+> The thesis: price and investor attention can outrun objective news evidence.
 >
-> NAVER measures cross-border search attention. Alpaca supplies market, news, options, and paper
-> execution data. OpenAI scores only evidence direction, materiality, and confidence through a
-> strict schema. Deterministic code owns contract selection, position sizing, liquidity checks,
-> and every risk gate.
+> NAVER measures complete-day cross-border search attention. Alpaca supplies the market clock,
+> prices, SPY-relative movement, volume, news, options, and paper portfolio state. OpenAI assesses
+> only evidence direction, materiality, confidence, and cited supplied headlines through a strict
+> schema. Deterministic code owns scoring, contract construction, sizing, and every risk gate.
 >
-> The system is paper-only, uses defined-risk debit verticals, and may abstain. Every decision is
-> stored as a replayable audit trace; the public app has no order endpoint.
+> The system is paper-only, supports defined-risk debit verticals, and may abstain. Public visitors
+> can replay the audit trail but cannot initiate a scan or order.
 >
 > Demo: https://crowd-excess-lab.vercel.app/agent
-> Code: [PUBLIC_GITHUB_URL]
+> Code: https://github.com/Kachii1020/crowd-excess-lab
 >
-> No live trading. No profitability claim. Building the evidence trail first.
+> No live trading. No profitability claim. Evidence first; risk decides.
 
-## Post 2 — First autonomous market-open run (publish only after verification)
+## Post 2 — First autonomous market-open session
 
 ### X
 
-> First autonomous market-open run: [RUN_URL]
-> Decision: [TRADE/ABSTAIN]. Reason: [REASON]. Alpaca paper state: [STATE]. Thresholds stayed fixed;
-> the trace shows inputs, AI evidence, risk gates, and any broker response. No profitability claim.
+> First session: 7 real market-open five-symbol shadow scans; all abstained. Stable trace: source
+> hashes + OpenAI response IDs/tokens, with no risk decision or receipt. Fixed thresholds.
+> https://crowd-excess-lab.vercel.app/agent/runs/20260828T193701Z-b404b62a
 
 ### LinkedIn
 
-> Crowd Excess Agent completed its first competition-period autonomous market-open run.
+> Crowd Excess Agent completed seven real five-symbol shadow scans during one open US market
+> session on August 28.
 >
-> Run: [PUBLIC_RUN_URL]
-> Inputs: 5-symbol attention + Alpaca price/SPY/volume/news/options
-> Decision: [TRADE INTENT OR ABSTAIN]
-> Primary reason: [ONE VERIFIED SENTENCE]
-> Alpaca paper state: [SHADOW / ACCEPTED / PARTIALLY_FILLED / FILLED / REJECTED / NO ORDER]
+> All seven abstained. The stable run preserved five NAVER inputs, five Alpaca market snapshots,
+> five structured OpenAI evidence assessments, source hashes, response IDs, model name, token
+> counts, and evidence-input hashes.
 >
-> The important part is not whether the agent traded. It is that the same public trace shows the
-> timestamped inputs, strict AI evidence assessment, Crowd Excess residual, every deterministic
-> risk gate, and the broker response if an order was attempted.
+> Its result was simple: no symbol passed the attention, movement, evidence, and market gates. No
+> persisted risk decision, execution receipt, or position was created, and no threshold was
+> relaxed to force a demo trade.
 >
-> We did not loosen thresholds to manufacture a demo result. Paper trading only; this is not a
-> claim of profitability.
+> Stable public trace:
+> https://crowd-excess-lab.vercel.app/agent/runs/20260828T193701Z-b404b62a
+>
+> Paper-only shadow evidence, not a profitability claim.
 
-## Post 3 — Honest result or failure analysis (publish after at least two sessions)
+## Post 3 — Honest result and failure safety
 
 ### X
 
-> Honest update after [N] sessions: [ATTEMPTS] paper attempts, [FILLS] fills, P&L [VALUE], max
-> drawdown [VALUE]. Main failure/abstention: [REASON]. Small competition sample—not evidence of
-> durable alpha. Audit: [PUBLIC_SUMMARY_URL]
+> Honest result after 7 shadow scans: $100k equity; P&L, drawdown and open risk $0; no positions. An
+> Alpaca data failure safely abstained; the watchdog dispatched stale work and skipped a duplicate.
+> https://crowd-excess-lab.vercel.app/agent/runs/20260828T174442Z-d761e38b
 
 ### LinkedIn
 
-> Honest update after [NUMBER] autonomous Crowd Excess Agent sessions:
+> Honest Crowd Excess Agent result after seven real market-open shadow scans:
 >
-> • Runs: [RUN IDS OR PUBLIC SUMMARY LINK]
-> • Paper order attempts: [COUNT]
-> • Filled spreads: [COUNT]
-> • Paper P&L: [EXACT VALUE]
-> • Maximum drawdown: [EXACT VALUE]
-> • Abstentions/failures: [COUNT + PRIMARY VERIFIED REASON]
+> • Equity: $100,000
+> • Total P&L: $0
+> • Drawdown: 0
+> • Open premium risk: $0
+> • Persisted risk decisions: 0
+> • Execution receipts: 0
+> • Positions: 0
 >
-> What worked: [ONE VERIFIED OBSERVATION].
-> What failed or stayed uncertain: [ONE VERIFIED OBSERVATION].
-> What I would test next: [ONE CHRONOLOGICAL VALIDATION STEP].
+> One run encountered unavailable Alpaca market data. It abstained, suppressed request details,
+> and created no order or position:
+> https://crowd-excess-lab.vercel.app/agent/runs/20260828T174442Z-d761e38b
 >
-> This is a small competition sample, not evidence of durable alpha. Negative outcomes and
-> no-trade decisions remain visible because an auditable agent should make failure as legible as
-> success.
+> GitHub's hosted cron was also delayed. A local fail-closed watchdog complemented it by dispatching
+> stale shadow work and later skipping a duplicate when the production audit was fresh. It cannot
+> place or promote an order.
 >
-> Public demo: https://crowd-excess-lab.vercel.app/agent
-> Code: [PUBLIC_GITHUB_URL]
+> What worked: real inputs, structured evidence, append-only audit, and safe abstention.
+> What remains uncertain: seven scans cannot establish alpha, and no candidate passed every gate.
+> Next: continue chronological market sessions without weakening the preregistered thresholds.
+>
+> No forced trade, no hidden fixture, no profitability claim.
 
 ## Publication guardrails
 
-- Do not publish Post 1 until the GitHub URL works while logged out.
-- Do not publish Post 2 from the pre-kickoff run `20260828T095104Z-cabc99f1`; that run is a real
-  closed-market abstention used only to verify deployment and safety behavior.
-- Do not publish Post 3 until every count and financial value can be read from the public audit
-  trail or Alpaca paper portfolio snapshot.
-- If there is no real order, write `NO ORDER` and explain the failed gate; do not substitute a
-  fixture receipt.
-- Preserve negative P&L, rejected orders, partial fills, and infrastructure failures exactly as
-  observed.
+- Use the stable trace for the autonomous-run post and the failure trace for the safety post.
+- Preserve the counts and zero portfolio values until the public audit actually changes.
+- If a real paper order later appears, replace the no-order counts with exact public receipt and
+  portfolio facts; do not delete or relabel earlier abstentions.
+- Never use a synthetic receipt, private dashboard, credential, or personal identifier in a post.
+- Describe NAVER as `cross-border search attention`, never community sentiment.

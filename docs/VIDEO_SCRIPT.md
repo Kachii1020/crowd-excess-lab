@@ -1,142 +1,142 @@
-# Crowd Excess Agent — 4:30 Presentation Script
+# Crowd Excess Agent — 4:15 No-Order Presentation
 
-This is the final recording structure. Bracketed fields are recording blockers and must be
-replaced only with verified production facts. Do not show the Alpaca account ID, credentials,
-private dashboards, terminal environment variables, or synthetic fixtures.
+This is the fact-locked recording script for the current public state. It uses the real August 28
+market-open shadow session and does not imply that an option order or position exists.
 
-## 0:00–0:25 — The thesis
+## 0:00–0:20 — Thesis
 
-**On screen:** Title card, then the public `/agent` console.
-
-**Voice-over:**
-
-> Markets do not react only to facts. They also react to attention. Crowd Excess Agent asks one
-> question: when attention and price move faster than objective news evidence, is the reaction
-> excessive? It turns that residual into a controlled, contrarian paper-options decision—only when
-> deterministic risk rules agree.
-
-## 0:25–0:55 — The honest data boundary
-
-**On screen:** Source indicators and fixed AAPL, MSFT, NVDA, TSLA, QQQ universe.
+**Shot:** Full-screen cover, then open https://crowd-excess-lab.vercel.app/agent.
 
 **Voice-over:**
 
-> The agent combines complete-day NAVER Search Trend, Alpaca prices, SPY-relative movement, volume,
-> news, and option-chain data. NAVER is labelled cross-border search attention—not sentiment and
-> not community opinion. Every input is timestamped, and incomplete future days are excluded.
-> This boundary matters because a convincing signal is useless if it leaks unavailable data.
+> Markets react to facts, but they also react to attention. Crowd Excess Agent asks whether
+> attention and price have moved further than the objective news evidence supports. It turns that
+> residual into a controlled contrarian decision only when deterministic risk rules agree.
 
-## 0:55–1:35 — AI evidence, not AI execution
+## 0:20–0:50 — Honest data boundary
 
-**On screen:** Evidence assessment, then the architecture or lineage view.
+**Shot:** Show the five-symbol activity view and source status.
+
+**Voice-over:**
+
+> The fixed universe is Apple, Microsoft, Nvidia, Tesla, and QQQ, with SPY as the benchmark. NAVER
+> supplies complete-day cross-border search attention—not sentiment. Alpaca supplies the market
+> clock, prices, volume, news, options, and portfolio state. Every source is timestamped, and
+> incomplete future days are excluded.
+
+## 0:50–1:25 — AI evidence, deterministic execution
+
+**Shot:** Show the evidence fields and then `/strategy` or `/lineage`.
 
 **Voice-over:**
 
 > OpenAI receives normalized market context and only the supplied Alpaca headlines. It returns a
-> strict evidence assessment: direction, materiality, confidence, citations to those headlines,
-> and an abstention reason. The model cannot choose contracts, size a position, or submit an order.
-> Invalid, refused, timed-out, or unavailable output becomes abstention. This keeps language-model
-> judgment narrow while deterministic code owns financial risk.
+> strict evidence assessment with direction, materiality, confidence, cited headline IDs,
+> rationale, and an abstention reason. The model cannot select contracts, size positions, bypass a
+> gate, or place an order. Invalid or unavailable output means abstain; deterministic code owns the
+> financial decision.
 
-## 1:35–2:15 — The Crowd Excess decision
+## 1:25–2:20 — Stable real market-open run
 
-**On screen:** Open the verified competition-period run and move through signal snapshots and the
-ranked decision matrix.
-
-**Recording blocker:** `[MARKET_OPEN_RUN_URL]` and `[RUN_OUTCOME]`.
-
-**Voice-over:**
-
-> Here is run [MARKET_OPEN_RUN_ID], captured during the competition window. The agent combines
-> attention heat with signed SPY-adjusted movement, then subtracts news direction, materiality, and
-> confidence. The remaining value is the Crowd Excess residual. In this run, [STATE THE VERIFIED
-> OUTCOME IN ONE SENTENCE: candidate and direction, or the exact abstention reason]. No threshold
-> was relaxed to force a trade.
-
-## 2:15–3:05 — Options construction and risk gates
-
-**On screen:** Trade intent and every passed/failed risk gate.
+**Shot:** Open the stable trace:
+https://crowd-excess-lab.vercel.app/agent/runs/20260828T193701Z-b404b62a. Pause on the five signals,
+evidence metadata, and outcome.
 
 **Voice-over:**
 
-> A valid contrarian view can use only a 14-to-30-day call or put debit vertical. Both legs must
-> have the same expiry and option type, the liquidity and Greek requirements must pass, and maximum
-> debit is capped at one percent of equity. Total premium at risk is capped at three percent, with
-> one new attempt per trading day. The runner also verifies the exact paper endpoint, dedicated
-> active account, market hours, daily loss limit, and competition window. Any missing fact means no
-> order.
+> This is the stable run from 19:37 UTC on August 28, captured while the US market was open. It is
+> one of seven real five-symbol shadow scans completed in the same session. All five symbols have
+> NAVER and Alpaca source hashes, plus OpenAI response IDs, model name, input and output token
+> counts, and input hashes. The final result was abstention: no symbol passed the attention,
+> movement, evidence, and market gates. There is no risk decision and no execution record. We did
+> not weaken a threshold to manufacture a trade.
 
-## 3:05–3:45 — Alpaca receipt and honest portfolio outcome
+## 2:20–2:55 — Failure safety
 
-**On screen:** Execution receipt, then `/portfolio`.
-
-**Recording blockers:** `[RECEIPT_STATE]`, `[EXACT_PAPER_PNL]`, and `[EXACT_DRAWDOWN]`.
-
-**Voice-over — use only after a real paper attempt:**
-
-> Alpaca returned [RECEIPT_STATE] for the deterministic client order ID shown in this sanitized
-> trace. If submission times out, the agent queries that same ID instead of immediately resending,
-> which prevents duplicate exposure. After [NUMBER] autonomous sessions, paper P&L is [EXACT VALUE]
-> and maximum drawdown is [EXACT VALUE]. These are short competition-period observations, not a
-> profitability claim.
-
-**Approved no-order alternative:**
-
-> No candidate passed every gate during the recorded sessions, so there is no paper receipt or
-> trading P&L to claim. The audit trail shows each abstention and its failed gate. We chose a
-> truthful no-trade result instead of weakening the strategy for the demo.
-
-## 3:45–4:15 — Reliability and auditability
-
-**On screen:** Run lineage, provenance, and public read-only route behavior.
+**Shot:** Open the failure-safety trace:
+https://crowd-excess-lab.vercel.app/agent/runs/20260828T174442Z-d761e38b. Highlight the sanitized
+summary and empty execution state.
 
 **Voice-over:**
 
-> Every run records source timestamps and hashes, structured evidence, the final score, every risk
-> decision, Alpaca responses, and portfolio snapshots in an append-only audit store. The public
-> application is read-only: visitors can replay decisions but cannot initiate scans or orders.
-> Live trading, naked options, and browser-side execution do not exist in the product.
+> This earlier market-open run proves the failure path. Alpaca market data became unavailable, the
+> system suppressed request details, marked the run as abstained, and created no order or position.
+> Provider failure is treated as a reason to stop, not as permission to invent data or fall back to
+> an unsafe decision.
 
-## 4:15–4:30 — Close
+## 2:55–3:25 — Honest portfolio result
 
-**On screen:** Title, public app URL, and public GitHub URL.
+**Shot:** Open `/portfolio`; pause on equity, P&L, drawdown, open risk, and positions.
 
 **Voice-over:**
 
-> Crowd Excess Agent does not ask AI to predict everything. It asks AI to evaluate evidence, code
-> to enforce risk, and Alpaca paper trading to make every outcome verifiable. Attention outruns
-> evidence. Risk decides.
+> After seven market-open shadow scans, equity remains exactly one hundred thousand dollars. Total
+> P&L is zero, drawdown is zero, open premium risk is zero, and there are no positions. Those zeros
+> are expected because the system produced zero persisted decisions and zero receipts. This is a
+> verified no-order result, not evidence of profitability.
+
+## 3:25–3:55 — Automation and duplicate safety
+
+**Shot:** Show the architecture slide or repository workflow and watchdog files, without opening a
+terminal or private service page.
+
+**Voice-over:**
+
+> GitHub Actions targets four scans per market hour, but hosted cron was delayed. A local fail-closed
+> watchdog complements it by checking the production audit, market hours, active workflows, and a
+> cooldown. It dispatched one stale shadow scan and then skipped a duplicate when the audit was
+> fresh. It can request shadow analysis only; it cannot directly promote or place a paper order.
+> The workflow still has to pass its independent evidence, account, liquidity, and risk gates.
+
+## 3:55–4:15 — Close
+
+**Shot:** Return to the cover with the public demo and repository URLs.
+
+**Voice-over:**
+
+> Crowd Excess Agent asks AI to assess evidence, code to enforce risk, and public audit records to
+> make failure as legible as success. Seven runs, seven honest abstentions, no forced trade.
+> Attention outruns evidence. Risk decides.
+
+## Shot list
+
+1. Cover image.
+2. `/agent` live session activity and source state.
+3. `/strategy` or `/lineage` evidence and execution boundaries.
+4. Stable run `20260828T193701Z-b404b62a`: five signals, evidence metadata, abstention.
+5. Failure run `20260828T174442Z-d761e38b`: sanitized provider failure, no execution.
+6. `/portfolio`: $100,000 equity; all risk and outcome values at zero.
+7. Architecture/repository reliability view: GitHub schedule plus local shadow watchdog.
+8. Cover with public demo and source URLs.
+
+## Conditional receipt swap
+
+If a real paper order later appears, do not add time to this cut. Replace the 2:55–3:25 no-order
+segment with the public execution trace and exact updated portfolio values. State the broker status
+exactly—accepted, partial, filled, rejected, or canceled—and retain the short-sample/no-profitability
+qualification. If no receipt appears, use the script above unchanged.
 
 ## Recording checklist
 
 ### Before recording
 
-- [ ] Replace every bracketed blocker with a verified production fact.
-- [ ] Use only a competition-period market-open run for the main trace.
-- [ ] Decide between the real-receipt paragraph and the approved no-order alternative; delete the
-      unused paragraph.
-- [ ] Verify `/agent`, selected `/agent/runs/:id`, `/portfolio`, `/strategy`, and GitHub while logged
-      out.
-- [ ] Confirm that receipt state, P&L, drawdown, run count, and timestamps match the public trace.
-- [ ] Hide bookmarks, notifications, personal tabs, account IDs, credentials, and private dashboards.
-- [ ] Use a clean 16:9 capture at 1920×1080 or 2560×1440, 30 fps, with browser zoom set before the
-      first take.
-- [ ] Prepare the exact tabs in narration order; do not type secret-bearing URLs on camera.
-- [ ] Record a ten-second audio test and confirm speech is clear without clipping or room echo.
+- [ ] Reopen both run links and `/portfolio`; confirm all values still match this script.
+- [ ] Verify `/agent`, `/portfolio`, `/strategy`, `/lineage`, and GitHub while logged out.
+- [ ] Use only public routes; hide credentials, personal tabs, emails, and private dashboards.
+- [ ] Capture at 1920×1080 or 2560×1440, 30 fps, with browser zoom fixed before the first take.
+- [ ] Arrange tabs in shot-list order and record a ten-second audio test.
 
 ### During recording
 
-- [ ] Keep the deployed domain visible at least once and show the production run ID.
-- [ ] Pause briefly on the residual, failed/passed gates, receipt, and portfolio values.
+- [ ] Show the deployed domain and both production run IDs clearly.
+- [ ] Pause on evidence metadata, abstention summary, empty execution state, and portfolio zeros.
 - [ ] Call NAVER `cross-border search attention`, never community sentiment.
-- [ ] Say `paper`, `short competition sample`, and `not a profitability claim` when discussing results.
-- [ ] Do not show fixtures or imply that the pre-kickoff closed-market run was a trade.
-- [ ] Keep the final cut at 4:30 or shorter; never exceed the five-minute submission limit.
+- [ ] Say `shadow`, `no-order result`, and `not evidence of profitability` clearly.
+- [ ] Keep the final edit between 4:00 and 4:20 and below the five-minute platform limit.
 
 ### After recording
 
-- [ ] Watch the exported MP4 end to end with audio and again muted for visual legibility.
-- [ ] Verify no credential, account ID, email, notification, or private URL appears in any frame.
-- [ ] Check that every spoken number and state still matches production.
-- [ ] Confirm direct links work in a fresh logged-out browser before upload.
+- [ ] Watch the MP4 once with audio and once muted for visual legibility.
+- [ ] Confirm no secret, personal identifier, notification, or private URL appears in any frame.
+- [ ] Check every spoken count, timestamp, and portfolio value against production.
 - [ ] Export H.264 MP4 at 1080p and retain the editable source separately.

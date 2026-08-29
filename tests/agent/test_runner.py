@@ -11,6 +11,7 @@ from crowd_excess_lab.agent.domain import (
     OptionType,
     StrategyConfig,
 )
+from crowd_excess_lab.agent.market_data import AlpacaMarketDataUnavailable
 from crowd_excess_lab.agent.orchestrator import AgentOrchestrator
 from crowd_excess_lab.agent.runner import AgentRunner, portfolio_from_alpaca
 from crowd_excess_lab.agent.store import AuditEvent, InMemoryAuditStore, audit_event
@@ -207,6 +208,35 @@ class FakeAlpacaCli:
         return []
 
 
+class OptionChainFailureMarket(FakeMarket):
+    @staticmethod
+    def option_chain(*args: object, **kwargs: object) -> tuple[OptionQuote, ...]:
+        del args, kwargs
+        raise AlpacaMarketDataUnavailable(
+            "synthetic raw URL https://data.example.test?token=must-not-appear"
+        )
+
+
+class OptionPairFailureMarket(FakeMarket):
+    @staticmethod
+    def option_chain(*args: object, **kwargs: object) -> tuple[OptionQuote, ...]:
+        del args, kwargs
+        return ()
+
+
+class OptionVolumeFailureMarket(FakeMarket):
+    @classmethod
+    def option_session_volume(
+        cls,
+        symbols: tuple[str, str],
+        *,
+        start: datetime,
+        end: datetime,
+    ) -> dict[str, int]:
+        del cls, symbols, start, end
+        raise AlpacaMarketDataUnavailable("synthetic secret-like provider response")
+
+
 def _receipt(client_order_id: str, state: str) -> ExecutionReceipt:
     return ExecutionReceipt(
         client_order_id=client_order_id,
@@ -262,6 +292,7 @@ def _runner(
     *,
     audit_events: tuple[AuditEvent, ...] = (),
     market_open: bool = True,
+    market: object | None = None,
 ) -> tuple[AgentRunner, FakeNaver, FakeEvidence, InMemoryAuditStore, FakeAlpacaCli]:
     naver = FakeNaver()
     evidence = FakeEvidence()
@@ -272,7 +303,7 @@ def _runner(
     return (
         AgentRunner(
             naver=naver,  # type: ignore[arg-type]
-            market=FakeMarket(),  # type: ignore[arg-type]
+            market=market or FakeMarket(),  # type: ignore[arg-type]
             evidence=evidence,  # type: ignore[arg-type]
             alpaca_cli=alpaca_cli,  # type: ignore[arg-type]
             orchestrator=orchestrator,
@@ -340,6 +371,39 @@ def test_prior_rejected_paper_attempt_blocks_later_candidate_that_day() -> None:
     assert detail.run.status == "abstained"
     assert detail.receipt is None
     assert detail.risk_decision is not None
+    assert detail.run.failure_stage == "risk_evaluation"
+    assert detail.run.failure_code == "risk_gate_rejected"
     assert "daily_position_count" in {
         gate.code for gate in detail.risk_decision.gates if not gate.passed
     }
+
+
+def test_option_chain_failure_records_only_sanitized_stage_and_code() -> None:
+    runner, _, _, store, _ = _runner(market=OptionChainFailureMarket())
+
+    detail = runner.run(now=NOW)
+
+    assert detail.run.failure_stage == "option_chain"
+    assert detail.run.failure_code == "alpaca_option_chain_unavailable"
+    assert "token=" not in detail.run.summary
+    assert "data.example.test" not in str(store.events[-1].payload)
+
+
+def test_option_pair_failure_records_shape_diagnostic() -> None:
+    runner, _, _, _, _ = _runner(market=OptionPairFailureMarket())
+
+    detail = runner.run(now=NOW)
+
+    assert detail.run.failure_stage == "option_pair_selection"
+    assert detail.run.failure_code == "option_shape_unavailable"
+
+
+def test_option_volume_failure_records_only_sanitized_stage_and_code() -> None:
+    runner, _, _, store, _ = _runner(market=OptionVolumeFailureMarket())
+
+    detail = runner.run(now=NOW)
+
+    assert detail.run.failure_stage == "option_session_volume"
+    assert detail.run.failure_code == "alpaca_option_volume_unavailable"
+    assert "secret-like" not in detail.run.summary
+    assert "secret-like" not in str(store.events[-1].payload)

@@ -194,7 +194,6 @@ export const exitIntentSchema = z.object({
 })
 
 export const portfolioSchema = z.object({
-  account_id: z.string(),
   observed_at: z.string(),
   equity: z.number(),
   buying_power: z.number(),
@@ -210,7 +209,7 @@ export const portfolioSchema = z.object({
     market_value: z.number(),
     unrealized_pnl: z.number(),
   })),
-})
+}).strict()
 
 export const portfolioHistorySchema = z.array(portfolioSchema)
 
@@ -232,6 +231,8 @@ export const agentRunSchema = z.object({
   source_hashes: z.record(z.string(), z.string()),
   summary: z.string(),
   error: z.string(),
+  failure_stage: z.enum(['option_chain', 'option_pair_selection', 'option_session_volume', 'risk_evaluation', 'execution']).nullable().optional(),
+  failure_code: z.string().regex(/^[a-z0-9_]+$/).max(80).nullable().optional(),
   // Optional as well as nullable so pre-market-clock audit rows remain readable.
   market_clock: marketClockSchema.nullable().optional(),
 })
@@ -250,6 +251,7 @@ export const agentStatusSchema = z.object({
   mode: z.enum(['shadow', 'paper']),
   scheduler: z.string(),
   last_run: agentRunSchema.nullable(),
+  latest_sampled_run: agentRunSchema.nullable().optional(),
   sources: z.record(z.string(), z.boolean()),
   message: z.string(),
 })
@@ -258,7 +260,6 @@ export const strategySchema = z.object({
   version: z.string(),
   universe: z.array(z.string()),
   benchmark: z.string(),
-  competition_account_id: z.string(),
   paper_base_url: z.string(),
   min_attention_z: z.number(),
   attention_weight: z.number(),
@@ -277,7 +278,7 @@ export const strategySchema = z.object({
   max_open_spreads: z.number(),
   max_new_positions_per_day: z.number(),
   freeze_at: z.string(),
-})
+}).strict()
 
 export type ResearchRun = z.infer<typeof runSchema>
 export type EventObservation = z.infer<typeof eventSchema>

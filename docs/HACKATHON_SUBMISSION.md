@@ -1,143 +1,176 @@
 # Hackathon Submission Package
 
-This document contains the public submission copy and the evidence checklist for Crowd Excess
-Agent. Public claims must distinguish paper execution, shadow decisions, pre-kickoff verification,
-and synthetic test fixtures. Account identifiers and credentials must never appear in this
-repository, screenshots, slides, or recordings.
+This file contains final English submission copy grounded in the public audit trail. Crowd Excess
+Agent completed a real market-open shadow session but did not create a paper order. That no-order
+result is part of the submission, not a gap to hide with a fixture.
 
-## Project identity
+## Submission form copy
 
 **Title:** Crowd Excess Agent
 
 **Tagline:** Attention outruns evidence. Risk decides.
 
-**Short description (under 255 characters):**
+**Short description (173 characters):**
 
 > An auditable AI agent that detects when attention and price outrun objective news, then expresses
 > a controlled contrarian view with defined-risk Alpaca paper option spreads.
 
 **Long description:**
 
-> Crowd Excess Agent tests a simple market intuition: investor attention can move faster than the
-> objective evidence behind a price move. It combines complete-day NAVER cross-border search
-> attention with Alpaca price, SPY benchmark, volume, news, and option-chain data. OpenAI evaluates
-> only the direction, materiality, and confidence of supplied news through a strict structured
-> schema. A deterministic engine calculates the remaining Crowd Excess residual, ranks a fixed
-> five-symbol universe, constructs a 14–30 DTE debit vertical, and enforces liquidity, account,
-> loss, exposure, and idempotency gates. The agent may abstain, and every decision is recorded in
-> an append-only audit trail. The public dashboard lets judges replay evidence, intent, risk gates,
-> Alpaca paper receipts, and honest paper P&L. Live trading and naked options are structurally
-> unavailable.
+> Crowd Excess Agent tests whether investor attention and price can move further than objective
+> news evidence supports. It combines complete-day NAVER cross-border search attention with Alpaca
+> prices, SPY-relative movement, volume, news, and option-chain data. OpenAI evaluates only the
+> direction, materiality, and confidence of supplied headlines through a strict structured schema;
+> deterministic code owns scoring, option construction, sizing, and risk. Seven real five-symbol
+> market-open shadow scans ran during one US session on August 28, 2026. Every scan abstained, so
+> the account remained at $100,000 equity with zero P&L, drawdown, open risk, decisions, receipts,
+> and positions. The public audit trail exposes source hashes, model response metadata, token
+> usage, evidence, scores, failure-safe behavior, and the honest no-order outcome. Live trading,
+> naked options, and browser-initiated execution do not exist.
 
-## Verified public evidence — August 28, 2026
+**Suggested tags:** `AI Agents`, `FinTech`, `Alpaca`, `Options`, `Risk Management`, `Auditability`
 
-- **Public application:** [crowd-excess-lab.vercel.app](https://crowd-excess-lab.vercel.app)
-  has been verified without authentication.
-- **Agent console:** [crowd-excess-lab.vercel.app/agent](https://crowd-excess-lab.vercel.app/agent)
-  is the primary judge path.
-- **Public source:** [github.com/Kachii1020/crowd-excess-lab](https://github.com/Kachii1020/crowd-excess-lab)
-  is available without authentication and retains the pre-hackathon provenance boundary.
-- **Alpaca paper account:** a dedicated account has been privately verified as `ACTIVE` with
-  exactly **$100,000** starting equity. Its account ID is intentionally excluded from public
-  artifacts and must be entered only in the official submission form.
-- **Pre-kickoff verification:** run
-  [`20260828T095104Z-cabc99f1`](https://crowd-excess-lab.vercel.app/agent/runs/20260828T095104Z-cabc99f1)
-  is a real credentialed **closed-market abstention** recorded before the competition window. It
-  proves the deployed audit path and safe market-hours gate; it is not an options trade, a full
-  market-session result, or P&L evidence.
-- **Market-open autonomous run:** `TBD — add verified competition-period run ID and link`.
-- **Alpaca paper receipt:** `TBD — add only after a real order attempt is recorded`.
-- **Paper P&L and drawdown:** `TBD — report exact values after the required market sessions`.
+**Public demo:** https://crowd-excess-lab.vercel.app/agent
+
+**Public source:** https://github.com/Kachii1020/crowd-excess-lab
+
+### Concise form answers
+
+**What problem does it solve?**
+
+> It separates attention-driven market movement from the objective news evidence available at the
+> decision time, while making every abstention or paper action independently inspectable.
+
+**How is AI used?**
+
+> OpenAI receives normalized market context and supplied Alpaca headlines, then returns strict
+> evidence direction, materiality, confidence, cited headline IDs, rationale, and an abstention
+> reason. It cannot select contracts, size positions, bypass risk rules, or place orders.
+
+**How is Alpaca used?**
+
+> Alpaca supplies the market clock, prices, SPY benchmark data, volume, headlines, option chains,
+> portfolio state, and the paper-only execution boundary. Missing or inconsistent Alpaca data
+> fails closed before an order can exist.
+
+**What was the verified result?**
+
+> Seven real market-open five-symbol shadow scans completed in one US session. All seven abstained.
+> The stable run preserved complete source and OpenAI evidence metadata; a separate provider-failure
+> run suppressed request details and created no order. Portfolio equity remained $100,000, with
+> zero P&L, drawdown, open premium risk, decisions, receipts, and positions.
+
+## Verified evidence — August 28–29, 2026
+
+- The [public decision audit](https://crowd-excess-lab.vercel.app/agent) and
+  [public repository](https://github.com/Kachii1020/crowd-excess-lab) work without authentication.
+- Seven real shadow scans covered AAPL, MSFT, NVDA, TSLA, and QQQ during the same open US market
+  session on August 28. All seven ended in a documented abstention.
+- The stable run,
+  [`20260828T193701Z-b404b62a`](https://crowd-excess-lab.vercel.app/agent/runs/20260828T193701Z-b404b62a),
+  completed five signal snapshots and preserved NAVER, Alpaca market, and OpenAI evidence hashes.
+  Every symbol also has an OpenAI response ID, model name, input/output token counts, and input hash.
+- Its exact summary is: `No symbol passed attention, move, evidence, and market gates.` No persisted
+  risk decision or execution receipt exists.
+- The failure-safety run,
+  [`20260828T174442Z-d761e38b`](https://crowd-excess-lab.vercel.app/agent/runs/20260828T174442Z-d761e38b),
+  abstained when Alpaca market data became unavailable, suppressed request details, and created no
+  order or position.
+- The verified portfolio snapshot is **$100,000 equity, $0 total P&L, 0 drawdown, $0 open premium
+  risk, 0 open spreads, and 0 positions**.
+- GitHub's scheduled workflow was delayed during the session. A local fail-closed watchdog
+  complemented, rather than replaced, the cron: it dispatched a stale shadow scan and later skipped
+  a duplicate when fresh audit activity was present. It cannot directly place or promote an order;
+  the workflow's independent evidence, account, liquidity, and risk gates still control promotion.
 
 ## One-page implementation write-up
 
 ### Thesis and data boundary
 
-Crowd Excess asks whether investor attention and price have moved further than the objective news
-evidence supports. NAVER Search Trend is used only as **cross-border search attention**—never as
-community sentiment. The fixed decision universe is AAPL, MSFT, NVDA, TSLA, and QQQ, with SPY as
-the market benchmark. Complete historical days and timestamped inputs prevent look-ahead use.
+Crowd Excess asks whether investor attention and price have moved further than supplied objective
+news evidence supports. NAVER Search Trend is used only as **cross-border search attention**—never
+as community sentiment. The fixed universe is AAPL, MSFT, NVDA, TSLA, and QQQ, with SPY as the
+benchmark. Complete historical days and timestamped source snapshots prevent look-ahead use.
 
-### AI logic
+### AI evidence layer
 
-OpenAI receives normalized, timestamped price context and supplied Alpaca headlines. With
-`store=false`, it returns strict `EvidenceAssessment` fields: direction, materiality, confidence,
-rationale, cited supplied headline IDs, and an abstention reason. Invalid, refused, timed-out, or
-unavailable output causes abstention. The model never receives an order tool and cannot select
-contracts, determine quantity, or bypass a risk gate.
+OpenAI receives normalized price context and supplied Alpaca headlines. With `store=false`, strict
+`EvidenceAssessment` output records direction, materiality, confidence, rationale, cited supplied
+headline IDs, and an abstention reason. Invalid, refused, timed-out, or unavailable output causes
+abstention. The model has no order tool and cannot choose contracts or quantity.
+
+The stable public run proves the evidence boundary with response IDs, model name, token counts, and
+input hashes for all five symbols. These are audit metadata, not claims that the model predicted a
+profitable trade.
 
 ### Signal and deterministic risk
 
-Crowd Excess combines signed SPY-adjusted movement with attention heat, then subtracts news
-direction × materiality × confidence. A positive residual represents potentially excessive upside
-enthusiasm; a negative residual represents potentially excessive downside pessimism. The agent
-takes the opposite view only after attention, move, confidence, freshness, liquidity, option
-shape, account, exposure, loss, and competition-window gates pass.
+The score combines signed SPY-adjusted movement with attention heat, then subtracts news direction
+× materiality × confidence. A positive residual represents potentially excessive upside
+enthusiasm; a negative residual represents potentially excessive downside pessimism. A contrarian
+intent can proceed only after attention, movement, evidence, freshness, liquidity, option shape,
+account, exposure, loss, and competition-window gates pass.
 
-Only 14–30 DTE call or put debit verticals are eligible. Maximum debit is 1% of account equity,
-total premium at risk is capped at 3%, and no more than one new position may be attempted per day.
-Missing quotes, Greeks, option volume, open interest, storage, or exact account identity results in
-`ABSTAIN`.
+Only 14–30 DTE call or put debit verticals are eligible. Maximum debit is 1% of equity, aggregate
+premium at risk is capped at 3%, and at most one new attempt is allowed per day. Missing quotes,
+Greeks, volume, open interest, storage, or exact paper-account identity means no order.
 
-### Alpaca execution and auditability
+### Execution, automation, and auditability
 
-Alpaca is the account, market-data, options, and paper-execution boundary. Multi-leg paper orders
-are submitted only after exact paper-host and dedicated-account verification. Every intent uses a
-deterministic client order ID. If submission times out, the runner queries that same ID before any
-further action, preventing a network timeout from becoming a duplicate trade.
+Alpaca is the market-data, portfolio, and paper-execution boundary. Each eligible intent receives a
+deterministic client order ID. A submission timeout triggers a lookup by that same ID before any
+further action, preventing ambiguous network state from becoming duplicate exposure.
 
-Supabase stores sanitized append-only runs, signals, evidence assessments, risk decisions,
-receipts, and portfolio snapshots. The public FastAPI/Vercel application has read-only access;
-scans and orders cannot be initiated from the browser. This produces a judge-readable chain from
-timestamped inputs to model evidence, deterministic risk, Alpaca response, and honest portfolio
-outcome.
+GitHub Actions targets four shadow scans per market hour, but hosted cron timing is best-effort. The
+local watchdog checks production audit freshness, competition dates, regular market hours, active
+workflow runs, and a local cooldown. It can request one shadow workflow when the audit is stale and
+otherwise skips or fails closed. It never bypasses GitHub, account, signal, or risk gates.
+
+Supabase stores sanitized append-only runs, signals, evidence, optional risk decisions, optional
+execution records, and portfolio snapshots. The public application is read-only. In the verified
+session the optional decision and execution records remained absent, accurately reflecting seven
+no-trade outcomes.
 
 ### Safety and limitations
 
-This is a competition paper-trading system, not investment advice. It contains no live-trading
-mode, naked-option path, or profitability claim. Search attention is an imperfect cross-border
-proxy, structured news assessment can abstain, option liquidity can invalidate a candidate, and a
-small competition sample cannot establish durable alpha. A no-trade decision is a valid outcome.
+This is a competition paper-trading system, not investment advice. It has no live-trading mode,
+naked-option path, or profitability claim. Search attention is an imperfect cross-border proxy;
+headline assessment can abstain; option liquidity may invalidate a candidate; provider and
+scheduler failures can delay scans; and seven observations cannot establish durable alpha.
 
-## Nine-slide pitch deck outline
+## Nine-slide narrative
 
-1. **Thesis:** Attention outruns evidence. Risk decides.
-2. **Data boundary:** NAVER attention, Alpaca market/news/options, and what each source does not say.
-3. **Signal:** attention heat + market-adjusted movement − objective news evidence.
-4. **Architecture:** provider inputs → structured evidence → deterministic engine → append-only audit.
-5. **Decision trace:** one verified market-open run from facts to ranked candidate or abstention.
-6. **Risk:** defined-risk debit vertical, liquidity checks, 1%/3% caps, and one attempt per day.
-7. **Receipt and portfolio:** real Alpaca paper response plus exact P&L/drawdown, once available.
-8. **Reliability:** strict schemas, paper/account lock, deterministic IDs, and timeout reconciliation.
-9. **Limitations and learning:** honest sample size, failures, abstentions, and next validation step.
+1. **Opening:** Attention outruns evidence. Risk decides.
+2. **Thesis:** the opportunity is the unexplained residual, not raw sentiment.
+3. **Data boundary:** what NAVER, Alpaca, and OpenAI do—and do not—measure.
+4. **Signal:** attention heat + market-adjusted movement - objective news evidence.
+5. **Product:** Overview leads directly to the latest sampled immutable decision trace.
+6. **Execution authority:** defined-risk spreads, fixed limits, paper-only account boundary.
+7. **Verified result:** seven five-symbol scans, $100,000 equity, and no forced trade.
+8. **Reliability:** strict evidence, idempotent orders, watchdog, and sanitized failure stages.
+9. **Business value:** audit before exposure and reproducible abstention when inputs are weak.
 
 ## Submission checklist
 
-### Verified now
+### Verified
 
-- [x] Public Vercel application works without authentication.
-- [x] Dedicated Alpaca paper account is `ACTIVE` with exactly $100,000 starting equity; ID withheld
-      from public artifacts.
-- [x] A real pre-kickoff closed-market abstention trace is publicly replayable and accurately
-      labelled.
-- [x] Final title, tagline, short description, long description, and implementation write-up exist.
-- [x] All current public product copy is English.
-- [x] No fixture is represented as real execution.
-- [x] No profitability claim is made.
+- [x] Public Vercel application and public GitHub repository work without authentication.
+- [x] Dedicated Alpaca paper account is active with exactly $100,000 equity.
+- [x] Seven same-session market-open five-symbol shadow runs are publicly recorded.
+- [x] Stable and failure-safety run links are fixed in the submission narrative.
+- [x] OpenAI response metadata and source hashes are visible for the stable run.
+- [x] Current zero-decision, zero-receipt, zero-position, and zero-P&L state is explicit.
+- [x] 16:9 cover and nine-slide PDF deck exist; editable deck source is retained.
+- [x] Final title, descriptions, form answers, tags, video script, and social copy are English.
+- [x] No fixture, abstention, or paper result is represented as profitable execution.
 
-### Verify before final recording and submission
+### Final operator actions
 
-- [x] Public GitHub repository works in a logged-out browser.
-- [ ] At least one competition-period market-open autonomous run: `TBD — add run ID`.
-- [ ] Real Alpaca paper option receipt, if a candidate passes every gate: `TBD — add trace link`.
-- [ ] At least two full autonomous sessions: `TBD — list run IDs and outcomes`.
-- [ ] Exact paper P&L and drawdown are shown, including negative values if applicable.
-- [x] 16:9 PNG cover uses the tagline and clearly says `ALPACA PAPER OPTIONS`.
-- [ ] Final MP4 is 4:30 or shorter and follows `docs/VIDEO_SCRIPT.md`.
-- [x] Nine-slide PDF pitch deck follows the outline above; editable PPTX is retained.
-- [ ] Three build-in-public posts use verified facts from `docs/SOCIAL_POSTS.md`.
-- [ ] Logged-out direct reload works for `/agent`, `/portfolio`, `/strategy`, and the selected run.
-- [ ] Submission form contains the paper account ID, but no public artifact exposes it.
-- [ ] Every placeholder in this document, the deck, video, and social posts has been removed.
+- [ ] Record and export the 4:00–4:20 MP4 using `docs/VIDEO_SCRIPT.md`.
+- [ ] Publish the three fact-locked build-in-public posts in `docs/SOCIAL_POSTS.md`.
+- [ ] Recheck all public links in a logged-out browser immediately before submission.
+- [ ] If a real paper receipt appears later, replace—not append to—the no-order video segment and
+      update all counts from the public trace.
+- [ ] Submit title, copy, tags, cover, video, deck, source, and demo before the internal cutoff.
 
 Internal submission cutoff: **September 4, 2026 at 20:00 JST**.

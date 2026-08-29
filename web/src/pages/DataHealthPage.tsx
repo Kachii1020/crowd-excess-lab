@@ -67,6 +67,14 @@ export function DataHealthPage() {
   const evidenceFailed = signals.some((signal) => signal.evidence.abstention_reason === 'openai_evidence_unavailable')
   const riskSampled = Boolean(detail.data?.risk_decision)
   const auditUnavailable = Boolean(status.error || runs.error || detail.error)
+  const failureStage = run?.failure_stage ?? null
+  const failureCode = run?.failure_code ?? null
+  const optionBoundaryFailure = failureCode === 'alpaca_option_chain_unavailable'
+    || failureCode === 'alpaca_option_volume_unavailable'
+  const riskBoundaryFailure = failureCode === 'risk_evaluation_unavailable'
+  const boundaryDiagnostic = failureStage && failureCode
+    ? `Stage ${failureStage.replaceAll('_', ' ')} · code ${failureCode}`
+    : null
 
   const items: HealthItem[] = [
     {
@@ -87,8 +95,10 @@ export function DataHealthPage() {
     },
     {
       name: 'Alpaca Options',
-      state: healthState(optionsSampled, runObservedAt, false),
-      cause: optionsSampled ? 'The selected option chain and its source hash were recorded.' : marketSampled ? 'No signal reached option-chain construction in the latest run.' : 'The run ended before option-chain sampling could be considered.',
+      state: healthState(optionsSampled, runObservedAt, optionBoundaryFailure),
+      cause: failureStage?.startsWith('option_') && failureCode
+        ? `Candidate stopped at ${failureStage.replaceAll('_', ' ')} (${failureCode}); raw provider details were not retained.`
+        : optionsSampled ? 'The selected option chain and its source hash were recorded.' : marketSampled ? 'No signal reached option-chain construction in the latest run.' : 'The run ended before option-chain sampling could be considered.',
       observedAt: optionsSampled ? runObservedAt : null,
       explanation: 'Option chains are requested only after a signal is eligible. Not sampled is a safe stage outcome, not a missing quote represented as zero.',
       icon: Gauge,
@@ -103,8 +113,10 @@ export function DataHealthPage() {
     },
     {
       name: 'Risk Engine',
-      state: healthState(riskSampled, detail.data?.risk_decision?.evaluated_at ?? runObservedAt, false),
-      cause: riskSampled ? `${detail.data?.risk_decision?.gates.length ?? 0} deterministic gates were recorded.` : 'No candidate reached option-structure risk evaluation in this run.',
+      state: healthState(riskSampled, detail.data?.risk_decision?.evaluated_at ?? runObservedAt, riskBoundaryFailure),
+      cause: failureStage === 'risk_evaluation' && failureCode
+        ? `Candidate stopped at risk evaluation (${failureCode}).`
+        : riskSampled ? `${detail.data?.risk_decision?.gates.length ?? 0} deterministic gates were recorded.` : 'No candidate reached option-structure risk evaluation in this run.',
       observedAt: riskSampled ? detail.data?.risk_decision?.evaluated_at ?? runObservedAt : null,
       explanation: 'A missing risk decision means no execution approval. It does not mean the gates passed.',
       icon: Gauge,
@@ -135,6 +147,10 @@ export function DataHealthPage() {
 
       {auditUnavailable && (
         <section className="data-health-alert" role="alert"><TriangleAlert aria-hidden="true" /><div><h2>Audit API unavailable</h2><p>Source history cannot be verified right now. Strategy documentation remains available, but no provider is assumed healthy.</p></div></section>
+      )}
+
+      {boundaryDiagnostic && (
+        <section className="data-health-alert" role="status"><CircleDashed aria-hidden="true" /><div><h2>Latest boundary outcome</h2><p>{boundaryDiagnostic}. The public trace stores only this sanitized diagnostic.</p></div></section>
       )}
 
       <section className="health-detail-list" aria-label="Provider health">

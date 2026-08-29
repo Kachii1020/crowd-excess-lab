@@ -116,8 +116,9 @@ def test_paper_order_is_not_called_when_pre_execution_audit_fails() -> None:
             raise AssertionError("must not be called")
 
     executor = RecordingExecutor()
+    store = FailingStore()
     orchestrator = AgentOrchestrator(
-        FailingStore(),
+        store,
         StrategyConfig(competition_account_id="paper-account"),
         mode=AgentMode.PAPER,
         executor=executor,
@@ -126,6 +127,9 @@ def test_paper_order_is_not_called_when_pre_execution_audit_fails() -> None:
     with pytest.raises(RuntimeError, match="synthetic storage failure"):
         orchestrator.run_candidate(*_prepared())
     assert not executor.called
+    assert store.events[-1].event_type == "run_completed"
+    assert store.events[-1].payload["failure_stage"] == "risk_evaluation"
+    assert store.events[-1].payload["failure_code"] == "risk_evaluation_unavailable"
 
 
 def test_paper_execution_failure_records_terminal_failed_run() -> None:
@@ -152,6 +156,8 @@ def test_paper_execution_failure_records_terminal_failed_run() -> None:
     ]
     assert store.events[-1].payload["status"] == "failed"
     assert store.events[-1].payload["error"] == "RuntimeError"
+    assert store.events[-1].payload["failure_stage"] == "execution"
+    assert store.events[-1].payload["failure_code"] == "alpaca_execution_unavailable"
 
 
 def test_paper_receipt_reconciliation_appends_instead_of_rewriting() -> None:

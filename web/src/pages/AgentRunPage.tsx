@@ -69,6 +69,8 @@ export function AgentRunPage() {
         <div><span>MODEL</span><strong>{run.model}</strong></div>
         <div><span>CONFIG</span><strong>{run.config_version}</strong></div>
         <div><span>SOURCE HASHES</span><strong>{Object.keys(run.source_hashes).length}</strong></div>
+        {run.failure_stage && <div><span>FAILURE STAGE</span><strong>{run.failure_stage.replaceAll('_', ' ')}</strong></div>}
+        {run.failure_code && <div><span>FAILURE CODE</span><strong>{run.failure_code}</strong></div>}
         {run.market_clock && <div><span>MARKET AT CHECK</span><strong>{run.market_clock.is_open ? 'OPEN' : 'CLOSED'} · {format.dateTime(run.market_clock.observed_at)}</strong></div>}
       </section>
 

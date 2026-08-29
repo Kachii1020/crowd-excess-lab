@@ -14,6 +14,8 @@ from crowd_excess_lab.agent.domain import (
     ExecutionReceipt,
     ExecutionState,
     ExitIntent,
+    FailureCode,
+    FailureStage,
     MarketClockSnapshot,
     OptionQuote,
     PortfolioSnapshot,
@@ -63,6 +65,9 @@ class AgentOrchestrator:
         run_id: str,
         run: AgentRunRecord,
         exc: Exception,
+        *,
+        failure_stage: FailureStage,
+        failure_code: FailureCode,
     ) -> AgentRunRecord:
         """Best-effort terminal audit record without leaking provider details."""
 
@@ -70,8 +75,10 @@ class AgentOrchestrator:
             update={
                 "status": RunStatus.FAILED,
                 "completed_at": datetime.now(UTC),
-                "summary": "Agent execution failed safely; no automatic retry was attempted.",
+                "summary": "Agent run failed safely; no automatic retry was attempted.",
                 "error": type(exc).__name__,
+                "failure_stage": failure_stage,
+                "failure_code": failure_code,
             }
         )
         with suppress(Exception):
@@ -121,15 +128,26 @@ class AgentOrchestrator:
         signals = (signal, *additional_signals)
         for observed_signal in signals:
             self._store.append(audit_event(run_id, "signal", observed_signal))
-        decision = evaluate_spread(
-            signal,
-            long_quote,
-            short_quote,
-            portfolio,
-            self._config,
-        )
-        # This append is the pre-execution audit barrier. A failure raises before any order call.
-        self._store.append(audit_event(run_id, "risk_decision", decision))
+        try:
+            decision = evaluate_spread(
+                signal,
+                long_quote,
+                short_quote,
+                portfolio,
+                self._config,
+            )
+            # This append is the pre-execution audit barrier.
+            # A failure raises before any order call.
+            self._store.append(audit_event(run_id, "risk_decision", decision))
+        except Exception as exc:
+            self._record_failed_run(
+                run_id,
+                run,
+                exc,
+                failure_stage=FailureStage.RISK_EVALUATION,
+                failure_code=FailureCode.RISK_EVALUATION_UNAVAILABLE,
+            )
+            raise
 
         receipt: ExecutionReceipt | None = None
         status = RunStatus.ABSTAINED
@@ -158,13 +176,28 @@ class AgentOrchestrator:
 
             self._store.append(audit_event(run_id, "portfolio", portfolio))
         except Exception as exc:
-            self._record_failed_run(run_id, run, exc)
+            self._record_failed_run(
+                run_id,
+                run,
+                exc,
+                failure_stage=FailureStage.EXECUTION,
+                failure_code=FailureCode.ALPACA_EXECUTION_UNAVAILABLE,
+            )
             raise
+        failure_update = (
+            {
+                "failure_stage": FailureStage.RISK_EVALUATION,
+                "failure_code": FailureCode.RISK_GATE_REJECTED,
+            }
+            if not decision.approved
+            else {}
+        )
         completed = run.model_copy(
             update={
                 "status": status,
                 "completed_at": datetime.now(UTC),
                 "summary": summary,
+                **failure_update,
             }
         )
         self._store.append(audit_event(run_id, "run_completed", completed))
@@ -224,7 +257,13 @@ class AgentOrchestrator:
             self._store.append(audit_event(run_id, "position_exit", receipt))
             self._store.append(audit_event(run_id, "portfolio", portfolio))
         except Exception as exc:
-            self._record_failed_run(run_id, run, exc)
+            self._record_failed_run(
+                run_id,
+                run,
+                exc,
+                failure_stage=FailureStage.EXECUTION,
+                failure_code=FailureCode.ALPACA_EXECUTION_UNAVAILABLE,
+            )
             raise
         completed = run.model_copy(
             update={
@@ -250,6 +289,8 @@ class AgentOrchestrator:
         started_at: datetime,
         source_hashes: dict[str, str] | None = None,
         market_clock: MarketClockSnapshot | None = None,
+        failure_stage: FailureStage | None = None,
+        failure_code: FailureCode | None = None,
     ) -> AgentRunDetail:
         """Persist a visible no-trade decision without constructing an order."""
 
@@ -280,6 +321,8 @@ class AgentOrchestrator:
                 "status": RunStatus.ABSTAINED,
                 "completed_at": datetime.now(UTC),
                 "summary": reason,
+                "failure_stage": failure_stage,
+                "failure_code": failure_code,
             }
         )
         self._store.append(audit_event(run_id, "run_completed", completed))

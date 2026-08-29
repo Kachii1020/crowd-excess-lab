@@ -61,6 +61,27 @@ def test_old_run_rows_without_market_clock_remain_valid() -> None:
 
     assert len(runs) == 1
     assert runs[0].market_clock is None
+    assert runs[0].failure_stage is None
+    assert runs[0].failure_code is None
+
+
+def test_latest_sampled_run_ignores_a_newer_run_without_signal_events() -> None:
+    sampled = AuditEvent.model_validate(_row(0))
+    sampled_signal = AuditEvent(
+        run_id=sampled.run_id,
+        event_type="signal",
+        recorded_at=NOW + timedelta(seconds=1),
+        payload={"synthetic": True},
+    )
+    closed = AuditEvent.model_validate(_row(1))
+    repository = AgentAuditRepository(
+        InMemoryAuditStore((sampled, sampled_signal, closed))
+    )
+
+    latest = repository.latest_sampled_run()
+
+    assert latest is not None
+    assert latest.run_id == sampled.run_id
 
 
 def _portfolio(index: int, *, equity: float | None = None) -> PortfolioSnapshot:

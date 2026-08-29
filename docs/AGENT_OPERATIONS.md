@@ -9,7 +9,8 @@ Complete these steps after the competition begins on August 29, 2026 JST:
 
 1. Enrol on lablab.ai and create the one-person team.
 2. Create a **fresh Alpaca paper account with exactly $100,000**.
-3. Store its account ID as `ALPACA_COMPETITION_ACCOUNT_ID`; do not put it in source code.
+3. Store the dedicated paper-account identifier in the runner-only
+   `ALPACA_COMPETITION_ACCOUNT_ID`; never expose its value in source or public artifacts.
 4. Create a dedicated OpenAI API project and a dedicated Supabase project.
 5. Record any sponsor requirement announced at kickoff before enabling the scheduler.
 
@@ -58,9 +59,9 @@ GitHub variable `AGENT_MODE` starts as `shadow`. Vercel receives only:
 
 - `SUPABASE_URL`
 - `SUPABASE_ANON_KEY`
-- `ALPACA_COMPETITION_ACCOUNT_ID` if the public strategy page should show it.
 
-Do not configure Alpaca, NAVER, OpenAI, or Supabase service-role secrets in Vercel.
+Paper-account identity remains runner-side. Do not configure Alpaca, NAVER, OpenAI, or Supabase
+service-role secrets in Vercel.
 
 ## 4. Local and CI gates
 
@@ -91,11 +92,22 @@ inventory runs through `scripts/license_preflight.py`; also review Python depend
 5. Inspect the Supabase event order: `run_started`, all `signal` rows, `risk_decision` when a
    candidate exists, optional `execution`, `portfolio`, then `run_completed`.
 6. Open `/agent/runs/<run-id>` logged out and verify timestamps, hashes, evidence, failed gates,
-   and the clearly labelled shadow receipt.
+   outcome, and portfolio snapshot. An abstention must not fabricate or imply an execution receipt.
 
 A no-trade result is valid. Never loosen a threshold just to manufacture a demo order.
 
-## 6. Paper promotion
+## 6. Scheduler reliability and local watchdog
+
+GitHub Actions targets four scans per market hour, but hosted cron timing is best-effort and may be
+delayed. `scripts/agent_watchdog.py` is a local, fail-closed complement for shadow coverage only. It
+checks the competition window, regular market hours, production audit freshness, active workflow
+runs, and a local cooldown before requesting one GitHub shadow dispatch.
+
+The watchdog must skip when the audit is fresh, a workflow is active, or its cooldown applies. It
+reserves cooldown state before dispatch so ambiguous network state cannot create a duplicate. It
+cannot run the agent locally, set paper mode, approve promotion, or submit an order.
+
+## 7. Paper promotion
 
 Promote only when all checks are true:
 
@@ -106,10 +118,11 @@ Promote only when all checks are true:
 - Repeating the same candidate returns the same `client_order_id` and no duplicate order.
 - Public routes have no mutation control and logged-out access works.
 
-Set the GitHub variable to `AGENT_MODE=paper`, then manually dispatch once. Scheduled runs continue
-every 15 minutes, but Alpaca's market clock and the competition date/freeze gates remain final.
+Set the GitHub variable to `AGENT_MODE=paper`, then manually dispatch once. Scheduled runs target
+four starts per market hour but are not guaranteed to start on time. Alpaca's market clock and the
+competition date/freeze gates remain final; the local watchdog continues to request shadow only.
 
-## 7. Incident and recovery matrix
+## 8. Incident and recovery matrix
 
 | Symptom | Safe behavior | Operator action |
 |---|---|---|
@@ -126,7 +139,7 @@ If public deployment is wrong, roll back Vercel to the preceding verified commit
 is unavailable, the public API returns a safe `503`; paper submission cannot proceed past a failed
 pre-execution append.
 
-## 8. Competition freeze
+## 9. Competition freeze
 
 No new position may open at or after `2026-09-03T20:00:00Z`. Stop scheduled paper openings after
 the September 3 US close. Reconcile remaining positions under the predeclared exit policy and

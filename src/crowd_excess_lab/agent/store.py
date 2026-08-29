@@ -141,6 +141,19 @@ class AgentAuditRepository:
             latest[event.run_id] = AgentRunRecord.model_validate(event.payload)
         return tuple(sorted(latest.values(), key=lambda item: item.started_at, reverse=True))
 
+    def latest_sampled_run(self) -> AgentRunRecord | None:
+        """Return the newest run that persisted at least one signal observation."""
+
+        events = self._events()
+        sampled_run_ids = {event.run_id for event in events if event.event_type == "signal"}
+        latest: dict[str, AgentRunRecord] = {}
+        for event in events:
+            if event.run_id not in sampled_run_ids:
+                continue
+            if event.event_type in {"run_started", "run_completed"}:
+                latest[event.run_id] = AgentRunRecord.model_validate(event.payload)
+        return max(latest.values(), key=lambda item: item.started_at, default=None)
+
     def get_run(self, run_id: str) -> AgentRunDetail | None:
         grouped = [event for event in self._events() if event.run_id == run_id]
         if not grouped:

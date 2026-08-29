@@ -39,6 +39,7 @@ export function AgentOverviewPage() {
   const portfolio = usePortfolio()
   const strategy = useStrategy()
   const latestRun = status.data?.last_run ?? runs.data?.[0]
+  const latestSampledRun = status.data?.latest_sampled_run
   const detail = useAgentRun(latestRun?.run_id ?? '')
 
   if (status.isLoading || runs.isLoading || portfolio.isLoading || strategy.isLoading || detail.isLoading) {
@@ -112,7 +113,17 @@ export function AgentOverviewPage() {
             <div className="decision-sentence"><Newspaper aria-hidden="true" /><p><strong>Evidence → Risk → Outcome</strong><span>{latestNarrative(detail.data)}</span></p></div>
             <div className="next-action"><strong>What to do next</strong><p>{nextAction}</p></div>
             <div className="overview-actions">
-              <Link className="button button--primary" to="/decisions">Open Decision Workbench <ArrowRight aria-hidden="true" /></Link>
+              {latestSampledRun ? (
+                <Link
+                  aria-label="Open Decision Workbench for latest sampled run"
+                  className="button button--primary"
+                  to={`/decisions?run=${latestSampledRun.run_id}`}
+                >
+                  Open latest sampled run <ArrowRight aria-hidden="true" />
+                </Link>
+              ) : (
+                <Link className="button button--primary" to="/decisions">Open Decision Workbench <ArrowRight aria-hidden="true" /></Link>
+              )}
               {latestRun && <Link className="button" to={`/agent/runs/${latestRun.run_id}`}>Open Full Trace</Link>}
             </div>
           </div>

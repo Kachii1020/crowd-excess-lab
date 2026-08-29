@@ -94,17 +94,17 @@ const risk = {
 
 const history = [
   {
-    account_id: 'fixture-paper-account', observed_at: '2026-08-31T14:00:00Z', equity: 100000,
+    observed_at: '2026-08-31T14:00:00Z', equity: 100000,
     buying_power: 100000, daily_pnl: 0, total_pnl: 0, drawdown: 0, open_premium_risk: 0,
     open_spread_count: 0, new_positions_today: 0, positions: [],
   },
   {
-    account_id: 'fixture-paper-account', observed_at: '2026-08-31T14:30:00Z', equity: 99980,
+    observed_at: '2026-08-31T14:30:00Z', equity: 99980,
     buying_power: 99980, daily_pnl: -20, total_pnl: -20, drawdown: 0.0002, open_premium_risk: 0,
     open_spread_count: 0, new_positions_today: 0, positions: [],
   },
   {
-    account_id: 'fixture-paper-account', observed_at: '2026-08-31T15:00:00Z', equity: 100025,
+    observed_at: '2026-08-31T15:00:00Z', equity: 100025,
     buying_power: 100025, daily_pnl: 25, total_pnl: 25, drawdown: 0, open_premium_risk: 0,
     open_spread_count: 0, new_positions_today: 0, positions: [],
   },
@@ -153,6 +153,8 @@ const quoteRun = {
   source_hashes: quoteSourceHashes,
   summary: 'Synthetic five-symbol scan abstained at the deterministic quote-width gate.',
   error: '',
+  failure_stage: 'risk_evaluation',
+  failure_code: 'risk_gate_rejected',
 }
 const postSampleFailureRun = {
   ...quoteRun,
@@ -166,11 +168,13 @@ const postSampleFailureRun = {
   },
   summary: 'Synthetic post-sampling audit failure; no order was attempted.',
   error: 'Synthetic failure after provider and risk records were persisted.',
+  failure_stage: 'execution',
+  failure_code: 'alpaca_execution_unavailable',
 }
 
 const strategy = {
   version: '2026-08-hackathon-v1', universe: ['AAPL', 'MSFT', 'NVDA', 'TSLA', 'QQQ'], benchmark: 'SPY',
-  competition_account_id: 'fixture-paper-account', paper_base_url: 'https://paper-api.alpaca.markets',
+  paper_base_url: 'https://paper-api.alpaca.markets',
   min_attention_z: 1.25, attention_weight: 1, min_move_z: 1, min_evidence_confidence: 0.6, max_event_materiality: 0.85, min_crowd_excess: 0.2,
   min_dte: 14, max_dte: 30, max_quote_width_pct: 0.15, max_market_data_age_seconds: 120, min_open_interest: 100,
   max_position_risk_pct: 0.01, max_total_risk_pct: 0.03, daily_loss_limit_pct: 0.015,
@@ -194,12 +198,15 @@ async function installShared(page: Page, options: {
   portfolioHistory: typeof history,
   sources: Record<string, boolean>,
   message: string,
+  latestSampledRun?: typeof run | typeof quoteRun | typeof postSampleFailureRun | null,
 }) {
   await jsonRoute(page, '/api/v1/agent/status', {
     configured: true,
     mode: 'shadow',
     scheduler: 'Synthetic test scheduler',
     last_run: options.latestRun,
+    latest_sampled_run: options.latestSampledRun
+      ?? (options.latestSignals.length > 0 ? options.latestRun : null),
     sources: options.sources,
     message: options.message,
   })
@@ -258,8 +265,12 @@ export async function installOneRunFixture(page: Page) {
 export async function installClosedMarketFixture(page: Page) {
   await installShared(page, {
     latestRun: closedRun,
-    runs: [closedRun],
-    details: [{ runId: CLOSED_RUN_ID, body: closedRunDetail }],
+    latestSampledRun: run,
+    runs: [closedRun, run],
+    details: [
+      { runId: CLOSED_RUN_ID, body: closedRunDetail },
+      { runId: RUN_ID, body: runDetail },
+    ],
     latestSignals: [],
     currentPortfolio: closedPortfolio,
     portfolioHistory: [closedPortfolio],

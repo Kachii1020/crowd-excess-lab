@@ -1,3 +1,4 @@
+import json
 from datetime import UTC, datetime
 
 from fastapi.testclient import TestClient
@@ -93,6 +94,7 @@ def test_public_agent_endpoints_are_read_only_and_traceable(study_root) -> None:
     assert status.status_code == 200
     assert status.json()["configured"] is True
     assert status.json()["last_run"]["run_id"] == RUN_ID
+    assert status.json()["latest_sampled_run"]["run_id"] == RUN_ID
 
     runs = client.get("/api/v1/agent/runs")
     assert runs.status_code == 200
@@ -124,11 +126,33 @@ def test_public_agent_endpoints_are_read_only_and_traceable(study_root) -> None:
     assert client.post("/api/v1/portfolio/history").status_code == 405
 
 
+def test_public_agent_json_recursively_redacts_private_account_identifiers(study_root) -> None:  # type: ignore[no-untyped-def]
+    client = _agent_client(study_root)
+    paths = (
+        "/openapi.json",
+        "/api/v1/agent/status",
+        "/api/v1/agent/runs",
+        f"/api/v1/agent/runs/{RUN_ID}",
+        "/api/v1/portfolio",
+        "/api/v1/portfolio/history?limit=90",
+        "/api/v1/strategy",
+    )
+
+    for path in paths:
+        response = client.get(path)
+        assert response.status_code == 200
+        serialized = json.dumps(response.json(), sort_keys=True)
+        assert '"account_id"' not in serialized
+        assert '"competition_account_id"' not in serialized
+        assert "paper-account" not in serialized
+
+
 def test_unconfigured_public_agent_returns_honest_empty_state(api_client: TestClient) -> None:
     status = api_client.get("/api/v1/agent/status")
     assert status.status_code == 200
     assert status.json()["configured"] is False
     assert status.json()["last_run"] is None
+    assert status.json()["latest_sampled_run"] is None
     assert api_client.get("/api/v1/agent/runs").json() == []
     assert api_client.get("/api/v1/agent/signals").json() == []
     assert api_client.get("/api/v1/portfolio").json() is None

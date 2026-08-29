@@ -16,6 +16,8 @@ from crowd_excess_lab.agent.domain import (
     EvidenceContext,
     ExecutionReceipt,
     ExecutionState,
+    FailureCode,
+    FailureStage,
     MarketClockSnapshot,
     OptionType,
     PortfolioSnapshot,
@@ -376,14 +378,16 @@ class AgentRunner:
                 observed_at=observed_at,
             )
             source_hashes[f"alpaca_options_{selected.symbol.lower()}"] = self._hash_points(quotes)
-        except AlpacaMarketDataUnavailable as exc:
+        except AlpacaMarketDataUnavailable:
             return self._orchestrator.run_abstention(
                 tuple(signals),
                 portfolio,
-                str(exc),
+                "Alpaca option-chain data was unavailable; the candidate abstained safely.",
                 started_at=observed_at,
                 source_hashes=source_hashes,
                 market_clock=market_clock,
+                failure_stage=FailureStage.OPTION_CHAIN,
+                failure_code=FailureCode.ALPACA_OPTION_CHAIN_UNAVAILABLE,
             )
         spread = select_debit_vertical(quotes, selected.trade_direction)
         if spread is None:
@@ -394,6 +398,8 @@ class AgentRunner:
                 started_at=observed_at,
                 source_hashes=source_hashes,
                 market_clock=market_clock,
+                failure_stage=FailureStage.OPTION_PAIR_SELECTION,
+                failure_code=FailureCode.OPTION_SHAPE_UNAVAILABLE,
             )
         try:
             volumes = self._market.option_session_volume(
@@ -401,14 +407,16 @@ class AgentRunner:
                 start=datetime.combine(observed_at.date(), time.min, tzinfo=UTC),
                 end=observed_at,
             )
-        except AlpacaMarketDataUnavailable as exc:
+        except AlpacaMarketDataUnavailable:
             return self._orchestrator.run_abstention(
                 tuple(signals),
                 portfolio,
-                str(exc),
+                "Alpaca option-session volume was unavailable; the candidate abstained safely.",
                 started_at=observed_at,
                 source_hashes=source_hashes,
                 market_clock=market_clock,
+                failure_stage=FailureStage.OPTION_SESSION_VOLUME,
+                failure_code=FailureCode.ALPACA_OPTION_VOLUME_UNAVAILABLE,
             )
         spread = (
             spread[0].model_copy(update={"volume": volumes.get(spread[0].symbol, 0)}),
