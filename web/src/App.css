@@ -612,6 +612,11 @@ kbd { padding: 3px 5px; border: 1px solid var(--border-subtle); color: var(--tex
 details.strategy-section > summary { cursor: pointer; list-style: none; }details.strategy-section > summary::-webkit-details-marker { display: none; }details.strategy-section > summary::after { color: var(--accent); content: "−"; font-size: 17px; }details.strategy-section:not([open]) > summary::after { content: "+"; }details.strategy-section > summary > svg { display: none; }
 .mobile-event-list { display: none; }.mobile-event-card { border: 1px solid var(--border-strong); background: var(--bg-surface); }.mobile-event-card > header { display: flex; justify-content: space-between; gap: 12px; padding: 12px; }.mobile-event-card header > div { min-width: 0; display: grid; gap: 4px; }.mobile-event-card time, .mobile-event-card header span { color: var(--text-tertiary); font: 10px var(--font-mono); }.mobile-event-card header strong { overflow: hidden; font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }.mobile-event-card dl { display: grid; grid-template-columns: repeat(3, 1fr); margin: 0; border-block: 1px solid var(--border-subtle); }.mobile-event-card dl > div { padding: 10px; border-right: 1px solid var(--border-subtle); }.mobile-event-card dl > div:last-child { border: 0; }.mobile-event-card dt { color: var(--text-tertiary); font-size: 10px; }.mobile-event-card dd { margin: 5px 0 0; font: 11px var(--font-mono); }.mobile-event-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px; }.mobile-event-actions .button, .mobile-event-actions .icon-link { width: 100%; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }.mobile-event-actions .icon-link { font-size: 11px; }
 
+@media (min-width: 1281px) {
+  .app-shell { grid-template-columns: 188px minmax(0, 1fr); }
+  .global-header { grid-template-columns: 188px minmax(320px, 760px) minmax(340px, 1fr); }
+}
+
 @media (min-width: 901px) and (max-width: 1280px) {
   .app-shell { grid-template-columns: 188px minmax(0, 1fr); }
   .global-header { grid-template-columns: 188px minmax(300px, 1fr) auto; }
