@@ -1,12 +1,12 @@
 # Crowd Excess — Final Execution Board
 
-Status timestamp: **2026-08-29 17:47 JST**
+Status timestamp: **2026-08-30 JST**
 
 Internal submission cutoff: **2026-09-04 20:00 JST**
 
 Public event window: **2026-08-28 through 2026-09-04**
 
-Frozen release: `ae2dca7` on `main`
+Frozen production release: `3413c66` on `main`
 
 ## 1. Objective
 
@@ -50,7 +50,7 @@ Not allowed:
 | Production | GO | All judge routes work logged out |
 | Public redaction | GO | Zero public account identifier keys |
 | First market session | GO | Seven real five-symbol shadow scans on 2026-08-28 |
-| Submission assets | PARTIAL | Cover, screenshots, PPTX, PDF, copy, and script ready; one deck count needs correction and MP4 is missing |
+| Submission assets | PARTIAL | Cover, refreshed screenshots, corrected PPTX/PDF, copy, and script ready; MP4 is missing |
 | Second market session | BLOCKED BY TIME | First opportunity is 2026-08-31 US regular session |
 | Submission portal | OPERATOR REQUIRED | Exact cutoff, uploads, private account field, and confirmation unverified |
 | Monday automation | CONDITIONAL GO | Watchdog healthy; Mac sleep prevention required |
@@ -58,23 +58,21 @@ Not allowed:
 Readiness is tracked in two ways:
 
 - technical release readiness: **100%**;
-- actual submission-package readiness: **about 78%** because a required MP4 and portal confirmation do not yet exist.
+- actual submission-package readiness: **about 82%** because a required MP4, second session, and final portal confirmation do not yet exist.
 
 ## 4. Active work plan
 
 | Order | Work | Owner | Intensity | Active time | Dependency | Done evidence |
 |---:|---|---|---|---:|---|---|
-| 1 | Correct slide 7 to `35 signal snapshots · 30 model assessments`; re-export and QA PDF | Agent | L3 | 15–25 min | Verified public audit counts | PPTX/PDF render clean and claim matches audit |
-| 2 | Confirm project/team registration and exact portal cutoff | User + agent browser support | L4 | 20 min | Logged-in portal | Screenshot or note with exact cutoff and project state |
-| 3 | Rehearse the no-order video once; test audio and browser tab order | User | L3 | 45–60 min | Current production | 30-second audio test and one unedited rehearsal |
-| 4 | Lock business-value voice-over | Agent + user | L2 | 20 min | None | Buyer, problem, value, and commercial path fit in 25 seconds |
-| 5 | Rehearse Monday operational checks without dispatching | Agent | L4 | 20 min | Mac available | launchd, auth, production, portfolio, and power checks understood |
-| 6 | Capture the second independent session | Agent automation + user monitor | L4 | 60–90 min active | 2026-08-31 22:30 JST open | At least one full five-symbol run on `ae2dca7`; target three |
-| 7 | Lock post-session facts and choose no-order or receipt branch | Agent | L4 | 30 min | Session evidence | Run IDs, signals, outcome, equity, P&L, drawdown, and receipt state fixed |
-| 8 | Record and edit final 4:00–4:20 MP4 | User; agent fact QA | L4 | 2–3 h | Fact lock | H.264 1080p MP4, audio/visual QA passed |
-| 9 | Update only changed counts/frames in docs or deck | Agent | L3 | 30–60 min | Fact lock | No stale counts, missing source, or unsupported claim |
-| 10 | Upload and submit | User + agent browser support | L4 | 45–60 min | Final MP4 | All files reopen; private account ID only in private field; confirmation captured |
-| 11 | Optional verified social posts | User | L2 | 20–30 min | Fact lock | Public links recorded; not a submission blocker |
+| 1 | Confirm project/team registration and exact portal cutoff | User + agent browser support | L4 | 20 min | Logged-in portal | Screenshot or note with exact cutoff and project state |
+| 2 | Rehearse the AI-narrated no-order video once; test audio and browser tab order | User | L3 | 45–60 min | Current production | 30-second audio test and one unedited rehearsal |
+| 3 | Rehearse Monday operational checks without dispatching | Agent | L4 | 20 min | Mac available | launchd, auth, production, portfolio, and power checks understood |
+| 4 | Capture the second independent session | Agent automation + user monitor | L4 | 60–90 min active | 2026-08-31 22:30 JST open | At least one full five-symbol run on `3413c66`; target three |
+| 5 | Generate the sanitized post-session fact lock and select the no-order or receipt branch | Agent | L4 | 15 min | Session evidence | `submission/fact-lock-final.json` passes the two-date gate |
+| 6 | Record and edit final 4:00–4:20 MP4 | User; agent fact QA | L4 | 2–3 h | Fact lock | H.264 1080p MP4, audio/visual QA passed |
+| 7 | Update only changed counts/frames in docs or deck | Agent | L3 | 30–60 min | Fact lock | No stale counts, missing source, or unsupported claim |
+| 8 | Upload and submit | User + agent browser support | L4 | 45–60 min | Final MP4 | All files reopen; private account ID only in private field; confirmation captured |
+| 9 | Optional verified social posts | User | L2 | 20–30 min | Fact lock | Public links recorded; not a submission blocker |
 
 Expected remaining active work:
 
@@ -96,10 +94,10 @@ Complete by **2026-08-30 20:00 JST**:
    - failure run `20260828T174442Z-d761e38b`;
    - `/portfolio`;
    - public GitHub repository.
-5. Correct the deck aggregate from `35 structured evidence assessments` to the verified
-   `35 signal snapshots · 30 model assessments`. The other five snapshots are structured
-   fail-closed evidence placeholders from `openai_evidence_unavailable`, not model responses.
-6. Record one short audio/video rehearsal using `docs/VIDEO_SCRIPT.md`.
+5. The deck aggregate is already corrected to `35 signal snapshots · 30 model assessments`; do not
+   change it until the second-session fact lock exists.
+6. Record one short AI-narration/video rehearsal using `docs/VIDEO_SCRIPT.md` and
+   `docs/VIDEO_EDIT_SPEC.md`.
 7. Lock this business-value statement:
 
 > Crowd Excess is an audit workspace for quant researchers, risk reviewers, and autonomous-agent

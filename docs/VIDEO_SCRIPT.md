@@ -1,21 +1,24 @@
 # Crowd Excess Agent — 4:15 No-Order Presentation
 
-This is the fact-locked recording script for the current public state. It uses the real August 28
-market-open shadow session and does not imply that an option order or position exists.
+This is the rehearsal script for the current public state. Before final recording, regenerate
+`submission/fact-lock-final.json`, update only changed facts, and follow `docs/VIDEO_EDIT_SPEC.md`.
+It does not imply that an option order or position exists.
 
 ## 0:00–0:20 — Thesis
 
-**Shot:** Full-screen cover, then open https://crowd-excess-lab.vercel.app/agent.
+**Shot:** Full-screen cover, then open the product-first Overview at
+https://crowd-excess-lab.vercel.app/agent. Pause on the definition, formula, and primary action.
 
 **Voice-over:**
 
-> Markets react to facts, but they also react to attention. Crowd Excess Agent asks whether
-> attention and price have moved further than the objective news evidence supports. It turns that
-> residual into a controlled contrarian decision only when deterministic risk rules agree.
+> Markets react to facts, but they also react to attention. Crowd Excess asks whether attention and
+> price have moved further than the objective news evidence supports. It is a pre-trade market
+> reaction filter: the agent advances a controlled contrarian candidate only when deterministic
+> liquidity and risk rules agree.
 
 ## 0:20–0:50 — Honest data boundary
 
-**Shot:** Show the five-symbol activity view and source status.
+**Shot:** Select `Review Latest Market Scan`, then show the five-symbol workbench and source status.
 
 **Voice-over:**
 
@@ -26,7 +29,7 @@ market-open shadow session and does not imply that an option order or position e
 
 ## 0:50–1:25 — AI evidence, deterministic execution
 
-**Shot:** Show the evidence fields and then `/strategy` or `/lineage`.
+**Shot:** Show the evidence fields and then `/strategy` (`How It Works`).
 
 **Voice-over:**
 
@@ -101,13 +104,14 @@ terminal or private service page.
 ## Shot list
 
 1. Cover image.
-2. `/agent` live session activity and source state.
-3. `/strategy` or `/lineage` evidence and execution boundaries.
-4. Stable run `20260828T193701Z-b404b62a`: five signals, evidence metadata, abstention.
-5. Failure run `20260828T174442Z-d761e38b`: sanitized provider failure, no execution.
-6. `/portfolio`: $100,000 equity; all risk and outcome values at zero.
-7. Architecture/repository reliability view: GitHub schedule plus local shadow watchdog.
-8. Cover with public demo and source URLs.
+2. `/agent` product definition, formula, latest sampled verdict, and primary action.
+3. `/decisions?run=<verified-run-id>` five-symbol Market Scan.
+4. `/strategy` evidence and execution boundaries.
+5. Stable run `20260828T193701Z-b404b62a`: five signals, evidence metadata, abstention.
+6. Failure run `20260828T174442Z-d761e38b`: sanitized provider failure, no execution.
+7. `/portfolio`: $100,000 equity; all risk and outcome values at zero.
+8. Architecture/repository reliability view: GitHub schedule plus local shadow watchdog.
+9. Cover with public demo and source URLs.
 
 ## Conditional receipt swap
 
