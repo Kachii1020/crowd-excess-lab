@@ -16,30 +16,31 @@ https://crowd-excess-lab.vercel.app/agent. Pause on the definition, formula, and
 > reaction filter: the agent advances a controlled contrarian candidate only when deterministic
 > liquidity and risk rules agree.
 
-## 0:20–0:50 — Honest data boundary
+## 0:20–0:58 — Market Scan inputs
 
 **Shot:** Select `Review Latest Market Scan`, then show the five-symbol workbench and source status.
 
 **Voice-over:**
 
-> The fixed universe is Apple, Microsoft, Nvidia, Tesla, and QQQ, with SPY as the benchmark. NAVER
-> supplies complete-day cross-border search attention—not sentiment. Alpaca supplies the market
-> clock, prices, volume, news, options, and portfolio state. Every source is timestamped, and
-> incomplete future days are excluded.
+> The latest Market Scan places Apple, Microsoft, Nvidia, Tesla, and QQQ on one comparable surface,
+> with SPY as the benchmark. Attention Z measures cross-border search heat. Move Z measures
+> volatility-normalized, market-adjusted reaction. Volume Z shows dislocation, while Evidence
+> records how strongly supplied news explains the move. The residual is Crowd Excess. Raw sentiment
+> or price direction alone is not the thesis.
 
-## 0:50–1:25 — AI evidence, deterministic execution
+## 0:58–1:31 — Crowd Excess residual
 
-**Shot:** Show the evidence fields and then `/strategy` (`How It Works`).
+**Shot:** Enlarge the Market Scan matrix, then the evidence panel.
 
 **Voice-over:**
 
-> OpenAI receives normalized market context and only the supplied Alpaca headlines. It returns a
-> strict evidence assessment with direction, materiality, confidence, cited headline IDs,
-> rationale, and an abstention reason. The model cannot select contracts, size positions, bypass a
-> gate, or place an order. Invalid or unavailable output means abstain; deterministic code owns the
-> financial decision.
+> Crowd Excess equals signed market-adjusted move times attention heat, minus news direction,
+> materiality, and confidence. A positive residual means upside enthusiasm may be excessive. A
+> negative residual means downside pessimism may be excessive. OpenAI assesses only supplied
+> headlines. It cannot choose contracts, size positions, bypass a gate, or place an order.
+> Deterministic code decides whether a contrarian view is even eligible.
 
-## 1:25–2:20 — Latest real market-open run
+## 1:31–2:13 — Latest real market-open run
 
 **Shot:** Use `Review Latest Market Scan`, then open:
 https://crowd-excess-lab.vercel.app/agent/runs/20260831T195329Z-97994d47. Pause on the five signals,
@@ -47,13 +48,14 @@ four model assessments, TSLA fail-closed evidence, and outcome.
 
 **Voice-over:**
 
-> This is the latest sampled run from 19:53 UTC on August 31, captured while the US market was open.
-> It is one of seventeen real five-symbol scans across two market dates. Four symbols retain OpenAI
-> response IDs, model metadata, token counts, and input hashes. Structured evidence for Tesla was
-> unavailable, so that symbol failed closed. The final result was abstention: no symbol passed every
-> attention, movement, evidence, and market gate. There is no risk decision or execution record.
+> This latest run was captured at 19:53 UTC on August 31 while the US market was open. Apple had
+> attention Z of minus 0.28, move Z of minus 0.52, and 58 percent evidence confidence, leaving no
+> residual. Tesla moved more sharply, with move Z above 2.2, but its attention was cold and
+> structured evidence was unavailable, so it failed closed. QQQ had 91 percent evidence confidence,
+> but its movement and attention still did not pass the signal gates. Five names were observed. No
+> candidate reached option construction.
 
-## 2:20–2:55 — Failure safety
+## 2:13–2:43 — Closest candidate and failure safety
 
 **Shot:** Open the failure-safety trace:
 https://crowd-excess-lab.vercel.app/agent/runs/20260828T174442Z-d761e38b. Highlight the sanitized
@@ -61,58 +63,57 @@ summary and empty execution state.
 
 **Voice-over:**
 
-> This earlier market-open run proves the failure path. Alpaca market data became unavailable, the
-> system suppressed request details, marked the run as abstained, and created no order or position.
-> Provider failure is treated as a reason to stop, not as permission to invent data or fall back to
-> an unsafe decision.
+> An earlier market-open run shows the closest candidate. Apple passed the attention, movement,
+> evidence, and residual gates and became eligible for a bearish reversal. Required Alpaca option
+> data then became unavailable before risk approval. The run stopped, suppressed request details,
+> and created no order or position. Missing liquidity evidence is a reason to abstain, never
+> permission to invent a spread.
 
-## 2:55–3:25 — Honest portfolio result
+## 2:43–3:22 — Honest portfolio result
 
 **Shot:** Open `/portfolio`; pause on equity, P&L, drawdown, open risk, and positions.
 
 **Voice-over:**
 
-> After seventeen sampled shadow scans across two market dates, equity remains exactly one hundred
-> thousand dollars. Total
-> P&L is zero, drawdown is zero, open premium risk is zero, and there are no positions. Those zeros
-> are expected because the system produced zero persisted decisions and zero receipts. This is a
-> verified no-order result, not evidence of profitability.
+> Across two market dates, seventeen sampled scans produced eighty-five signal snapshots and
+> seventy-eight model assessments. Equity remains exactly one hundred thousand dollars. Profit and
+> loss, drawdown, open premium risk, and positions remain zero. No candidate cleared every evidence,
+> liquidity, and risk gate. This is a verified no-order result, not evidence of profitability.
 
-## 3:25–3:55 — Automation and duplicate safety
+## 3:22–3:56 — Deterministic risk authority
 
-**Shot:** Show the architecture slide or repository workflow and watchdog files, without opening a
-terminal or private service page.
+**Shot:** Show the execution-authority slide with fixed risk limits.
 
 **Voice-over:**
 
-> GitHub Actions targets four scans per market hour, but hosted cron was delayed. A local fail-closed
-> watchdog complements it by checking the production audit, market hours, active workflows, and a
-> cooldown. It dispatched one stale shadow scan and then skipped a duplicate when the audit was
-> fresh. It can request shadow analysis only; it cannot directly promote or place a paper order.
-> The workflow still has to pass its independent evidence, account, liquidity, and risk gates.
+> Risk owns the order. Only fourteen-to-thirty day call or put debit verticals are eligible. Maximum
+> position debit is one percent of equity, total premium risk is capped at three percent, and missing
+> quotes, Greeks, open interest, volume, account identity, or storage means abstain. Every order uses
+> a deterministic client order ID. A timeout triggers lookup by that same ID, never a blind retry. A
+> watchdog requests shadow analysis only when the public audit is stale.
 
-## 3:55–4:15 — Close
+## 3:56–4:15 — Differentiation and close
 
 **Shot:** Return to the cover with the public demo and repository URLs.
 
 **Voice-over:**
 
-> Crowd Excess Agent asks AI to assess evidence, code to enforce risk, and public audit records to
-> make failure as legible as success. Seventeen sampled scans, zero receipts, no forced trade.
-> Attention outruns evidence. Risk decides.
+> Crowd Excess is not another news signal. It measures the reaction left unexplained after
+> cross-border attention, market-adjusted price movement, and supplied news are reconciled.
+> Seventeen sampled scans, eighty-five signals, seventy-eight model assessments, zero receipts, and
+> no forced trade. Attention outruns evidence. Risk decides.
 
 ## Shot list
 
 1. Cover image.
 2. `/agent` product definition, formula, latest sampled verdict, and primary action.
 3. `/decisions?run=<verified-run-id>` five-symbol Market Scan.
-4. `/strategy` evidence and execution boundaries.
-5. Latest run `20260831T195329Z-97994d47`: five signals, four model assessments, one fail-closed
-   evidence record, abstention.
-6. Failure run `20260828T174442Z-d761e38b`: sanitized provider failure, no execution.
+4. Enlarged Crowd Excess matrix and evidence panel.
+5. Latest run `20260831T195329Z-97994d47`: AAPL, TSLA, and QQQ evidence comparisons.
+6. Failure run `20260828T174442Z-d761e38b`: eligible AAPL signal, no execution.
 7. `/portfolio`: $100,000 equity; all risk and outcome values at zero.
-8. Architecture/repository reliability view: GitHub schedule plus local shadow watchdog.
-9. Cover with public demo and source URLs.
+8. Execution-authority slide: 1%, 3%, one attempt, 14–30 DTE.
+9. Differentiation slide and cover.
 
 ## Conditional receipt swap
 

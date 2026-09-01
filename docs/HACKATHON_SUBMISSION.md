@@ -156,7 +156,7 @@ durable alpha.
 5. **Product:** Overview leads directly to the latest sampled immutable decision trace.
 6. **Execution authority:** defined-risk spreads, fixed limits, paper-only account boundary.
 7. **Verified result:** 17 five-symbol scans across two dates, $100,000 equity, and no forced trade.
-8. **Reliability:** strict evidence, idempotent orders, watchdog, and sanitized failure stages.
+8. **Reliability:** strict evidence, idempotent orders, watchdog, and tested option-stage diagnostics.
 9. **Business value:** audit before exposure and reproducible abstention when inputs are weak.
 
 ## Submission checklist
