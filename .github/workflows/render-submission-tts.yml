@@ -1,0 +1,32 @@
+name: Render Submission TTS
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Render neural narration and timestamped captions
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: >-
+          python scripts/render_submission_tts.py
+          --manifest submission/video-narration.json
+          --output submission-tts
+      - name: Upload narration artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: crowd-excess-submission-tts
+          path: submission-tts
+          if-no-files-found: error
+          retention-days: 7

@@ -1,0 +1,39 @@
+{
+  "model": "gpt-4o-mini-tts-2025-12-15",
+  "voice": "marin",
+  "instructions": "Speak like a calm, confident product-demo presenter. Use a warm, natural conversational cadence with precise financial terminology. Avoid an advertising voice. Pause briefly between sentences. Pronounce Crowd Excess as two words, Q Q Q as three letters, S P Y as three letters, Open A I as three parts, Z as zee, and client order I D as client order I D.",
+  "scenes": [
+    {
+      "id": "01-thesis",
+      "text": "Markets react to facts, but they also react to attention. Crowd Excess asks whether attention and price have moved further than the objective news evidence supports. It is a pre-trade market reaction filter. The system advances a contrarian options candidate only when deterministic liquidity and risk rules agree."
+    },
+    {
+      "id": "02-market-scan",
+      "text": "The latest Market Scan places Apple, Microsoft, Nvidia, Tesla, and Q Q Q on one comparable surface, with S P Y as the benchmark. Attention Z measures cross-border search heat. Move Z measures volatility-normalized, market-adjusted reaction. Volume Z shows dislocation, while Evidence records how strongly supplied news explains the move. The residual is Crowd Excess. Raw sentiment or price direction alone is not the thesis."
+    },
+    {
+      "id": "03-residual",
+      "text": "Crowd Excess equals signed market-adjusted move times attention heat, minus news direction, materiality, and confidence. A positive residual means upside enthusiasm may be excessive. A negative residual means downside pessimism may be excessive. Open A I assesses only supplied headlines. It cannot choose contracts, size positions, bypass a gate, or place an order. Deterministic code decides whether a contrarian view is even eligible."
+    },
+    {
+      "id": "04-latest-run",
+      "text": "This latest run was captured at nineteen fifty-three U T C on August thirty-first while the U S market was open. Apple had attention Z of minus zero point two eight, move Z of minus zero point five two, and fifty-eight percent evidence confidence, leaving no residual. Tesla moved more sharply, with move Z above two point two, but its attention was cold and structured evidence was unavailable, so it failed closed. Q Q Q had ninety-one percent evidence confidence, but its movement and attention still did not pass the signal gates. Five names were observed. No candidate reached option construction."
+    },
+    {
+      "id": "05-closest-candidate",
+      "text": "An earlier market-open run shows the closest candidate. Apple passed the attention, movement, evidence, and residual gates and became eligible for a bearish reversal. Required Alpaca option data then became unavailable before risk approval. The run stopped, suppressed request details, and created no order or position. Missing liquidity evidence is a reason to abstain, never permission to invent a spread."
+    },
+    {
+      "id": "06-result",
+      "text": "Across two market dates, seventeen sampled scans produced eighty-five signal snapshots and seventy-eight model assessments. Equity remains exactly one hundred thousand dollars. Profit and loss, drawdown, open premium risk, and positions remain zero. No candidate cleared every evidence, liquidity, and risk gate. This is a verified no-order result, not evidence of profitability."
+    },
+    {
+      "id": "07-risk-authority",
+      "text": "Risk owns the order. Only fourteen-to-thirty day call or put debit verticals are eligible. Maximum position debit is one percent of equity, total premium risk is capped at three percent, and missing quotes, Greeks, open interest, volume, account identity, or storage means abstain. Every order uses a deterministic client order I D. A timeout triggers lookup by that same I D, never a blind retry. A watchdog requests shadow analysis only when the public audit is stale."
+    },
+    {
+      "id": "08-close",
+      "text": "Crowd Excess is not another news signal. It measures the reaction left unexplained after cross-border attention, market-adjusted price movement, and supplied news are reconciled. Seventeen sampled scans, eighty-five signals, seventy-eight model assessments, zero receipts, and no forced trade. Attention outruns evidence. Risk decides."
+    }
+  ]
+}
