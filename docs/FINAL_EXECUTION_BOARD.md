@@ -1,6 +1,6 @@
 # Crowd Excess — Final Execution Board
 
-Status timestamp: **2026-08-30 JST**
+Status timestamp: **2026-09-01 JST**
 
 Internal submission cutoff: **2026-09-04 20:00 JST**
 
@@ -50,15 +50,16 @@ Not allowed:
 | Production | GO | All judge routes work logged out |
 | Public redaction | GO | Zero public account identifier keys |
 | First market session | GO | Seven real five-symbol shadow scans on 2026-08-28 |
-| Submission assets | PARTIAL | Cover, refreshed screenshots, corrected PPTX/PDF, copy, and script ready; MP4 is missing |
-| Second market session | BLOCKED BY TIME | First opportunity is 2026-08-31 US regular session |
+| Submission assets | GO | Cover, screenshots, fact-locked PPTX/PDF, copy, and 4:08 MP4 ready |
+| Second market session | GO | Ten additional five-symbol sampled scans on 2026-08-31 |
+| Fact lock | GO | 17 sampled runs, 85 signals, 78 model assessments, two market dates, no-order branch |
 | Submission portal | OPERATOR REQUIRED | Exact cutoff, uploads, private account field, and confirmation unverified |
 | Monday automation | CONDITIONAL GO | Watchdog healthy; Mac sleep prevention required |
 
 Readiness is tracked in two ways:
 
 - technical release readiness: **100%**;
-- actual submission-package readiness: **about 82%** because a required MP4, second session, and final portal confirmation do not yet exist.
+- actual submission-package readiness: **about 96%** because only portal upload and final confirmation remain.
 
 ## 4. Active work plan
 
@@ -67,10 +68,10 @@ Readiness is tracked in two ways:
 | 1 | Confirm project/team registration and exact portal cutoff | User + agent browser support | L4 | 20 min | Logged-in portal | Screenshot or note with exact cutoff and project state |
 | 2 | Rehearse the AI-narrated no-order video once; test audio and browser tab order | User | L3 | 45–60 min | Current production | 30-second audio test and one unedited rehearsal |
 | 3 | Rehearse Monday operational checks without dispatching | Agent | L4 | 20 min | Mac available | launchd, auth, production, portfolio, and power checks understood |
-| 4 | Capture the second independent session | Agent automation + user monitor | L4 | 60–90 min active | 2026-08-31 22:30 JST open | At least one full five-symbol run on `3413c66`; target three |
-| 5 | Generate the sanitized post-session fact lock and select the no-order or receipt branch | Agent | L4 | 15 min | Session evidence | `submission/fact-lock-final.json` passes the two-date gate |
-| 6 | Record and edit final 4:00–4:20 MP4 | User; agent fact QA | L4 | 2–3 h | Fact lock | H.264 1080p MP4, audio/visual QA passed |
-| 7 | Update only changed counts/frames in docs or deck | Agent | L3 | 30–60 min | Fact lock | No stale counts, missing source, or unsupported claim |
+| 4 | Capture the second independent session | Agent automation + user monitor | L4 | Complete | 2026-08-31 session | Ten full five-symbol sampled runs recorded |
+| 5 | Generate the sanitized post-session fact lock and select the no-order or receipt branch | Agent | L4 | Complete | Session evidence | `submission/fact-lock-final.json` passed the two-date gate |
+| 6 | Record and edit final 4:00–4:20 MP4 | Agent + user review | L4 | Complete | Fact lock | 4:08 H.264 1080p MP4 with captions; audio/visual QA passed |
+| 7 | Update only changed counts/frames in docs or deck | Agent | L3 | Complete | Fact lock | 17 runs, 85 signals, and 78 assessments synchronized |
 | 8 | Upload and submit | User + agent browser support | L4 | 45–60 min | Final MP4 | All files reopen; private account ID only in private field; confirmation captured |
 | 9 | Optional verified social posts | User | L2 | 20–30 min | Fact lock | Public links recorded; not a submission blocker |
 
@@ -94,8 +95,8 @@ Complete by **2026-08-30 20:00 JST**:
    - failure run `20260828T174442Z-d761e38b`;
    - `/portfolio`;
    - public GitHub repository.
-5. The deck aggregate is already corrected to `35 signal snapshots · 30 model assessments`; do not
-   change it until the second-session fact lock exists.
+5. The deck aggregate is fact-locked to `85 signal snapshots · 78 model assessments` across 17
+   sampled runs and two US market dates.
 6. Record one short AI-narration/video rehearsal using `docs/VIDEO_SCRIPT.md` and
    `docs/VIDEO_EDIT_SPEC.md`.
 7. Lock this business-value statement:

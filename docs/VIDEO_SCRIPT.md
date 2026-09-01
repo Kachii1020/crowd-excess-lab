@@ -39,20 +39,19 @@ https://crowd-excess-lab.vercel.app/agent. Pause on the definition, formula, and
 > gate, or place an order. Invalid or unavailable output means abstain; deterministic code owns the
 > financial decision.
 
-## 1:25–2:20 — Stable real market-open run
+## 1:25–2:20 — Latest real market-open run
 
-**Shot:** Open the stable trace:
-https://crowd-excess-lab.vercel.app/agent/runs/20260828T193701Z-b404b62a. Pause on the five signals,
-evidence metadata, and outcome.
+**Shot:** Use `Review Latest Market Scan`, then open:
+https://crowd-excess-lab.vercel.app/agent/runs/20260831T195329Z-97994d47. Pause on the five signals,
+four model assessments, TSLA fail-closed evidence, and outcome.
 
 **Voice-over:**
 
-> This is the stable run from 19:37 UTC on August 28, captured while the US market was open. It is
-> one of seven real five-symbol shadow scans completed in the same session. All five symbols have
-> NAVER and Alpaca source hashes, plus OpenAI response IDs, model name, input and output token
-> counts, and input hashes. The final result was abstention: no symbol passed the attention,
-> movement, evidence, and market gates. There is no risk decision and no execution record. We did
-> not weaken a threshold to manufacture a trade.
+> This is the latest sampled run from 19:53 UTC on August 31, captured while the US market was open.
+> It is one of seventeen real five-symbol scans across two market dates. Four symbols retain OpenAI
+> response IDs, model metadata, token counts, and input hashes. Structured evidence for Tesla was
+> unavailable, so that symbol failed closed. The final result was abstention: no symbol passed every
+> attention, movement, evidence, and market gate. There is no risk decision or execution record.
 
 ## 2:20–2:55 — Failure safety
 
@@ -73,7 +72,8 @@ summary and empty execution state.
 
 **Voice-over:**
 
-> After seven market-open shadow scans, equity remains exactly one hundred thousand dollars. Total
+> After seventeen sampled shadow scans across two market dates, equity remains exactly one hundred
+> thousand dollars. Total
 > P&L is zero, drawdown is zero, open premium risk is zero, and there are no positions. Those zeros
 > are expected because the system produced zero persisted decisions and zero receipts. This is a
 > verified no-order result, not evidence of profitability.
@@ -98,7 +98,7 @@ terminal or private service page.
 **Voice-over:**
 
 > Crowd Excess Agent asks AI to assess evidence, code to enforce risk, and public audit records to
-> make failure as legible as success. Seven runs, seven honest abstentions, no forced trade.
+> make failure as legible as success. Seventeen sampled scans, zero receipts, no forced trade.
 > Attention outruns evidence. Risk decides.
 
 ## Shot list
@@ -107,7 +107,8 @@ terminal or private service page.
 2. `/agent` product definition, formula, latest sampled verdict, and primary action.
 3. `/decisions?run=<verified-run-id>` five-symbol Market Scan.
 4. `/strategy` evidence and execution boundaries.
-5. Stable run `20260828T193701Z-b404b62a`: five signals, evidence metadata, abstention.
+5. Latest run `20260831T195329Z-97994d47`: five signals, four model assessments, one fail-closed
+   evidence record, abstention.
 6. Failure run `20260828T174442Z-d761e38b`: sanitized provider failure, no execution.
 7. `/portfolio`: $100,000 equity; all risk and outcome values at zero.
 8. Architecture/repository reliability view: GitHub schedule plus local shadow watchdog.

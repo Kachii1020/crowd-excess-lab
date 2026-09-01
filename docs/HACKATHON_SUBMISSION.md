@@ -1,7 +1,7 @@
 # Hackathon Submission Package
 
 This file contains final English submission copy grounded in the public audit trail. Crowd Excess
-Agent completed a real market-open shadow session but did not create a paper order. That no-order
+Agent completed two real sampled market sessions but did not create a paper order. That no-order
 result is part of the submission, not a gap to hide with a fixture.
 
 ## Submission form copy
@@ -21,8 +21,9 @@ result is part of the submission, not a gap to hide with a fixture.
 > news evidence supports. It combines complete-day NAVER cross-border search attention with Alpaca
 > prices, SPY-relative movement, volume, news, and option-chain data. OpenAI evaluates only the
 > direction, materiality, and confidence of supplied headlines through a strict structured schema;
-> deterministic code owns scoring, option construction, sizing, and risk. Seven real five-symbol
-> market-open shadow scans ran during one US session on August 28, 2026. Every scan abstained, so
+> deterministic code owns scoring, option construction, sizing, and risk. Seventeen real
+> five-symbol sampled shadow scans ran across two US market dates on August 28 and 31, 2026. They
+> produced 85 signal snapshots and 78 model assessments. No candidate passed every gate, so
 > the account remained at $100,000 equity with zero P&L, drawdown, open risk, decisions, receipts,
 > and positions. The public audit trail exposes source hashes, model response metadata, token
 > usage, evidence, scores, failure-safe behavior, and the honest no-order outcome. Live trading,
@@ -55,17 +56,24 @@ result is part of the submission, not a gap to hide with a fixture.
 
 **What was the verified result?**
 
-> Seven real market-open five-symbol shadow scans completed in one US session. All seven abstained.
-> The stable run preserved complete source and OpenAI evidence metadata; a separate provider-failure
+> Seventeen real five-symbol sampled shadow scans completed across two US market dates. They
+> produced 85 signal snapshots and 78 model assessments. The latest run preserved four complete
+> model assessments and one explicit fail-closed evidence record; a separate provider-failure
 > run suppressed request details and created no order. Portfolio equity remained $100,000, with
 > zero P&L, drawdown, open premium risk, decisions, receipts, and positions.
 
-## Verified evidence — August 28–29, 2026
+## Verified evidence — August 28–September 1, 2026
 
 - The [public decision audit](https://crowd-excess-lab.vercel.app/agent) and
   [public repository](https://github.com/Kachii1020/crowd-excess-lab) work without authentication.
-- Seven real shadow scans covered AAPL, MSFT, NVDA, TSLA, and QQQ during the same open US market
-  session on August 28. All seven ended in a documented abstention.
+- Seventeen real sampled shadow scans covered AAPL, MSFT, NVDA, TSLA, and QQQ across the August 28
+  and August 31 US market dates. Together they recorded 85 signal snapshots and 78 model
+  assessments, with seven fail-closed evidence-unavailable records.
+- The latest sampled run,
+  [`20260831T195329Z-97994d47`](https://crowd-excess-lab.vercel.app/agent/runs/20260831T195329Z-97994d47),
+  recorded five signals while the market clock was open. Four symbols retained OpenAI response IDs
+  and input hashes; TSLA failed closed when structured evidence was unavailable. The run abstained
+  and created no risk decision or receipt.
 - The stable run,
   [`20260828T193701Z-b404b62a`](https://crowd-excess-lab.vercel.app/agent/runs/20260828T193701Z-b404b62a),
   completed five signal snapshots and preserved NAVER, Alpaca market, and OpenAI evidence hashes.
@@ -128,15 +136,16 @@ otherwise skips or fails closed. It never bypasses GitHub, account, signal, or r
 
 Supabase stores sanitized append-only runs, signals, evidence, optional risk decisions, optional
 execution records, and portfolio snapshots. The public application is read-only. In the verified
-session the optional decision and execution records remained absent, accurately reflecting seven
-no-trade outcomes.
+sessions the optional decision and execution records remained absent, accurately reflecting the
+verified no-order outcome.
 
 ### Safety and limitations
 
 This is a competition paper-trading system, not investment advice. It has no live-trading mode,
 naked-option path, or profitability claim. Search attention is an imperfect cross-border proxy;
 headline assessment can abstain; option liquidity may invalidate a candidate; provider and
-scheduler failures can delay scans; and seven observations cannot establish durable alpha.
+scheduler failures can delay scans; and 17 sampled runs across two market dates cannot establish
+durable alpha.
 
 ## Nine-slide narrative
 
@@ -146,7 +155,7 @@ scheduler failures can delay scans; and seven observations cannot establish dura
 4. **Signal:** attention heat + market-adjusted movement - objective news evidence.
 5. **Product:** Overview leads directly to the latest sampled immutable decision trace.
 6. **Execution authority:** defined-risk spreads, fixed limits, paper-only account boundary.
-7. **Verified result:** seven five-symbol scans, $100,000 equity, and no forced trade.
+7. **Verified result:** 17 five-symbol scans across two dates, $100,000 equity, and no forced trade.
 8. **Reliability:** strict evidence, idempotent orders, watchdog, and sanitized failure stages.
 9. **Business value:** audit before exposure and reproducible abstention when inputs are weak.
 
@@ -156,17 +165,18 @@ scheduler failures can delay scans; and seven observations cannot establish dura
 
 - [x] Public Vercel application and public GitHub repository work without authentication.
 - [x] Dedicated Alpaca paper account is active with exactly $100,000 equity.
-- [x] Seven same-session market-open five-symbol shadow runs are publicly recorded.
+- [x] Seventeen five-symbol sampled shadow runs across two US market dates are publicly recorded.
 - [x] Stable and failure-safety run links are fixed in the submission narrative.
 - [x] OpenAI response metadata and source hashes are visible for the stable run.
 - [x] Current zero-decision, zero-receipt, zero-position, and zero-P&L state is explicit.
 - [x] 16:9 cover and nine-slide PDF deck exist; editable deck source is retained.
+- [x] Final 4:08 English AI-narrated H.264 MP4 exists with burned-in captions.
+- [x] Sanitized two-session fact lock is retained with the submission assets.
 - [x] Final title, descriptions, form answers, tags, video script, and social copy are English.
 - [x] No fixture, abstention, or paper result is represented as profitable execution.
 
 ### Final operator actions
 
-- [ ] Record and export the 4:00–4:20 MP4 using `docs/VIDEO_SCRIPT.md`.
 - [ ] Publish the three fact-locked build-in-public posts in `docs/SOCIAL_POSTS.md`.
 - [ ] Recheck all public links in a logged-out browser immediately before submission.
 - [ ] If a real paper receipt appears later, replace—not append to—the no-order video segment and

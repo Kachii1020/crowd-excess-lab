@@ -12,10 +12,15 @@ The product began as a Korean-equity research tool. That pre-hackathon origin re
 under `/research` and `/lineage`; it is not represented as US execution data or competition-period
 work. NAVER Search Trend is labelled **cross-border search attention**, never sentiment.
 
-## Verified market-open session
+## Verified market-open sessions
 
-On August 28, 2026, Crowd Excess Agent completed **seven real five-symbol market-open shadow
-scans** during one US session. All seven abstained; no threshold was weakened to force a trade.
+Across August 28 and 31, 2026, Crowd Excess Agent completed **17 real five-symbol sampled shadow
+scans** across two US market dates. They produced 85 signal snapshots and 78 model assessments;
+no threshold was weakened to force a trade.
+
+- [Latest sampled run `20260831T195329Z-97994d47`](https://crowd-excess-lab.vercel.app/agent/runs/20260831T195329Z-97994d47):
+  five signals captured while the market was open; four complete OpenAI assessments and one
+  fail-closed evidence-unavailable record; no persisted risk decision or execution receipt.
 
 - [Stable run `20260828T193701Z-b404b62a`](https://crowd-excess-lab.vercel.app/agent/runs/20260828T193701Z-b404b62a):
   five signals with NAVER, Alpaca, and OpenAI source hashes; OpenAI response IDs, token counts, and
@@ -129,10 +134,12 @@ database migration, and a real paper order are deliberately not simulated by thi
 - [`submission/crowd-excess-cover.png`](submission/crowd-excess-cover.png): 16:9 project cover.
 - [`submission/crowd-excess-pitch-deck.pdf`](submission/crowd-excess-pitch-deck.pdf): verified nine-slide pitch deck.
 - [`submission/crowd-excess-pitch-deck.pptx`](submission/crowd-excess-pitch-deck.pptx): editable deck source.
+- [`submission/crowd-excess-demo.mp4`](submission/crowd-excess-demo.mp4): 4:08 English AI-narrated production demo.
+- [`submission/fact-lock-final.json`](submission/fact-lock-final.json): sanitized public two-session evidence lock.
 - [`docs/VIDEO_SCRIPT.md`](docs/VIDEO_SCRIPT.md): 4:15 presentation script and recording checklist.
 - [`docs/SOCIAL_POSTS.md`](docs/SOCIAL_POSTS.md): fact-gated build-in-public drafts.
 
-The submission uses the seven-run market-open session above. It reports the stable abstention,
+The submission uses the two-session public audit above. It reports the latest sampled abstention,
 failure-safe abstention, and zero-exposure portfolio exactly as recorded; no fixture or closed-market
 probe is presented as performance.
 

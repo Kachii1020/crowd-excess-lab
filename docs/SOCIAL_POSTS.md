@@ -1,7 +1,7 @@
 # Crowd Excess Agent — Fact-Locked Build-in-Public Posts
 
 Each theme has a compact X draft and an expanded LinkedIn draft. These versions match the public
-August 28 market-open shadow session and can be published without implying an order or profit.
+August 28 and 31 sampled shadow sessions and can be published without implying an order or profit.
 
 ## Post 1 — Architecture and safety
 
@@ -30,29 +30,28 @@ August 28 market-open shadow session and can be published without implying an or
 >
 > No live trading. No profitability claim. Evidence first; risk decides.
 
-## Post 2 — First autonomous market-open session
+## Post 2 — Two autonomous sampled sessions
 
 ### X
 
-> First session: 7 real market-open five-symbol shadow scans; all abstained. Stable trace: source
-> hashes + OpenAI response IDs/tokens, with no risk decision or receipt. Fixed thresholds.
-> https://crowd-excess-lab.vercel.app/agent/runs/20260828T193701Z-b404b62a
+> Two sessions: 17 real five-symbol sampled scans, 85 signals, 78 model assessments, zero receipts.
+> Latest trace: four assessed symbols plus one fail-closed evidence record. Fixed thresholds.
+> https://crowd-excess-lab.vercel.app/agent/runs/20260831T195329Z-97994d47
 
 ### LinkedIn
 
-> Crowd Excess Agent completed seven real five-symbol shadow scans during one open US market
-> session on August 28.
+> Crowd Excess Agent completed 17 real five-symbol sampled shadow scans across two US market dates.
 >
-> All seven abstained. The stable run preserved five NAVER inputs, five Alpaca market snapshots,
-> five structured OpenAI evidence assessments, source hashes, response IDs, model name, token
-> counts, and evidence-input hashes.
+> The audit now contains 85 signal snapshots and 78 structured OpenAI assessments. The latest run
+> preserved five NAVER inputs, five Alpaca market snapshots, four complete model assessments, and
+> one fail-closed evidence-unavailable record.
 >
 > Its result was simple: no symbol passed the attention, movement, evidence, and market gates. No
 > persisted risk decision, execution receipt, or position was created, and no threshold was
 > relaxed to force a demo trade.
 >
-> Stable public trace:
-> https://crowd-excess-lab.vercel.app/agent/runs/20260828T193701Z-b404b62a
+> Latest public trace:
+> https://crowd-excess-lab.vercel.app/agent/runs/20260831T195329Z-97994d47
 >
 > Paper-only shadow evidence, not a profitability claim.
 
@@ -60,13 +59,14 @@ August 28 market-open shadow session and can be published without implying an or
 
 ### X
 
-> Honest result after 7 shadow scans: $100k equity; P&L, drawdown and open risk $0; no positions. An
+> Honest result after 17 sampled scans across two dates: $100k equity; P&L, drawdown and open risk
+> $0; no positions. An
 > Alpaca data failure safely abstained; the watchdog dispatched stale work and skipped a duplicate.
 > https://crowd-excess-lab.vercel.app/agent/runs/20260828T174442Z-d761e38b
 
 ### LinkedIn
 
-> Honest Crowd Excess Agent result after seven real market-open shadow scans:
+> Honest Crowd Excess Agent result after 17 real sampled shadow scans across two market dates:
 >
 > • Equity: $100,000
 > • Total P&L: $0
@@ -85,7 +85,8 @@ August 28 market-open shadow session and can be published without implying an or
 > place or promote an order.
 >
 > What worked: real inputs, structured evidence, append-only audit, and safe abstention.
-> What remains uncertain: seven scans cannot establish alpha, and no candidate passed every gate.
+> What remains uncertain: 17 sampled scans across two dates cannot establish alpha, and no candidate
+> passed every gate.
 > Next: continue chronological market sessions without weakening the preregistered thresholds.
 >
 > No forced trade, no hidden fixture, no profitability claim.
