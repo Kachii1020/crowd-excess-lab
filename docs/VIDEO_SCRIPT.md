@@ -1,10 +1,10 @@
-# Crowd Excess Agent — 4:15 No-Order Presentation
+# Crowd Excess Agent — 3:58 No-Order Presentation
 
 This is the rehearsal script for the current public state. Before final recording, regenerate
 `submission/fact-lock-final.json`, update only changed facts, and follow `docs/VIDEO_EDIT_SPEC.md`.
 It does not imply that an option order or position exists.
 
-## 0:00–0:20 — Thesis
+## 0:00–0:24 — Thesis
 
 **Shot:** Full-screen cover, then open the product-first Overview at
 https://crowd-excess-lab.vercel.app/agent. Pause on the definition, formula, and primary action.
@@ -16,7 +16,7 @@ https://crowd-excess-lab.vercel.app/agent. Pause on the definition, formula, and
 > reaction filter: the agent advances a controlled contrarian candidate only when deterministic
 > liquidity and risk rules agree.
 
-## 0:20–0:58 — Market Scan inputs
+## 0:24–0:57 — Market Scan inputs
 
 **Shot:** Select `Review Latest Market Scan`, then show the five-symbol workbench and source status.
 
@@ -28,7 +28,7 @@ https://crowd-excess-lab.vercel.app/agent. Pause on the definition, formula, and
 > records how strongly supplied news explains the move. The residual is Crowd Excess. Raw sentiment
 > or price direction alone is not the thesis.
 
-## 0:58–1:31 — Crowd Excess residual
+## 0:57–1:28 — Crowd Excess residual
 
 **Shot:** Enlarge the Market Scan matrix, then the evidence panel.
 
@@ -40,7 +40,7 @@ https://crowd-excess-lab.vercel.app/agent. Pause on the definition, formula, and
 > headlines. It cannot choose contracts, size positions, bypass a gate, or place an order.
 > Deterministic code decides whether a contrarian view is even eligible.
 
-## 1:31–2:13 — Latest real market-open run
+## 1:28–2:05 — Latest real market-open run
 
 **Shot:** Use `Review Latest Market Scan`, then open:
 https://crowd-excess-lab.vercel.app/agent/runs/20260831T195329Z-97994d47. Pause on the five signals,
@@ -55,7 +55,7 @@ four model assessments, TSLA fail-closed evidence, and outcome.
 > but its movement and attention still did not pass the signal gates. Five names were observed. No
 > candidate reached option construction.
 
-## 2:13–2:43 — Closest candidate and failure safety
+## 2:05–2:33 — Closest candidate and failure safety
 
 **Shot:** Open the failure-safety trace:
 https://crowd-excess-lab.vercel.app/agent/runs/20260828T174442Z-d761e38b. Highlight the sanitized
@@ -69,7 +69,7 @@ summary and empty execution state.
 > and created no order or position. Missing liquidity evidence is a reason to abstain, never
 > permission to invent a spread.
 
-## 2:43–3:22 — Honest portfolio result
+## 2:33–2:57 — Honest portfolio result
 
 **Shot:** Open `/portfolio`; pause on equity, P&L, drawdown, open risk, and positions.
 
@@ -80,7 +80,7 @@ summary and empty execution state.
 > loss, drawdown, open premium risk, and positions remain zero. No candidate cleared every evidence,
 > liquidity, and risk gate. This is a verified no-order result, not evidence of profitability.
 
-## 3:22–3:56 — Deterministic risk authority
+## 2:57–3:32 — Deterministic risk authority
 
 **Shot:** Show the execution-authority slide with fixed risk limits.
 
@@ -92,7 +92,7 @@ summary and empty execution state.
 > a deterministic client order ID. A timeout triggers lookup by that same ID, never a blind retry. A
 > watchdog requests shadow analysis only when the public audit is stale.
 
-## 3:56–4:15 — Differentiation and close
+## 3:32–3:58 — Differentiation and close
 
 **Shot:** Return to the cover with the public demo and repository URLs.
 
@@ -138,7 +138,7 @@ qualification. If no receipt appears, use the script above unchanged.
 - [ ] Pause on evidence metadata, abstention summary, empty execution state, and portfolio zeros.
 - [ ] Call NAVER `cross-border search attention`, never community sentiment.
 - [ ] Say `shadow`, `no-order result`, and `not evidence of profitability` clearly.
-- [ ] Keep the final edit between 4:00 and 4:20 and below the five-minute platform limit.
+- [ ] Keep the final edit below the five-minute platform limit.
 
 ### After recording
 

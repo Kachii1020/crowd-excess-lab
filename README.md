@@ -134,9 +134,9 @@ database migration, and a real paper order are deliberately not simulated by thi
 - [`submission/crowd-excess-cover.png`](submission/crowd-excess-cover.png): 16:9 project cover.
 - [`submission/crowd-excess-pitch-deck.pdf`](submission/crowd-excess-pitch-deck.pdf): verified nine-slide pitch deck.
 - [`submission/crowd-excess-pitch-deck.pptx`](submission/crowd-excess-pitch-deck.pptx): editable deck source.
-- [`submission/crowd-excess-demo.mp4`](submission/crowd-excess-demo.mp4): 4:08 English AI-narrated production demo.
+- [`submission/crowd-excess-demo.mp4`](submission/crowd-excess-demo.mp4): 3:58 English neural-narrated production demo with transcript-timed captions.
 - [`submission/fact-lock-final.json`](submission/fact-lock-final.json): sanitized public two-session evidence lock.
-- [`docs/VIDEO_SCRIPT.md`](docs/VIDEO_SCRIPT.md): 4:15 presentation script and recording checklist.
+- [`docs/VIDEO_SCRIPT.md`](docs/VIDEO_SCRIPT.md): fact-locked presentation script and recording checklist.
 - [`docs/SOCIAL_POSTS.md`](docs/SOCIAL_POSTS.md): fact-gated build-in-public drafts.
 
 The submission uses the two-session public audit above. It reports the latest sampled abstention,

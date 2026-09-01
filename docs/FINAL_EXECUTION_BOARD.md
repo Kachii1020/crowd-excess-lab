@@ -50,7 +50,7 @@ Not allowed:
 | Production | GO | All judge routes work logged out |
 | Public redaction | GO | Zero public account identifier keys |
 | First market session | GO | Seven real five-symbol shadow scans on 2026-08-28 |
-| Submission assets | GO | Cover, screenshots, fact-locked PPTX/PDF, copy, and 4:08 MP4 ready |
+| Submission assets | GO | Cover, screenshots, fact-locked PPTX/PDF, copy, and 3:58 MP4 ready |
 | Second market session | GO | Ten additional five-symbol sampled scans on 2026-08-31 |
 | Fact lock | GO | 17 sampled runs, 85 signals, 78 model assessments, two market dates, no-order branch |
 | Submission portal | OPERATOR REQUIRED | Exact cutoff, uploads, private account field, and confirmation unverified |
@@ -70,7 +70,7 @@ Readiness is tracked in two ways:
 | 3 | Rehearse Monday operational checks without dispatching | Agent | L4 | 20 min | Mac available | launchd, auth, production, portfolio, and power checks understood |
 | 4 | Capture the second independent session | Agent automation + user monitor | L4 | Complete | 2026-08-31 session | Ten full five-symbol sampled runs recorded |
 | 5 | Generate the sanitized post-session fact lock and select the no-order or receipt branch | Agent | L4 | Complete | Session evidence | `submission/fact-lock-final.json` passed the two-date gate |
-| 6 | Record and edit final 4:00–4:20 MP4 | Agent + user review | L4 | Complete | Fact lock | 4:08 H.264 1080p MP4 with captions; audio/visual QA passed |
+| 6 | Record and edit final under-five-minute MP4 | Agent + user review | L4 | Complete | Fact lock | 3:58 H.264 1080p MP4 with neural narration and transcript-timed captions |
 | 7 | Update only changed counts/frames in docs or deck | Agent | L3 | Complete | Fact lock | 17 runs, 85 signals, and 78 assessments synchronized |
 | 8 | Upload and submit | User + agent browser support | L4 | 45–60 min | Final MP4 | All files reopen; private account ID only in private field; confirmation captured |
 | 9 | Optional verified social posts | User | L2 | 20–30 min | Fact lock | Public links recorded; not a submission blocker |

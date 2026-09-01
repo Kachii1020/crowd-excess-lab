@@ -170,7 +170,7 @@ durable alpha.
 - [x] OpenAI response metadata and source hashes are visible for the stable run.
 - [x] Current zero-decision, zero-receipt, zero-position, and zero-P&L state is explicit.
 - [x] 16:9 cover and nine-slide PDF deck exist; editable deck source is retained.
-- [x] Final 4:08 English AI-narrated H.264 MP4 exists with burned-in captions.
+- [x] Final 3:58 English neural-narrated H.264 MP4 exists with transcript-timed burned-in captions.
 - [x] Sanitized two-session fact lock is retained with the submission assets.
 - [x] Final title, descriptions, form answers, tags, video script, and social copy are English.
 - [x] No fixture, abstention, or paper result is represented as profitable execution.
